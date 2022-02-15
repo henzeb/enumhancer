@@ -1,0 +1,54 @@
+{
+    "name": "henzeb/enumhancer",
+    "description": "Enrich your enums with common functionality",
+    "keywords": [
+        "henzeb",
+        "enumhancer"
+    ],
+    "homepage": "https://github.com/henzeb/enumhancer",
+    "license": "AGPL-3.0-only",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Henze Berkheij",
+            "email": "henzeberkheij@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.5",
+        "phpunit/phpunit": "^9.0",
+        "illuminate/support": "^8.69|^9.0",
+        "orchestra/testbench": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Henzeb\\Enumhancer\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Henzeb\\Enumhancer\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage-txt": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
+        "test-dox": "vendor/bin/phpunit --testdox"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Henzeb\\Enumhancer\\Laravel\\Providers\\EnumhancerServiceProvider"
+            ]
+        }
+    }
+}
