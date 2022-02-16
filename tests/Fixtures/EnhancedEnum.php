@@ -2,12 +2,16 @@
 
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
+use Henzeb\Enumhancer\Concerns\Constructor;
 use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Contracts\Mapper;
 
+/**
+ * @method static self anotherMappedEnum()
+ */
 enum EnhancedEnum: string
 {
-    use Enhancers;
+    use Enhancers, Constructor;
 
     case ENUM = 'an enum';
     case ANOTHER_ENUM = 'another enum';
