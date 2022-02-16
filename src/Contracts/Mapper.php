@@ -14,6 +14,10 @@ abstract class Mapper
             return null;
         }
 
+        if(empty($value)) {
+            return null;
+        }
+
         if ($value instanceof UnitEnum) {
             return $value->name;
         }
@@ -34,10 +38,6 @@ abstract class Mapper
 
     public function defined(string $key, string $prefix = null): bool
     {
-        return array_key_exists(
-            $key,
-            $this->mappable()[$prefix]
-            ?? $this->mappable()
-        );
+        return (bool)$this->map($key, $prefix);
     }
 }
