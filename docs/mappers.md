@@ -23,6 +23,9 @@ enum YourEnum {
     case NOT_MAPPED;
  
 }
+```
+
+```php
 use Henzeb\Enumhancer\Contracts\Mapper;
 
 class YourMapper extends Mapper {
@@ -66,6 +69,7 @@ YourEnum::makeOrReport(['unknown', 'NOT_MAPPED'], new YourMapper()); // will ret
 Note: See for the `makeOrReport` method: [Reporters](reporters.md)
 
 ### Shared Mapper
+
 You can also use one `Mapper` for multiple enums. Just use the FQCN of the enum
 as a key in your array, like below:
 
@@ -87,4 +91,24 @@ class YourMapper extends Mapper {
 ```
 And then use the commands as shown in the `example` section.
 
-Note: You can also mix them up, if some enums may share a value or a name.
+## The mapper method
+
+In case you don't want to add the mapper all the time, you can also specify a `mapper` method that returns your mapper.
+
+```php
+use Henzeb\Enumhancer\Concerns\Mappers;
+use Henzeb\Enumhancer\Contracts\Mapper;
+
+enum YourEnum {
+    use Mappers;
+    
+    case ENUM;
+    case NO_LABEL;
+    case NOT_MAPPED;
+    
+    protected static mapper(): ?Mapper
+    {
+        return new YourMapper();
+    }
+}
+```

@@ -5,5 +5,5 @@ use BackedEnum;
 
 interface Reporter
 {
-    public function report(string $enum, string $key, ?BackedEnum $context): void;
+    public function report(string $enum, ?string $key, ?BackedEnum $context): void;
 }

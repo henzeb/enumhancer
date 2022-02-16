@@ -22,7 +22,7 @@ class EnumReporterTest extends TestCase
         EnumReporter::set(null);
 
         $reporter = new class implements Reporter {
-            public function report(string $enum, string $key, ?BackedEnum $context): void {}
+            public function report(string $enum, ?string $key, ?BackedEnum $context): void {}
         };
 
         EnumReporter::set($reporter);

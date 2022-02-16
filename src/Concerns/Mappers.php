@@ -10,14 +10,27 @@ use Henzeb\Enumhancer\Helpers\EnumReporter;
 
 trait Mappers
 {
-    final protected static function reporter():?Reporter
+    protected static function reporter():?Reporter
     {
         return EnumReporter::get();
     }
 
-    private static function map(string|int|null $value, Mapper|string $mapper = null): string
+    protected static function mapper(): ?Mapper
     {
-         return ($mapper) ?
+        return null;
+    }
+
+    private static function map(string|int|null $value, Mapper|string $mapper = null): ?string
+    {
+        if(null === $value) {
+            return null;
+        }
+
+        $value = ($mapper) ?
+            $mapper->map($value, static::class) ?? $value
+            : $value;
+
+        return ($mapper = self::mapper()) ?
             $mapper->map($value, static::class) ?? $value
             : $value;
     }

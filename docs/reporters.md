@@ -19,7 +19,7 @@ use Henzeb\Enumhancer\Contracts\Reporter;
 
 class YourReporter implements Reporter {
 
-    public function report(string $enum, string $key, ?BackedEnum $context) : void
+    public function report(string $enum, ?string $key, ?BackedEnum $context) : void
     {
         // TODO: Implement report() method.
     }
