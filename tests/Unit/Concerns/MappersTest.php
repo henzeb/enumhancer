@@ -180,4 +180,11 @@ class MappersTest extends TestCase
             EnhancedEnum::TryMakeArray(['anotherMappedEnum'])
         );
     }
+
+    public function testShouldUseMapperWhenConstructorIsUsed() {
+        $this->assertEquals(
+            EnhancedEnum::ENUM,
+            EnhancedEnum::anotherMappedEnum()
+        );
+    }
 }
