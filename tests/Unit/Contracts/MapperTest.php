@@ -29,6 +29,16 @@ class MapperTest extends TestCase
         $this->assertNull($this->getMapper()->map('map'));
     }
 
+    public function testReturnsNullExistingKeyWithNull()
+    {
+        $this->assertNull($this->getMapper(['map'=>null])->map('map'));
+    }
+
+    public function testReturnsNullExistingKeyWithString()
+    {
+        $this->assertNull($this->getMapper(['map'=>''])->map('map'));
+    }
+
     public function testReturnsMappedString()
     {
         $this->assertEquals(
@@ -85,6 +95,20 @@ class MapperTest extends TestCase
         );
     }
 
+    public function testReturnsNullExsistingKeyNullWithPrefix()
+    {
+        $this->assertNull(
+            $this->getMapper(['prefix' => ['map' => null]])->map('map', 'prefix')
+        );
+    }
+
+    public function testReturnsNullWithExistingKeyStringPrefix()
+    {
+        $this->assertNull(
+            $this->getMapper(['prefix' => ['map' => '']])->map('map', 'prefix')
+        );
+    }
+
     public function testIsDefined()
     {
         $this->assertTrue(
@@ -96,6 +120,20 @@ class MapperTest extends TestCase
     {
         $this->assertFalse(
             $this->getMapper(['defined' => 'this is defined'])->defined('notDefined')
+        );
+    }
+
+    public function testIsNotDefinedExistingKey()
+    {
+        $this->assertFalse(
+            $this->getMapper(['defined' => null])->defined('defined')
+        );
+    }
+
+    public function testIsNotDefinedExistingKeyString()
+    {
+        $this->assertFalse(
+            $this->getMapper(['defined' => ''])->defined('defined')
         );
     }
 
