@@ -45,6 +45,20 @@ class MappersTest extends TestCase
         );
     }
 
+    public function testMakeShouldNotMapWhenNull()
+    {
+        $this->expectError();
+        EnhancedEnum::make(null, $this->getMapper());
+    }
+
+    public function testMakeShouldMapWithoutMapperGiven()
+    {
+        $this->assertEquals(
+            EnhancedEnum::ENUM,
+            EnhancedEnum::make('anotherMappedEnum')
+        );
+    }
+
     public function testMakeShouldErrorWithMap()
     {
         $this->expectError();
@@ -64,6 +78,14 @@ class MappersTest extends TestCase
         $this->assertNull(EnhancedEnum::tryMake('mappedEnum'));
     }
 
+    public function testTryMakeShouldNotMapWhenNull()
+    {
+
+        $this->assertNull(
+            EnhancedEnum::tryMake(null, $this->getMapper())
+        );
+    }
+
     public function testTryMakeShouldMap()
     {
         $this->assertEquals(
@@ -72,9 +94,25 @@ class MappersTest extends TestCase
         );
     }
 
+    public function testTryMakeShouldMapWithoutMapperGiven()
+    {
+        $this->assertEquals(
+            EnhancedEnum::ENUM,
+            EnhancedEnum::tryMake('anotherMappedEnum')
+        );
+    }
+
+
     public function testTryMakeShouldReturnNullWithMap()
     {
         $this->assertNull(EnhancedEnum::tryMake('not existing', $this->getMapper()));
+    }
+
+
+    public function testMakeArrayShouldNotMapWhenNull()
+    {
+        $this->expectError();
+        EnhancedEnum::makeArray([null], $this->getMapper());
     }
 
     public function testMakeArrayShouldWorkWithoutMapper()
@@ -99,6 +137,15 @@ class MappersTest extends TestCase
         );
     }
 
+
+    public function testMakeArrayShouldMapWithoutMapperGiven()
+    {
+        $this->assertEquals(
+            [EnhancedEnum::ENUM],
+            EnhancedEnum::MakeArray(['anotherMappedEnum'])
+        );
+    }
+
     public function testMakeArrayShouldThrowErrorWitMapper()
     {
         $this->expectError();
@@ -113,11 +160,24 @@ class MappersTest extends TestCase
         );
     }
 
+    public function testTryMakeArrayShouldNotMapWhenNull()
+    {
+        $this->assertEquals([], EnhancedEnum::tryMakeArray([null], $this->getMapper()));
+    }
+
     public function testTryMakeArrayShouldWorkWitMapper()
     {
         $this->assertEquals(
             [EnhancedEnum::ENUM],
             EnhancedEnum::tryMakeArray(['mappedEnum','DoesNotExist'], $this->getMapper())
+        );
+    }
+
+    public function testTryMakeArrayShouldMapWithoutMapperGiven()
+    {
+        $this->assertEquals(
+            [EnhancedEnum::ENUM],
+            EnhancedEnum::TryMakeArray(['anotherMappedEnum'])
         );
     }
 }

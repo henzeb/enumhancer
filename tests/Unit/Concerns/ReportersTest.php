@@ -157,7 +157,7 @@ class ReportersTest extends TestCase
     {
         $reporter = new class implements Reporter {
 
-            public function report(string $enum, string $key, ?BackedEnum $context): void
+            public function report(string $enum, ?string $key, ?BackedEnum $context): void
             {
                 enum_exists($context::class);
             }
@@ -179,7 +179,7 @@ class ReportersTest extends TestCase
     {
         $reporter = new class implements Reporter {
 
-            public function report(string $enum, string $key, ?BackedEnum $context): void
+            public function report(string $enum, ?string $key, ?BackedEnum $context): void
             {
                 enum_exists($context::class);
             }

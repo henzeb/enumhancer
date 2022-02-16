@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
 use Henzeb\Enumhancer\Concerns\Enhancers;
+use Henzeb\Enumhancer\Contracts\Mapper;
 
 enum EnhancedEnum: string
 {
@@ -16,5 +17,19 @@ enum EnhancedEnum: string
         return [
             'ENUM'=>'My label'
         ];
+    }
+
+    protected static function mapper(): ?Mapper
+    {
+        return new class extends Mapper
+        {
+
+            protected function mappable(): array
+            {
+                return [
+                    'anotherMappedEnum' => EnhancedEnum::ENUM
+                ];
+            }
+        };
     }
 }
