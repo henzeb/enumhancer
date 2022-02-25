@@ -27,7 +27,6 @@ enum EnhancedEnum: string
     {
         return new class extends Mapper
         {
-
             protected function mappable(): array
             {
                 return [

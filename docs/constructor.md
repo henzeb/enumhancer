@@ -30,5 +30,5 @@ YourEnum::CALLABLE(); // will return YourEnum::CALLABLE;
 Note: Under the hood it is using `__callStatic`, so it may give some 
 unpredicted behavior when calling a method that doesn't exist.
 
-Note: This is the only one that is not enabled by default when 
+Note: This trait is not enabled by default when 
 using the `Enumhancer` trait.

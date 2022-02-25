@@ -10,6 +10,7 @@ something for you.
 This package currently supports the following:
 
 - Comparison
+- From (for non-backed enums)
 - Ability to make from enum-name (Make methods)
 - Labels
 - Mappers
@@ -29,7 +30,7 @@ composer require henzeb/enumhancer
 
 ## Usage
 You can simply add the `Enhancers` trait to your `enum` in 
-order to use all functionality of this package. All functionality 
+order to use almost all functionality of this package. All functionality 
 should work with `unit` enums as well as `backed` enums'.
 
 ```php
@@ -50,6 +51,7 @@ implemented his own version of `Makers` and `Reporters`.
 ### Functionality
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
+- [From](docs/from.md)
 - [Labels](docs/labels.md)
 - [Makers](docs/makers.md)
 - [Mappers](docs/mappers.md)
