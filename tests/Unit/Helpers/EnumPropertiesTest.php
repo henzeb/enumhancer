@@ -4,8 +4,8 @@ namespace Unit\Helpers;
 
 
 use Henzeb\Enumhancer\Helpers\EnumProperties;
-use Henzeb\Enumhancer\Tests\Fixtures\ConstructableNonBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
@@ -17,20 +17,20 @@ class EnumPropertiesTest extends TestCase
     {
         EnumProperties::clearGlobal();
         EnumProperties::clear(StringBackedMakersEnum::class);
-        EnumProperties::clear(ConstructableNonBackedEnum::class);
-        EnumProperties::clear(EnhancedEnum::class);
+        EnumProperties::clear(ConstructableUnitEnum::class);
+        EnumProperties::clear(EnhancedBackedEnum::class);
     }
 
     public function providesTestcasesForStoreProperty(): array
     {
         return [
-            'boolean' => ['property', true, true, ConstructableNonBackedEnum::class],
-            'object' => ['anObject', new stdClass(), new stdClass(), ConstructableNonBackedEnum::class],
-            'string' => ['aString', 'A String', 'A String', ConstructableNonBackedEnum::class],
-            'enum' => ['anEnum', ConstructableNonBackedEnum::CALLABLE, ConstructableNonBackedEnum::CALLABLE, ConstructableNonBackedEnum::class],
-            'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableNonBackedEnum::class],
+            'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+            'object' => ['anObject', new stdClass(), new stdClass(), ConstructableUnitEnum::class],
+            'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+            'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::class],
+            'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
 
-            'another-enum-that-tries-to-get' => ['anotherProperty', true, null, ConstructableNonBackedEnum::class, StringBackedMakersEnum::class],
+            'another-enum-that-tries-to-get' => ['anotherProperty', true, null, ConstructableUnitEnum::class, StringBackedMakersEnum::class],
 
         ];
     }
@@ -62,7 +62,7 @@ class EnumPropertiesTest extends TestCase
             'boolean' => ['property', true, true],
             'object' => ['anObject', new stdClass(), new stdClass()],
             'string' => ['aString', 'A String', 'A String'],
-            'enum' => ['anEnum', ConstructableNonBackedEnum::CALLABLE, ConstructableNonBackedEnum::CALLABLE],
+            'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE],
             'callable' => ['property', fn() => 'true', fn() => 'true'],
         ];
     }
@@ -84,24 +84,24 @@ class EnumPropertiesTest extends TestCase
 
     public function testClearsProperties()
     {
-        EnumProperties::store(ConstructableNonBackedEnum::class, 'property', 'a value');
+        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
         EnumProperties::store(StringBackedMakersEnum::class, 'property', 'a value');
 
-        EnumProperties::clear(ConstructableNonBackedEnum::class);
+        EnumProperties::clear(ConstructableUnitEnum::class);
 
-        $this->assertNull(EnumProperties::get(ConstructableNonBackedEnum::class, 'property'));
+        $this->assertNull(EnumProperties::get(ConstructableUnitEnum::class, 'property'));
         $this->assertEquals('a value', EnumProperties::get(StringBackedMakersEnum::class, 'property'));
     }
 
     public function testClearsSingleProperty()
     {
-        EnumProperties::store(ConstructableNonBackedEnum::class, 'property', 'a value');
-        EnumProperties::store(ConstructableNonBackedEnum::class, 'property2', 'a value');
+        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
+        EnumProperties::store(ConstructableUnitEnum::class, 'property2', 'a value');
 
-        EnumProperties::clear(ConstructableNonBackedEnum::class, 'property');
+        EnumProperties::clear(ConstructableUnitEnum::class, 'property');
 
-        $this->assertNull(EnumProperties::get(ConstructableNonBackedEnum::class, 'property'));
-        $this->assertEquals('a value', EnumProperties::get(ConstructableNonBackedEnum::class, 'property2'));
+        $this->assertNull(EnumProperties::get(ConstructableUnitEnum::class, 'property'));
+        $this->assertEquals('a value', EnumProperties::get(ConstructableUnitEnum::class, 'property2'));
     }
 
     public function testClearsGlobal()
@@ -135,8 +135,8 @@ class EnumPropertiesTest extends TestCase
     public function testIfLocalPropertyOverridesGlobalProperty()
     {
         EnumProperties::global('property', 'global value');
-        EnumProperties::store(ConstructableNonBackedEnum::class, 'property', 'local value');
+        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'local value');
 
-        $this->assertEquals('local value', EnumProperties::get(ConstructableNonBackedEnum::class, 'property'));
+        $this->assertEquals('local value', EnumProperties::get(ConstructableUnitEnum::class, 'property'));
     }
 }

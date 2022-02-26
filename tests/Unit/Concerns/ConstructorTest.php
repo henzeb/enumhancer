@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedStaticCallableEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\ConstructableNonBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedStaticCallableEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -13,15 +13,15 @@ class ConstructorTest extends TestCase
     public function testShouldGetEnumUsingStaticCall(): void
     {
         $this->assertEquals(
-            ConstructableNonBackedEnum::CALLABLE,
-            ConstructableNonBackedEnum::CALLABLE()
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::CALLABLE()
         );
     }
 
     public function testShouldFailUsingStaticCallToUnknownEnum(): void
     {
         $this->expectError();
-        ConstructableNonBackedEnum::CANNOT_CALL();
+        ConstructableUnitEnum::CANNOT_CALL();
     }
 
     public function testShouldGetStringBackedEnumByName(): void

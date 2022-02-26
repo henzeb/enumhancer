@@ -3,7 +3,7 @@
 namespace Unit\Contracts;
 
 use Henzeb\Enumhancer\Contracts\Mapper;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use PHPUnit\Framework\TestCase;
 
 
@@ -51,7 +51,7 @@ class MapperTest extends TestCase
     {
         $this->assertEquals(
             'ENUM',
-            $this->getMapper(['map' => EnhancedEnum::ENUM])->map('map')
+            $this->getMapper(['map' => EnhancedBackedEnum::ENUM])->map('map')
         );
     }
 
@@ -91,7 +91,7 @@ class MapperTest extends TestCase
     {
         $this->assertEquals(
             'ENUM',
-            $this->getMapper(['prefix' => ['map' => EnhancedEnum::ENUM]])->map('map', 'prefix')
+            $this->getMapper(['prefix' => ['map' => EnhancedBackedEnum::ENUM]])->map('map', 'prefix')
         );
     }
 

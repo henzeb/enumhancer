@@ -9,15 +9,16 @@ something for you.
 
 This package currently supports the following:
 
+- Constructor (in case you're migrating from
+  [Spatie's PHP Enum](https://github.com/spatie/enum))
 - Comparison
-- From (for non-backed enums)
-- Ability to make from enum-name (Make methods)
+- From (for unit enums)
+- Make (Ability to make from enum-name)
 - Labels
 - Mappers
-- Reporting (Logging)
 - Properties
-- Constructor (in case you're migrating from 
-[Spatie's PHP Enum](https://github.com/spatie/enum))
+- Reporting (Logging)
+- Value
 
 
 ## Installation
@@ -57,6 +58,7 @@ implemented his own version of `Makers` and `Reporters`.
 - [Mappers](docs/mappers.md)
 - [Properties](docs/properties.md)
 - [Reporters](docs/reporters.md)
+- [Value](docs/value.md)
 
 ### Laravel
 When you are installing this package into a laravel project, Enumhancer will

@@ -8,7 +8,7 @@ use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Tests\Fixtures\CustomReportingEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\NotReportingEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\ReporterTestEnum;
 
@@ -21,7 +21,7 @@ class ReportersTest extends TestCase
     {
         return [
             'just-reporters' => [ReporterTestEnum::class],
-            'with-mappers-enhancment' => [EnhancedEnum::class]
+            'with-mappers-enhancment' => [EnhancedBackedEnum::class]
         ];
     }
 
@@ -165,7 +165,7 @@ class ReportersTest extends TestCase
 
         EnumReporter::set($reporter);
 
-        $this->assertNull($enum::makeOrReport('DOESNOTEXIST', EnhancedEnum::ANOTHER_ENUM));
+        $this->assertNull($enum::makeOrReport('DOESNOTEXIST', EnhancedBackedEnum::ANOTHER_ENUM));
 
     }
 
@@ -187,7 +187,7 @@ class ReportersTest extends TestCase
 
         EnumReporter::set($reporter);
 
-        $this->assertEquals([], $enum::makeOrReportArray(['DOESNOTEXIST'], EnhancedEnum::ANOTHER_ENUM));
+        $this->assertEquals([], $enum::makeOrReportArray(['DOESNOTEXIST'], EnhancedBackedEnum::ANOTHER_ENUM));
 
     }
 }
