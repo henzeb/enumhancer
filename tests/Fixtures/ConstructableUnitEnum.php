@@ -10,7 +10,7 @@ use Henzeb\Enumhancer\Concerns\Constructor;
 /**
  * @method static self CALLABLE()
  */
-enum ConstructableNonBackedEnum
+enum ConstructableUnitEnum
 {
     use Constructor, Mappers, Comparison, From;
 

@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Concerns\Labels;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -20,11 +20,11 @@ class LabelsTest extends TestCase
 
     public function testShouldGetLabelByName()
     {
-        $this->assertEquals('My label', EnhancedEnum::ENUM->label());
+        $this->assertEquals('My label', EnhancedBackedEnum::ENUM->label());
     }
 
     public function testShouldGetNameWhenLabelDoesNotExist()
     {
-        $this->assertEquals('ANOTHER_ENUM', EnhancedEnum::ANOTHER_ENUM->label());
+        $this->assertEquals('ANOTHER_ENUM', EnhancedBackedEnum::ANOTHER_ENUM->label());
     }
 }

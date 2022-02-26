@@ -4,7 +4,7 @@ namespace Unit\Laravel\Reporters;
 
 
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Illuminate\Support\Facades\Log;
 use Orchestra\Testbench\TestCase;
 
@@ -14,12 +14,12 @@ class LaravelLogReporterTest extends TestCase
     {
         $spy = Log::spy();
 
-        (new LaravelLogReporter())->report(EnhancedEnum::class, 'KEY', null);
+        (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', null);
 
         $spy->shouldHaveReceived('warning', [
-            "EnhancedEnum does not have 'KEY'",
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'class' => 'EnhancedEnum',
+                'class' => 'EnhancedBackedEnum',
                 'key' => 'KEY',
             ]
         ]);
@@ -29,14 +29,14 @@ class LaravelLogReporterTest extends TestCase
     {
         $spy = Log::spy();
 
-        (new LaravelLogReporter())->report(EnhancedEnum::class, 'KEY', EnhancedEnum::ANOTHER_ENUM);
+        (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', EnhancedBackedEnum::ANOTHER_ENUM);
 
         $spy->shouldHaveReceived('warning', [
-            "EnhancedEnum does not have 'KEY'",
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'class' => 'EnhancedEnum',
+                'class' => 'EnhancedBackedEnum',
                 'key' => 'KEY',
-                'context' => EnhancedEnum::ANOTHER_ENUM->value
+                'context' => EnhancedBackedEnum::ANOTHER_ENUM->value
             ]
         ]);
     }

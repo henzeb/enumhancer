@@ -9,7 +9,7 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 /**
  * @method static self anotherMappedEnum()
  */
-enum EnhancedEnum: string
+enum EnhancedBackedEnum: string
 {
     use Enhancers, Constructor;
 
@@ -30,7 +30,7 @@ enum EnhancedEnum: string
             protected function mappable(): array
             {
                 return [
-                    'anotherMappedEnum' => EnhancedEnum::ENUM
+                    'anotherMappedEnum' => EnhancedBackedEnum::ENUM
                 ];
             }
         };

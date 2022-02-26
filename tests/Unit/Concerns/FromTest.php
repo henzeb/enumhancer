@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use PHPUnit\Framework\TestCase;
-use Henzeb\Enumhancer\Tests\Fixtures\ConstructableNonBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 
 
 class FromTest extends TestCase
@@ -11,30 +11,30 @@ class FromTest extends TestCase
     function testNonBackedEnumCanCallFrom(): void
     {
         $this->assertEquals(
-            ConstructableNonBackedEnum::CALLABLE,
-            ConstructableNonBackedEnum::from('callable')
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::from('callable')
         );
     }
 
-    function testNonBackedEnumCanCallFromAndFail(): void
+    function testUnitEnumCanCallFromAndFail(): void
     {
         $this->expectError();
 
-        ConstructableNonBackedEnum::from('doesnotexist');
+        ConstructableUnitEnum::from('doesnotexist');
     }
 
-    function testNonBackedEnumCanCallTryFrom(): void
+    function testUnitEnumCanCallTryFrom(): void
     {
         $this->assertEquals(
-            ConstructableNonBackedEnum::CALLABLE,
-            ConstructableNonBackedEnum::tryFrom('callable')
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::tryFrom('callable')
         );
     }
 
     function testTryFromShouldReturnNull(): void
     {
         $this->assertNull(
-            ConstructableNonBackedEnum::tryFrom('doesNotExist')
+            ConstructableUnitEnum::tryFrom('doesNotExist')
         );
     }
 }
