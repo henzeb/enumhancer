@@ -37,21 +37,21 @@ class EnumPropertiesTest extends TestCase
 
     public function testStoreShouldNotAcceptNonEnums()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumProperties::store(stdClass::class, 'property', 'value');
     }
 
     public function testGetShouldNotAcceptNonEnums()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumProperties::get(stdClass::class, 'property');
     }
 
     public function testClearShouldNotAcceptNonEnums()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumProperties::clear(stdClass::class);
     }

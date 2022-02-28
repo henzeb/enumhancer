@@ -4,7 +4,7 @@ namespace Henzeb\Enumhancer\Concerns;
 
 trait Value
 {
-    public function value(): string|int
+    final public function value(): string|int
     {
         return $this->value ?? strtolower($this->name);
     }

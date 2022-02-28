@@ -17,7 +17,6 @@ enum yourEnum {
 ```
 
 ### Examples
-
 ```php
 YourEnum::MY_ENUM->value(); // will return `my_enum`;
 ```

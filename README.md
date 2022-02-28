@@ -16,6 +16,7 @@ This package currently supports the following:
 - Make (Ability to make from enum-name)
 - Labels
 - Mappers
+- Multi
 - Properties
 - Reporting (Logging)
 - Value
@@ -56,6 +57,7 @@ implemented his own version of `Makers` and `Reporters`.
 - [Labels](docs/labels.md)
 - [Makers](docs/makers.md)
 - [Mappers](docs/mappers.md)
+- [Multi](docs/multi.md)
 - [Properties](docs/properties.md)
 - [Reporters](docs/reporters.md)
 - [Value](docs/value.md)

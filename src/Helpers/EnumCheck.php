@@ -2,19 +2,35 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use RuntimeException;
+use UnitEnum;
+use TypeError;
+use BackedEnum;
 
 class EnumCheck
 {
     public static function check(string $enum): void
     {
-        if(!enum_exists($enum, true)) {
-            self::throwError($enum);
+        if (!enum_exists($enum, true)) {
+            self::throwError();
         }
     }
 
-    private static function throwError(string $enum): never
+    public static function matches($class, BackedEnum|UnitEnum|string ...$enums): void
     {
-        throw new RuntimeException('The trait is not being used in an enum');
+        foreach ($enums as $enum) {
+            if (!is_string($enum) && !is_a($enum, $class)) {
+                self::throwSameError($class, $enum::class);
+            }
+        }
+    }
+
+    private static function throwError(): never
+    {
+        throw new TypeError('This method can only be used with an enum');
+    }
+
+    private static function throwSameError(string $class, string $enum): never
+    {
+        throw new TypeError('All enums must be a `' . $class . '`, `' . $enum . '` was given');
     }
 }
