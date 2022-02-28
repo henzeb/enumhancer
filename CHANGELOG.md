@@ -2,6 +2,14 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.3.0 - 2022-02-28
+
+- added Multi. Currently allows you to compare against a subset of your enum.
+
+## 1.2.0 - 2022-02-26
+
+- added Value (for use with unit enums)
+
 ## 1.1.0 - 2022-02-25
 
 - added From. Useful for situations where you need them with non-backed enums

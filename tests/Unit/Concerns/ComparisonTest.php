@@ -3,123 +3,83 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Concerns\Comparison;
-use Mockery;
 use PHPUnit\Framework\TestCase;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 
 
 class ComparisonTest extends TestCase
 {
     public function testEnumEquals()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-
-        $with = Mockery::mock(Comparison::class);
-        $with->name = 'TEST';
-
         $this->assertTrue(
-            $compare->equals($with)
+            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ENUM)
         );
     }
 
     public function testEnumNotEquals()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-        $with = clone $compare;
-        $compare->name = 'TEST2';
         $this->assertFalse(
-            $compare->equals($with)
+            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM)
         );
     }
 
     /** @noinspection PhpExpressionResultUnusedInspection */
     public function testEqualsDoesNotAcceptDifferentObject()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-
         $class = new class {
             use Comparison;
         };
         $this->expectError();
 
-        $compare->equals($class);
+        EnhancedBackedEnum::ENUM->equals($class);
     }
 
     public function testWhenMultipleValuesAreGivenAndOneIsTrue()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST2';
-
-        $with = [];
-        for ($i = 0; $i < 5; $i++) {
-            $withObj = Mockery::mock(Comparison::class);
-            $withObj->name = 'TEST' . $i;
-            $with[] = $withObj;
-        }
-
         $this->assertTrue(
-            $compare->equals(...$with)
+            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ENUM)
         );
     }
 
     public function testWhenMultipleValuesAreGivenAndNoneIsTrue()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-
-        $with = [];
-        for ($i = 0; $i < 5; $i++) {
-            $withObj = Mockery::mock(Comparison::class);
-            $withObj->name = 'TEST' . $i;
-            $with[] = $withObj;
-        }
-
         $this->assertFalse(
-            $compare->equals(...$with)
+            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ANOTHER_ENUM)
         );
     }
 
     public function testWhenStringEqualsName()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-
         $this->assertTrue(
-            $compare->equals('TEST')
+            EnhancedBackedEnum::ENUM->equals('ENUM')
         );
     }
 
     public function testWhenStringNotEqualsName()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-
         $this->assertFalse(
-            $compare->equals('TEST2')
+            EnhancedBackedEnum::ENUM->equals('TEST2')
         );
     }
 
     public function testWhenStringEqualsValue()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-        $compare->value = 'test2';
-
         $this->assertTrue(
-            $compare->equals('test2')
+            EnhancedBackedEnum::ENUM->equals('an enum')
         );
     }
 
     public function testWhenStringNotEqualsValue()
     {
-        $compare = Mockery::mock(Comparison::class);
-        $compare->name = 'TEST';
-        $compare->value = 'test';
-
         $this->assertFalse(
-            $compare->equals('test2')
+            EnhancedBackedEnum::ENUM->equals('not an enum')
+        );
+    }
+
+    public function testShouldMatchWithUnitEnumValue() {
+        $this->assertTrue(
+            EnhancedUnitEnum::ENUM->equals('enum')
         );
     }
 }

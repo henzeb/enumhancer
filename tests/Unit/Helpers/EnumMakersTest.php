@@ -12,28 +12,28 @@ class EnumMakersTest extends TestCase
 {
     public function testMakeShouldFailWithInvalidClass()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumMakers::make(stdClass::class, 'test');
     }
 
     public function testTryMakeShouldFailWithInvalidClass()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumMakers::tryMake(stdClass::class, 'test');
     }
 
     public function testMakeArrayShouldFailWithInvalidClass()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumMakers::makeArray(stdClass::class, ['test']);
     }
 
     public function testTryMakeArrayShouldFailWithInvalidClass()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
 
         EnumMakers::tryMakeArray(stdClass::class, ['test']);
     }

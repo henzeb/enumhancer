@@ -67,12 +67,12 @@ class EnumReporterTest extends TestCase
     }
 
     public function testMakeOrReportShouldErrorWithNonEnum() {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
         EnumReporter::makeOrReport(stdClass::class, '', null, new LaravelLogReporter());
     }
 
     public function testMakeOrReportArrayShouldErrorWithNonEnum() {
-        $this->expectException(RuntimeException::class);
+        $this->expectError();
         EnumReporter::makeOrReportArray(stdClass::class, [], null, new LaravelLogReporter());
     }
 }
