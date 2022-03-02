@@ -2,6 +2,13 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.4.0 - 2022-03-02
+
+- Renamed Multi to Subset
+- Added `names` method to `Subset`
+- Added `values` method to `Subset`
+- Added `do` method to `Subset`
+
 ## 1.3.0 - 2022-02-28
 
 - added Multi. Currently allows you to compare against a subset of your enum.

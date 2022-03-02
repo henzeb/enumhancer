@@ -57,7 +57,7 @@ implemented his own version of `Makers` and `Reporters`.
 - [Labels](docs/labels.md)
 - [Makers](docs/makers.md)
 - [Mappers](docs/mappers.md)
-- [Multi](docs/multi.md)
+- [Subset](docs/subset.md)
 - [Properties](docs/properties.md)
 - [Reporters](docs/reporters.md)
 - [Value](docs/value.md)

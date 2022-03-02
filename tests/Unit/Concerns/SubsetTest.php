@@ -8,7 +8,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 
 
-class MultiTest extends TestCase
+class SubsetTest extends TestCase
 {
     public function testOfSubsetShouldEquals(): void
     {
