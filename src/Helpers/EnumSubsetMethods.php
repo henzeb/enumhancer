@@ -2,11 +2,12 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Closure;
 use UnitEnum;
 use BackedEnum;
-use Henzeb\Enumhancer\Contracts\MultiEnum;
+use Henzeb\Enumhancer\Contracts\EnumSubset;
 
-class MultiEnumMethods implements MultiEnum
+class EnumSubsetMethods implements EnumSubset
 {
     private array $enums;
 
@@ -17,13 +18,20 @@ class MultiEnumMethods implements MultiEnum
         $this->enums = $enums;
     }
 
+    public function do(Closure $callable): void
+    {
+        foreach($this->enums as $enum) {
+            $callable($enum);
+        }
+    }
+
     public function equals(string|UnitEnum|BackedEnum ...$equals): bool
     {
         EnumCheck::matches($this->enumType, ...$equals);
 
-        foreach($this->enums as $enum) {
+        foreach ($this->enums as $enum) {
 
-            if($this->compare($enum, ...$equals)) {
+            if ($this->compare($enum, ...$equals)) {
                 return true;
             }
         }
@@ -33,7 +41,7 @@ class MultiEnumMethods implements MultiEnum
 
     private function compare(UnitEnum|BackedEnum $enum, string|UnitEnum|BackedEnum ...$equals): bool
     {
-        foreach($equals as $equal) {
+        foreach ($equals as $equal) {
             if ($enum->name === $equal) {
                 return true;
             }
@@ -42,7 +50,7 @@ class MultiEnumMethods implements MultiEnum
                 return true;
             }
 
-            if(method_exists($enum,'value') && $enum->value() === $equal) {
+            if (method_exists($enum, 'value') && $enum->value() === $equal) {
                 return true;
             }
 
@@ -51,5 +59,17 @@ class MultiEnumMethods implements MultiEnum
             }
         }
         return false;
+    }
+
+    public function names(): array
+    {
+        return array_map(fn(UnitEnum $enum) => $enum->name, $this->enums);
+    }
+
+    public function values(): array
+    {
+        return array_map(
+            fn(mixed $enum) => $enum->value ?? $enum->value(), $this->enums
+        );
     }
 }

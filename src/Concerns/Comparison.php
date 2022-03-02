@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Concerns;
 
 use BackedEnum;
-use Henzeb\Enumhancer\Helpers\MultiEnumMethods;
+use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 
 trait Comparison
 {
@@ -12,7 +12,7 @@ trait Comparison
      */
     final public function equals(self|string ...$equals): bool
     {
-        return (new MultiEnumMethods(self::class, $this))
+        return (new EnumSubsetMethods(self::class, $this))
             ->equals(...$equals);
     }
 
