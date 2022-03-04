@@ -73,6 +73,17 @@ YourEnum::of(
     yourEnum::MY_OTHER_ENUM
 )->values(); // will return ['my_enum', 'my_other_enum']
 ```
+
+### cases
+This method returns the all the cases of the specified subset.
+
+```php
+YourEnum::of(
+    yourEnum::MY_ENUM, 
+    yourEnum::MY_OTHER_ENUM
+)->cases(); // will return [yourEnum::MY_ENUM, yourEnum::MY_OTHER_ENUM]
+```
+
 ### do
 This method allows you call a closure on each item in the subset. 
 
