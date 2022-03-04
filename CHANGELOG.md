@@ -2,6 +2,10 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.4.1 - 2022-03-04
+
+- added `cases` method to `Subset`
+
 ## 1.4.0 - 2022-03-02
 
 - Renamed Multi to Subset

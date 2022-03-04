@@ -15,4 +15,6 @@ interface EnumSubset
     public function names(): array;
 
     public function values(): array;
+
+    public function cases(): array;
 }

@@ -72,4 +72,9 @@ class EnumSubsetMethods implements EnumSubset
             fn(mixed $enum) => $enum->value ?? $enum->value(), $this->enums
         );
     }
+
+    public function cases(): array
+    {
+        return $this->enums;
+    }
 }

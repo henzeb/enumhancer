@@ -15,4 +15,5 @@ enum EnhancedUnitEnum
 
     case ENUM;
     case ANOTHER_ENUM;
+    case THIRD_ENUM;
 }

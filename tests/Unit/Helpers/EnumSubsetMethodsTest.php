@@ -90,6 +90,26 @@ class EnumSubsetMethodsTest extends TestCase
         $this->assertEquals(EnhancedUnitEnum::cases(), $enums);
     }
 
+    public function providesTestCasesForReturningSubsetOfCases(): array
+    {
+        return [
+            [[EnhancedUnitEnum::ENUM]],
+            [[EnhancedUnitEnum::ENUM, EnhancedUnitEnum::THIRD_ENUM]]
+        ];
+    }
+
+    /**
+     * @return void
+     * @dataProvider providesTestCasesForReturningSubsetOfCases
+     */
+    public function testCasesShouldReturnSubsetOfCases(array $cases)
+    {
+        $this->assertEquals(
+            $cases,
+            (new EnumSubsetMethods(EnhancedUnitEnum::class, ...$cases))->cases()
+        );
+    }
+
     private function getNames(array $cases): array
     {
         return array_map(fn($enum) => $enum->name, $cases);
