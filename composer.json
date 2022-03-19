@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Henzeb\\Enumhancer\\": "src"
+            "Henzeb\\Enumhancer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Henzeb\\Enumhancer\\Tests\\": "tests"
+            "Henzeb\\Enumhancer\\Tests\\": "tests/"
         }
     },
     "scripts": {

@@ -20,7 +20,7 @@ class EnumSubsetMethods implements EnumSubset
 
     public function do(Closure $callable): void
     {
-        foreach($this->enums as $enum) {
+        foreach ($this->enums as $enum) {
             $callable($enum);
         }
     }
@@ -69,7 +69,11 @@ class EnumSubsetMethods implements EnumSubset
     public function values(): array
     {
         return array_map(
-            fn(mixed $enum) => $enum->value ?? $enum->value(), $this->enums
+            fn(mixed $enum) => (
+                $enum->value
+                ?? (method_exists($enum, 'value') ? $enum->value() : null)
+                ?? $enum->name
+            ), $this->enums
         );
     }
 

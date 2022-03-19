@@ -2,9 +2,9 @@
 
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
-use Henzeb\Enumhancer\Concerns\Constructor;
-use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Contracts\Mapper;
+use Henzeb\Enumhancer\Concerns\Enhancers;
+use Henzeb\Enumhancer\Concerns\Constructor;
 
 /**
  * @method static self anotherMappedEnum()
@@ -20,14 +20,13 @@ enum EnhancedBackedEnum: string
     protected function labels(): array
     {
         return [
-            'ENUM'=>'My label'
+            'ENUM' => 'My label'
         ];
     }
 
     protected static function mapper(): ?Mapper
     {
-        return new class extends Mapper
-        {
+        return new class extends Mapper {
             protected function mappable(): array
             {
                 return [

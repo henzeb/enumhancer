@@ -4,6 +4,7 @@ namespace Unit\Helpers;
 
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedMakersEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
@@ -78,6 +79,15 @@ class EnumSubsetMethodsTest extends TestCase
         );
     }
 
+    public function testValueShouldReturnArrayOfValuesUnitEnumsWithoutValue()
+    {
+        $this->assertEquals(
+            $this->getValues(SubsetUnitEnum::cases()),
+            (new EnumSubsetMethods(SubsetUnitEnum::class, ...SubsetUnitEnum::cases()))
+                ->values()
+        );
+    }
+
     public function testShouldRunClosureOnArrayOfEnums()
     {
         $enums = [];
@@ -117,6 +127,6 @@ class EnumSubsetMethodsTest extends TestCase
 
     private function getValues(array $cases): array
     {
-        return array_map(fn($enum) => $enum->value ?? $enum->value(), $cases);
+        return array_map(fn($enum) => $enum->value ?? (method_exists($enum, 'value')?$enum->value():null) ?? $enum->name, $cases);
     }
 }
