@@ -3,7 +3,13 @@
     "description": "Enrich your enums with common functionality",
     "keywords": [
         "henzeb",
-        "enumhancer"
+        "enumhancer",
+        "enums",
+        "enum",
+        "enumerators",
+        "enumerator",
+        "mappers",
+        "comparison"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
     "license": "AGPL-3.0-only",

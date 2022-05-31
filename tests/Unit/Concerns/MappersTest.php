@@ -149,7 +149,7 @@ class MappersTest extends TestCase
     public function testMakeArrayShouldThrowErrorWitMapper()
     {
         $this->expectError();
-        EnhancedBackedEnum::makeArray(['ENUM','doesNotExist'], $this->getMapper());
+        EnhancedBackedEnum::makeArray(['ENUM', 'doesNotExist'], $this->getMapper());
     }
 
     public function testTryMakeArrayShouldWorkWithoutMapper()
@@ -169,7 +169,7 @@ class MappersTest extends TestCase
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::tryMakeArray(['mappedEnum','DoesNotExist'], $this->getMapper())
+            EnhancedBackedEnum::tryMakeArray(['mappedEnum', 'DoesNotExist'], $this->getMapper())
         );
     }
 
@@ -181,10 +181,39 @@ class MappersTest extends TestCase
         );
     }
 
-    public function testShouldUseMapperWhenConstructorIsUsed() {
+    public function testShouldUseMapperWhenConstructorIsUsed()
+    {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
             EnhancedBackedEnum::anotherMappedEnum()
         );
     }
+
+    public function testShouldExtractWithDefaultMappedKey()
+    {
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::extract('This text contains anotherMappedEnum for you')
+        );
+    }
+
+    public function testShouldExtractWithMappedKey()
+    {
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::extract('This text contains mappedEnum for you', $this->getMapper())
+        );
+    }
+
+    public function testShouldExtractWithMappedKeyAndDefaultMappedKey()
+    {
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM, EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::extract(
+                'This text contains mappedEnum and anotherMappedEnum for you',
+                $this->getMapper()
+            )
+        );
+    }
+
 }

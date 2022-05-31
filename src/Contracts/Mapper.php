@@ -14,7 +14,7 @@ abstract class Mapper
             return null;
         }
 
-        if(empty($value)) {
+        if (empty($value)) {
             return null;
         }
 
@@ -39,5 +39,23 @@ abstract class Mapper
     public function defined(string $key, string $prefix = null): bool
     {
         return (bool)$this->map($key, $prefix);
+    }
+
+    public function keys(string $prefix = null): array
+    {
+        $mappable = $this->mappable();
+
+        return array_merge(
+            array_keys(
+
+                array_filter(
+                    $mappable,
+                    function ($value) {
+                        return !is_array($value);
+                    }
+                ),
+            ),
+            is_array($mappable[$prefix] ?? null) ? $mappable[$prefix] : []
+        );
     }
 }

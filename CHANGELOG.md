@@ -2,6 +2,10 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.5.0 - 2022-05-31
+- added `Extractor` to extract enums from a string mentioned by value
+- some documentation repairs
+
 ## 1.4.1 - 2022-03-04
 
 - added `cases` method to `Subset`
@@ -15,7 +19,7 @@ All notable changes to `Enumhancer` will be documented in this file
 
 ## 1.3.0 - 2022-02-28
 
-- added Multi. Currently allows you to compare against a subset of your enum.
+- added Multi. Currently allows you to compare against a subset of your enum
 
 ## 1.2.0 - 2022-02-26
 

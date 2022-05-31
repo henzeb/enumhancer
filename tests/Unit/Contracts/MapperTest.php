@@ -151,5 +151,20 @@ class MapperTest extends TestCase
         );
     }
 
+    public function testReturnsKeys()
+    {
+        $this->assertEquals(
+            $this->getMapper(['defined' => 'this is defined'])->keys(),
+            ['defined']
+        );
+    }
+
+    public function testReturnsKeysWithPrefix()
+    {
+        $this->assertEquals(
+            $this->getMapper(['defined' => 'this is defined', 'a_prefix'=>['prefixed_key']])->keys('a_prefix'),
+            ['defined', 'prefixed_key']
+        );
+    }
 
 }

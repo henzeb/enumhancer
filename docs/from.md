@@ -1,9 +1,9 @@
 # From
 
-The methods `from` and `tryFrom` do not exist on non-backed enums. When you have 
-a non-backed enum where the string value is exactly the same as it's key, but 
-you need `from` or `tryFrom` because of some library (like Laravel's validation), 
-this might be useful.
+The methods `from` and `tryFrom` do not exist on non-backed enums. When you 
+have a non-backed enum where the string value is exactly the same as it's key,
+but you need `from` or `tryFrom` because of some library (like Laravel's 
+validation), this might be useful.
 
 ## Usage
 

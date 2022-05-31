@@ -6,11 +6,13 @@ use BackedEnum;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumMapper;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
+use Henzeb\Enumhancer\Helpers\EnumExtractor;
 
 trait Mappers
 {
-    protected static function reporter():?Reporter
+    protected static function reporter(): ?Reporter
     {
         return EnumReporter::get();
     }
@@ -20,62 +22,56 @@ trait Mappers
         return null;
     }
 
-    private static function map(string|int|null $value, Mapper|string $mapper = null): ?string
-    {
-        if(null === $value) {
-            return null;
-        }
-
-        $value = ($mapper) ?
-            $mapper->map($value, static::class) ?? $value
-            : $value;
-
-        return ($mapper = self::mapper()) ?
-            $mapper->map($value, static::class) ?? $value
-            : $value;
-    }
-
     final public static function make(string|int|null $value, Mapper|string $mapper = null): self
     {
-        return EnumMakers::make(self::class, self::map($value, $mapper));
+        return EnumMakers::make(self::class, EnumMapper::map($value, $mapper, self::mapper()));
     }
 
     final public static function tryMake(string|int|null $value, Mapper|string $mapper = null): ?self
     {
-        return EnumMakers::tryMake(self::class, self::map($value, $mapper));
+        return EnumMakers::tryMake(self::class, EnumMapper::map($value, $mapper, self::mapper()));
     }
 
     final public static function makeArray(iterable $values, Mapper|string $mapper = null): array
     {
-        $mapped = [];
-        foreach($values as $value) {
-            $mapped[] = self::map($value, $mapper);
-        }
-        return EnumMakers::makeArray(self::class, $mapped);
+
+        return EnumMakers::makeArray(
+            self::class,
+            EnumMapper::mapArray($values, $mapper, self::mapper())
+        );
     }
 
     final public static function tryMakeArray(iterable $values, Mapper|string $mapper = null): array
     {
-        $mapped = [];
-        foreach($values as $value) {
-            $mapped[] = self::map($value, $mapper);
-        }
-        return EnumMakers::tryMakeArray(self::class, $mapped);
+        return EnumMakers::tryMakeArray(
+            self::class,
+            EnumMapper::mapArray($values, $mapper, self::mapper())
+        );
     }
 
-    final public static function makeOrReport(int|string|null $values, BackedEnum $context = null, Mapper $mapper = null): ?self
+    final public static function makeOrReport(int|string|null $value, BackedEnum $context = null, Mapper|string $mapper = null): ?self
     {
-        return EnumReporter::makeOrReport(self::class, self::map($values, $mapper), $context, self::reporter());
+        return EnumReporter::makeOrReport(self::class, EnumMapper::map($value, $mapper, self::mapper()), $context, self::reporter());
     }
 
-    public static function makeOrReportArray(iterable $values, BackedEnum $context = null, Mapper $mapper = null): array
+    public static function makeOrReportArray(iterable $values, BackedEnum $context = null, Mapper|string $mapper = null): array
     {
-        $mapped = [];
-        foreach($values as $value) {
-            $mapped[] = self::map($value, $mapper);
-        }
-
-        return EnumReporter::makeOrReportArray(self::class, $mapped, $context, self::reporter());
+        return EnumReporter::makeOrReportArray(
+            self::class,
+            EnumMapper::mapArray($values, $mapper, self::mapper()),
+            $context,
+            self::reporter()
+        );
     }
 
+    public static function extract(string $text, Mapper|string $mapper = null): array
+    {
+        $mappers = array_filter(
+            [
+                is_string($mapper) ? new $mapper() : $mapper, self::mapper()
+            ]
+        );
+
+        return EnumExtractor::extract(self::class, $text, ...$mappers);
+    }
 }

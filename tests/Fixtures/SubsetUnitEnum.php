@@ -3,10 +3,11 @@
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
 use Henzeb\Enumhancer\Concerns\Subset;
+use Henzeb\Enumhancer\Concerns\Extractor;
 
 enum SubsetUnitEnum
 {
-    use Subset;
+    use Subset, Extractor;
 
     case ENUM;
     case ANOTHER_ENUM;
