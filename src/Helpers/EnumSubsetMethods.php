@@ -25,7 +25,7 @@ class EnumSubsetMethods implements EnumSubset
         }
     }
 
-    public function equals(string|UnitEnum|BackedEnum ...$equals): bool
+    public function equals(UnitEnum|string|int ...$equals): bool
     {
         EnumCheck::matches($this->enumType, ...$equals);
 
@@ -39,7 +39,7 @@ class EnumSubsetMethods implements EnumSubset
         return false;
     }
 
-    private function compare(UnitEnum|BackedEnum $enum, string|UnitEnum|BackedEnum ...$equals): bool
+    private function compare(UnitEnum $enum, UnitEnum|string|int ...$equals): bool
     {
         foreach ($equals as $equal) {
             if ($enum->name === $equal) {
@@ -54,7 +54,7 @@ class EnumSubsetMethods implements EnumSubset
                 return true;
             }
 
-            if (property_exists($equal, 'name') && $enum->name === $equal->name) {
+            if ($equal instanceof UnitEnum && $enum->name === $equal->name) {
                 return true;
             }
         }

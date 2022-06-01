@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\IntBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 
 class EnumSubsetMethodsTest extends TestCase
@@ -15,39 +15,39 @@ class EnumSubsetMethodsTest extends TestCase
     public function testShouldThrowErrorWithWrongEnumType(): void
     {
         $this->expectError();
-        (new EnumSubsetMethods(IntBackedMakersEnum::class, EnhancedUnitEnum::ENUM));
+        (new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
     }
 
 
     public function testEqualsShouldReturnNullWhenNoEnumsPassed()
     {
         $this->assertFalse(
-            (new EnumSubsetMethods(IntBackedMakersEnum::class))
-                ->equals(IntBackedMakersEnum::TEST)
+            (new EnumSubsetMethods(IntBackedEnum::class))
+                ->equals(IntBackedEnum::TEST)
         );
     }
 
     public function testEqualsShouldReturnTrue()
     {
         $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedMakersEnum::class, IntBackedMakersEnum::TEST))
-                ->equals(IntBackedMakersEnum::TEST)
+            (new EnumSubsetMethods(IntBackedEnum::class, IntBackedEnum::TEST))
+                ->equals(IntBackedEnum::TEST)
         );
     }
 
     public function testEqualsMultiShouldReturnTrue()
     {
         $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedMakersEnum::class, ...IntBackedMakersEnum::cases()))
-                ->equals(IntBackedMakersEnum::TEST)
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+                ->equals(IntBackedEnum::TEST)
         );
     }
 
     public function testNamesShouldReturnArrayOfNames()
     {
         $this->assertEquals(
-            $this->getNames(IntBackedMakersEnum::cases()),
-            (new EnumSubsetMethods(IntBackedMakersEnum::class, ...IntBackedMakersEnum::cases()))
+            $this->getNames(IntBackedEnum::cases()),
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->names()
         );
     }
@@ -64,8 +64,8 @@ class EnumSubsetMethodsTest extends TestCase
     public function testValueShouldReturnArrayOfValuesIntBacked()
     {
         $this->assertEquals(
-            $this->getValues(IntBackedMakersEnum::cases()),
-            (new EnumSubsetMethods(IntBackedMakersEnum::class, ...IntBackedMakersEnum::cases()))
+            $this->getValues(IntBackedEnum::cases()),
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->values()
         );
     }

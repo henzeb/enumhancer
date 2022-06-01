@@ -10,7 +10,7 @@ trait Comparison
     /**
      * @mixin BackedEnum
      */
-    final public function equals(self|string ...$equals): bool
+    final public function equals(self|string|int ...$equals): bool
     {
         return (new EnumSubsetMethods(self::class, $this))
             ->equals(...$equals);

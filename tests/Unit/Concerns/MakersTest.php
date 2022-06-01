@@ -4,7 +4,7 @@ namespace Henzeb\Tests\Unit\Concerns;
 
 
 use Generator;
-use Henzeb\Enumhancer\Tests\Fixtures\IntBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -58,8 +58,8 @@ class MakersTest extends TestCase
     public function testMakeByValueOnIntbackedEnum()
     {
         $this->assertEquals(
-            IntBackedMakersEnum::TEST,
-            IntBackedMakersEnum::make(0)
+            IntBackedEnum::TEST,
+            IntBackedEnum::make(0)
         );
     }
 
@@ -89,8 +89,8 @@ class MakersTest extends TestCase
     public function testTryMakeByValueOnIntbackedEnum()
     {
         $this->assertEquals(
-            IntBackedMakersEnum::TEST,
-            IntBackedMakersEnum::tryMake(0)
+            IntBackedEnum::TEST,
+            IntBackedEnum::tryMake(0)
         );
     }
 
