@@ -59,6 +59,17 @@ class ExtractorTest extends TestCase
         );
     }
 
+    public function testShouldNotMatchPartsOfWords()
+    {
+        $this->assertEquals(
+            [
+                ExtractBackedEnum::AN_ENUM,
+                ExtractBackedEnum::AN_ENUM
+            ],
+            ExtractBackedEnum::extract('an enums An ENUM an enum')
+        );
+    }
+
     public function testExtractionWithUnitEnum()
     {
         $this->assertEquals(

@@ -31,13 +31,13 @@ class EnumExtractor
         );
 
         $match = implode(
-            '|',
+            '\b|\b',
             array_merge(
                 $match,
                 ...array_map(fn(Mapper $map) => $map->keys($class), $mappers)
             ));
 
-        preg_match_all(sprintf('/%s/i', $match), $text, $matches);
+        preg_match_all(sprintf('/\b%s\b/i', $match), $text, $matches);
 
         $matches = array_map(fn($value) => EnumMapper::map($value, ...$mappers), $matches[0] ?? []);
 
