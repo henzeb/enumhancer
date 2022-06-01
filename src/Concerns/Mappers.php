@@ -66,12 +66,6 @@ trait Mappers
 
     public static function extract(string $text, Mapper|string $mapper = null): array
     {
-        $mappers = array_filter(
-            [
-                is_string($mapper) ? new $mapper() : $mapper, self::mapper()
-            ]
-        );
-
-        return EnumExtractor::extract(self::class, $text, ...$mappers);
+        return EnumExtractor::extract(self::class, $text, $mapper, self::mapper());
     }
 }

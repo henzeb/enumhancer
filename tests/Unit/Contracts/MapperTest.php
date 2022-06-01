@@ -162,8 +162,22 @@ class MapperTest extends TestCase
     public function testReturnsKeysWithPrefix()
     {
         $this->assertEquals(
-            $this->getMapper(['defined' => 'this is defined', 'a_prefix'=>['prefixed_key']])->keys('a_prefix'),
+            $this->getMapper(['defined' => 'this is defined', 'a_prefix'=>['prefixed_key'=>'a_value']])->keys('a_prefix'),
             ['defined', 'prefixed_key']
+        );
+    }
+
+    public function testShouldBeCaseAgnosticWithPrefix() {
+        $this->assertEquals(
+            $this->getMapper(['defined' => 'this is defined', 'a_prefix'=>['prefixed_key'=>'value']])->map('PREFIXED_KEY', 'a_prefix'),
+            'value'
+        );
+    }
+
+    public function testShouldBeCaseAgnostic() {
+        $this->assertEquals(
+            $this->getMapper(['defined' => 'this is defined', 'a_prefix'=>['prefixed_key'=>'value']])->map('DEfined'),
+            'this is defined'
         );
     }
 

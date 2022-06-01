@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use RuntimeException;
 use Henzeb\Enumhancer\Contracts\Mapper;
 
 class EnumMapper
@@ -12,8 +13,9 @@ class EnumMapper
             return null;
         }
 
-        foreach (array_filter($mappers) as $mapper) {
-            $mapper = is_string($mapper) ? new $mapper() : $mapper;
+        $mappers = self::sanitizeMapperArray(...$mappers);
+
+        foreach ($mappers as $mapper) {
             $value = $mapper->map($value, static::class) ?? $value;
         }
 
@@ -29,5 +31,29 @@ class EnumMapper
         }
 
         return $mapped;
+    }
+
+    public static function sanitizeMapperArray(Mapper|string|null ...$mappers): array
+    {
+        return
+            array_map(
+                function (Mapper|string $mapper) {
+
+                    if (is_string($mapper)) {
+                        $mapper = new $mapper;
+                    }
+
+                    if (!$mapper instanceof Mapper) {
+                        throw new RuntimeException(
+                            sprintf('object of type \'%s\' expected, got \'%s\'',
+                                Mapper::class,
+                                $mapper::class
+                            )
+                        );
+                    }
+                    return $mapper;
+                },
+                array_filter($mappers)
+        );
     }
 }

@@ -10,10 +10,11 @@ class EnumExtractor
 {
     use Mappers;
 
-    public static function extract(string $class, string $text, Mapper ...$mappers): array
+    public static function extract(string $class, string $text, Mapper|string|null ...$mappers): array
     {
         EnumCheck::check($class);
 
+        $mappers = EnumMapper::sanitizeMapperArray(...$mappers);
         /**
          * @var $class UnitEnum|string
          */

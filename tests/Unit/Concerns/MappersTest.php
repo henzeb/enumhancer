@@ -45,6 +45,20 @@ class MappersTest extends TestCase
         );
     }
 
+    public function testMakeShouldMapWithStringMap()
+    {
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::make('mappedEnum', $this->getMapper()::class)
+        );
+    }
+
+    public function testMakeShouldThrowExceptionForNonMap()
+    {
+            $this->expectException(\RuntimeException::class);
+            EnhancedBackedEnum::make('mappedEnum', self::class);
+    }
+
     public function testMakeShouldNotMapWhenNull()
     {
         $this->expectError();

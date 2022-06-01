@@ -33,7 +33,9 @@ abstract class Mapper
     {
         return $this->parse(
             $this->mappable()[$prefix][$key] ??
-            $this->mappable()[$key] ?? null);
+            $this->mappable()[$prefix][strtolower($key)] ??
+            $this->mappable()[$key] ??
+            $this->mappable()[strtolower($key)] ?? null);
     }
 
     public function defined(string $key, string $prefix = null): bool
@@ -55,7 +57,7 @@ abstract class Mapper
                     }
                 ),
             ),
-            is_array($mappable[$prefix] ?? null) ? $mappable[$prefix] : []
+            is_array($mappable[$prefix] ?? null) ? array_keys($mappable[$prefix]) : []
         );
     }
 }
