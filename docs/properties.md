@@ -34,7 +34,7 @@ YourEnum::property('your_property'); // will return callable
 YourEnum::property('your_property', new stdClass());
 YourEnum::property('your_property'); // will return stdClass() instance
 
-YourEnum::unset('your_property'); // will remove you_property
+YourEnum::unset('your_property'); // will remove your_property
 YourEnum::unsetAll(); // will clear all properties.
 ```
 

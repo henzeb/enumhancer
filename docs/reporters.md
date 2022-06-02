@@ -1,7 +1,7 @@
 # Reporters
 
 Sometimes you don't want your code to fail, yet you want to know when an 
-enum is tried to be instantiated, but failed. This allow you to do so.
+enum is tried to be instantiated, but failed. This allows you to do so.
 
 ## usage
 ```php

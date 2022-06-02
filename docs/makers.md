@@ -4,6 +4,10 @@ you cannot use them to create `enum objects` with the name of the `enum`.
 
 This allows you to do so.
 
+Note: the name `make` is chosen because of Spatie, who started using them 
+and never moved away from them. So this is also backwards compatible with 
+[Spatie's PHP Enum](https://github.com/spatie/enum)
+
 ## Usage
 ```php
 use Henzeb\Enumhancer\Concerns\Makers;

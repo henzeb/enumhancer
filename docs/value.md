@@ -1,6 +1,6 @@
 # Value
 
-When you have a unit enum, you have no value. You have to use the `name` value. But what if you
+When you have a UnitEnum you have no value. You have to use the `name` value. But what if you
 want to have the lowercase version of that name? That's where `Value` comes in.
 
 ## Usage

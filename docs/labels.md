@@ -1,7 +1,8 @@
 # Labels
 
-Just like [Spatie's PHP Enum](https://github.com/spatie/enum), you can add labels to your enums. This is backwards
-compatible with their package.
+Just like [Spatie's PHP Enum](https://github.com/spatie/enum), you can add labels to 
+your enums. This is largely backwards compatible with their package, except that it
+also works for UnitEnum's in which case it returns the name if not specified.
 
 ## Usage
 
@@ -26,5 +27,5 @@ enum YourEnum {
 ### Examples
 ```php
 YourEnum::ENUM->label(); // will return 'Your label'
-YourEnum::NO_LABEL->label(); // will return null;
+YourEnum::NO_LABEL->label(); // will return 'NO_LABEL';
 ```

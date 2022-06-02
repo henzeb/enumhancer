@@ -23,8 +23,8 @@ class LabelsTest extends TestCase
         $this->assertEquals('My label', EnhancedBackedEnum::ENUM->label());
     }
 
-    public function testShouldGetNameWhenLabelDoesNotExist()
+    public function testShouldGetValueWhenLabelDoesNotExist()
     {
-        $this->assertEquals('ANOTHER_ENUM', EnhancedBackedEnum::ANOTHER_ENUM->label());
+        $this->assertEquals('another enum', EnhancedBackedEnum::ANOTHER_ENUM->label());
     }
 }

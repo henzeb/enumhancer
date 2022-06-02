@@ -16,6 +16,13 @@ enum YourEnum: string {
     case ENUM = 'enum';
     case ENUM2 = 'another enum';
 }
+
+enum YourOtherEnum: int {
+    use Extractor;
+    
+    case ENUM = 0;
+    case ENUM2 = 1;
+}
 ```
 
 ### Examples
@@ -23,7 +30,13 @@ enum YourEnum: string {
 YourEnum::extract('you can find another enum here'); // returns [YourEnum::ENUM2]
 YourEnum::extract('A lot of text with (enum)'); // returns [YourEnum::ENUM]
 YourEnum::extract('another enum (enum)'); // returns [YourEnum::ENUM2, YourEnum::ENUM]
-YourEnum::extract('extact case sensitive another ENUM') // returns [YourEnum::ENUM2];
+YourEnum::extract('extract case sensitive another ENUM') // returns [YourEnum::ENUM2];
+YourEnum::extract('contains multiple enums') // returns [];
+
+YourOtherEnum::extract('I found 1 truth'); // returns [YourOtherEnum::ENUM2]
+YourOtherEnum::extract('I found 1 truth and 0 lies'); // returns [YourOtherEnum::ENUM2, YourOtherEnum::ENUM]
+YourOtherEnum::extract('I found 100 lies'); // returns []
 ```
 
-Note: You can use `Mappers`
+Note: You can use `Mappers` in combination with `Extractor`. This might be helpful
+when the source has multiple or different notations of your enum cases.

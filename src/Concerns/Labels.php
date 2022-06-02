@@ -11,6 +11,9 @@ trait Labels
 
     final public function label(): ?string
     {
-        return $this->labels()[$this->name] ?? $this->name;
+        return $this->labels()[$this->name]
+            ?? (method_exists($this, 'value') ? $this->value() : null)
+            ?? $this->value
+            ?? $this->name;
     }
 }
