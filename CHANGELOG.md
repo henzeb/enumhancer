@@ -2,6 +2,9 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.6.0 - 2022-06-04
+- added Eloquent Casting support for basic enumerations.
+
 ## 1.5.0 - 2022-05-31
 - added `Extractor` to extract enums from a string mentioned by value
 - some documentation repairs
@@ -23,11 +26,11 @@ All notable changes to `Enumhancer` will be documented in this file
 
 ## 1.2.0 - 2022-02-26
 
-- added Value (for use with unit enums)
+- added Value (for use with basic enums)
 
 ## 1.1.0 - 2022-02-25
 
-- added From. Useful for situations where you need them with non-backed enums
+- added From. Useful for situations where you need them with basic enums
 
 ## 1.0.2 - 2022-02-16
 

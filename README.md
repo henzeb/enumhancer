@@ -23,7 +23,14 @@ This package currently supports the following:
 - Properties
 - Reporting (Logging)
 - Subset
-- Value (for unit enums)
+- Value (for basic enums)
+
+Laravel specific features:
+- Casting (Laravel Specific)
+
+Note: While functionality that also exists in Spatie's PHP Enum is made backwards 
+compatible to allow for an easy migration to PHP native enums, currently this is 
+not the case for the PHPUnit assertions or Faker Provider.
 
 While functionality that also exists in Spatie's PHP Enum is made backwards 
 compatible to allow for an easy migration to PHP native enums, currently this is 
@@ -57,7 +64,7 @@ for that functionality.
 Note: all traits can be used next to each other, except for `Mappers`, which has 
 implemented the methods of `Makers`, `Extractor` and `Reporters`.
 
-### Functionality
+### Features
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
 - [Extractor](docs/extractor.md)
@@ -70,7 +77,11 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 - [Subset](docs/subset.md)
 - [Value](docs/value.md)
 
-### Laravel
+### Laravel specific Features
+
+- [Casting](docs/casting.md)
+
+### Laravel's auto-discovery
 When you are installing this package into a laravel project, Enumhancer will
 automatically set the global `Reporter` for the `makeOrReport` methods, so that
 it will use Laravel's `Log` facade.

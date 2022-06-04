@@ -64,8 +64,7 @@ YourEnum::of(
 ```
 
 ### values
-This method returns an array of values of the specified subset. 
-This uses the [Value](value.md) trait, when enum is a `UnitEnum`.
+This method returns an array of values of the specified subset.
 
 ```php
 YourEnum::of(

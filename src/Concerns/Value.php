@@ -2,10 +2,12 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
+use Henzeb\Enumhancer\Helpers\EnumValue;
+
 trait Value
 {
     final public function value(): string|int
     {
-        return $this->value ?? strtolower($this->name);
+        return EnumValue::value($this);
     }
 }
