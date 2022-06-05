@@ -39,7 +39,7 @@ class EnumExtractor
 
         preg_match_all(sprintf('/\b%s\b/i', $match), $text, $matches);
 
-        $matches = array_map(fn($value) => EnumMapper::map($value, ...$mappers), $matches[0] ?? []);
+        $matches = array_map(fn($value) => EnumMapper::map($class, $value, ...$mappers), $matches[0] ?? []);
 
         return EnumMakers::makeArray($class, $matches);
     }

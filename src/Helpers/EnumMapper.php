@@ -7,8 +7,10 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 
 class EnumMapper
 {
-    public static function map(string|int|null $value, Mapper|string|null ...$mappers): ?string
+    public static function map(string $enum, string|int|null $value, Mapper|string|null ...$mappers): ?string
     {
+        EnumCheck::check($enum);
+
         if (null === $value) {
             return null;
         }
@@ -16,18 +18,18 @@ class EnumMapper
         $mappers = self::sanitizeMapperArray(...$mappers);
 
         foreach ($mappers as $mapper) {
-            $value = $mapper->map($value, static::class) ?? $value;
+            $value = $mapper->map($value, $enum) ?? $value;
         }
 
         return $value;
     }
 
-    public static function mapArray(iterable $values, Mapper|string|null ...$mappers): array
+    public static function mapArray(string $enum, iterable $values, Mapper|string|null ...$mappers): array
     {
         $mapped = [];
 
         foreach ($values as $value) {
-            $mapped[] = EnumMapper::map($value, ...$mappers);
+            $mapped[] = EnumMapper::map($enum, $value, ...$mappers);
         }
 
         return $mapped;

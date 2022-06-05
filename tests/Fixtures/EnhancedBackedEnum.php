@@ -7,6 +7,7 @@ use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Concerns\Constructor;
 
 /**
+ * @EnhancedBackedEnum
  * @method static self anotherMappedEnum()
  */
 enum EnhancedBackedEnum: string

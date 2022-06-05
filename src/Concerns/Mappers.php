@@ -24,12 +24,18 @@ trait Mappers
 
     final public static function make(string|int|null $value, Mapper|string $mapper = null): self
     {
-        return EnumMakers::make(self::class, EnumMapper::map($value, $mapper, self::mapper()));
+        return EnumMakers::make(
+            self::class,
+            EnumMapper::map(self::class, $value, $mapper, self::mapper())
+        );
     }
 
     final public static function tryMake(string|int|null $value, Mapper|string $mapper = null): ?self
     {
-        return EnumMakers::tryMake(self::class, EnumMapper::map($value, $mapper, self::mapper()));
+        return EnumMakers::tryMake(
+            self::class,
+            EnumMapper::map(self::class, $value, $mapper, self::mapper())
+        );
     }
 
     final public static function makeArray(iterable $values, Mapper|string $mapper = null): array
@@ -37,7 +43,7 @@ trait Mappers
 
         return EnumMakers::makeArray(
             self::class,
-            EnumMapper::mapArray($values, $mapper, self::mapper())
+            EnumMapper::mapArray(self::class, $values, $mapper, self::mapper())
         );
     }
 
@@ -45,20 +51,33 @@ trait Mappers
     {
         return EnumMakers::tryMakeArray(
             self::class,
-            EnumMapper::mapArray($values, $mapper, self::mapper())
+            EnumMapper::mapArray(self::class, $values, $mapper, self::mapper())
         );
     }
 
-    final public static function makeOrReport(int|string|null $value, BackedEnum $context = null, Mapper|string $mapper = null): ?self
+    final public static function makeOrReport(
+        int|string|null $value,
+        BackedEnum      $context = null,
+        Mapper|string   $mapper = null
+    ): ?self
     {
-        return EnumReporter::makeOrReport(self::class, EnumMapper::map($value, $mapper, self::mapper()), $context, self::reporter());
+        return EnumReporter::makeOrReport(
+            self::class,
+            EnumMapper::map(self::class, $value, $mapper, self::mapper()),
+            $context,
+            self::reporter()
+        );
     }
 
-    public static function makeOrReportArray(iterable $values, BackedEnum $context = null, Mapper|string $mapper = null): array
+    public static function makeOrReportArray(
+        iterable      $values,
+        BackedEnum    $context = null,
+        Mapper|string $mapper = null
+    ): array
     {
         return EnumReporter::makeOrReportArray(
             self::class,
-            EnumMapper::mapArray($values, $mapper, self::mapper()),
+            EnumMapper::mapArray(self::class, $values, $mapper, self::mapper()),
             $context,
             self::reporter()
         );
