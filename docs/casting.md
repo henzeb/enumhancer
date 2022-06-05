@@ -24,5 +24,19 @@ class YourModel extends Model
 
 ```
 ### Lowercase values
-By default, it will use of the basic enumeration as the value. If you want the 
-lowercase variant, you can add the `$keepEnumCase` property and set it to false. 
+By default, it will use the name of the basic enumeration as the value. If you want 
+the lowercase variant, you can add the `$keepEnumCase` property and set it to false. 
+
+```php
+class YourModel extends Model 
+{
+    use CastsBasicEnumerations;
+    
+    private $keepEnumCase = false;
+    
+    $casts = [
+        'column' => YourEnum::class
+    ];
+}
+
+```

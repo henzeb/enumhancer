@@ -9,7 +9,7 @@ class CastsBasicEnumsLowerCaseModel extends Model
 {
     use CastsBasicEnumerations;
 
-    protected $keepEnumCase = false;
+    private $keepEnumCase = false;
 
     protected $casts = [
         'unitEnum' => SubsetUnitEnum::class,

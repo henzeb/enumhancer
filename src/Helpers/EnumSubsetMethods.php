@@ -46,15 +46,15 @@ class EnumSubsetMethods implements EnumSubset
                 return true;
             }
 
-            if (property_exists($enum, 'value') && $enum->value === $equal) {
-                return true;
+            if(is_object($equal)) {
+                $equal = EnumValue::value($equal);
             }
 
-            if (method_exists($enum, 'value') && $enum->value() === $equal) {
-                return true;
+            if(is_string($equal)) {
+                $equal = strtolower($equal);
             }
 
-            if ($equal instanceof UnitEnum && $enum->name === $equal->name) {
+            if(EnumValue::value($enum) === $equal) {
                 return true;
             }
         }

@@ -5,6 +5,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 use Henzeb\Enumhancer\Concerns\Comparison;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 
@@ -81,6 +82,18 @@ class ComparisonTest extends TestCase
     public function testShouldMatchWithUnitEnumValue() {
         $this->assertTrue(
             EnhancedUnitEnum::ENUM->equals('enum')
+        );
+    }
+
+    public function testShouldMatchWithUnitEnumValue2() {
+        $this->assertTrue(
+            EnhancedUnitEnum::ENUM->equals('Enum')
+        );
+    }
+
+    public function testShouldMatchWithUnitEnumValueWithoutValueMethod() {
+        $this->assertTrue(
+            SubsetUnitEnum::ENUM->equals('enum')
         );
     }
 
