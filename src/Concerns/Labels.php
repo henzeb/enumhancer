@@ -4,14 +4,14 @@ namespace Henzeb\Enumhancer\Concerns;
 
 trait Labels
 {
-    public function labels(): array
+    public static function labels(): array
     {
         return [];
     }
 
     final public function label(): ?string
     {
-        return $this->labels()[$this->name]
+        return self::labels()[$this->name]
             ?? (method_exists($this, 'value') ? $this->value() : null)
             ?? $this->value
             ?? $this->name;

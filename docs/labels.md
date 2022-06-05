@@ -15,7 +15,7 @@ enum YourEnum {
     case ENUM;
     case NO_LABEL;
     
-    public function labels(): array
+    public static function labels(): array
     {
         return [
             'ENUM' => 'Your label';
