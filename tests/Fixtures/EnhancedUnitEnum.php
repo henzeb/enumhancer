@@ -7,6 +7,9 @@ use Henzeb\Enumhancer\Concerns\Constructor;
 
 /**
  * @method static self anotherMappedEnum()
+ * @method isAnother_Enum()
+ * @method isEnum()
+ * @method isNotEnum()
  */
 enum EnhancedUnitEnum
 {

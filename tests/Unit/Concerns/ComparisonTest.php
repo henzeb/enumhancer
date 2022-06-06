@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use BadMethodCallException;
 use Henzeb\Enumhancer\Concerns\Comparison;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
@@ -107,5 +108,69 @@ class ComparisonTest extends TestCase
         $this->assertFalse(
             IntBackedEnum::TEST->equals(1)
         );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunction() {
+        $this->assertTrue(
+            IntBackedEnum::TEST->isTest()
+        );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunctionIsNot() {
+        $this->assertTrue(
+            IntBackedEnum::TEST_2->isNotTest()
+        );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunctionWithValue() {
+        $this->assertTrue(
+            IntBackedEnum::TEST->is0()
+        );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunctionWithValueIsNot() {
+        $this->assertTrue(
+            IntBackedEnum::TEST_2->isNot0()
+        );
+    }
+
+    public function testShouldReturnFalseUsingMagicFunction() {
+        $this->assertFalse(
+            IntBackedEnum::TEST->isTest_2()
+        );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunctionBasic() {
+        $this->assertTrue(
+            EnhancedUnitEnum::ENUM->isEnum()
+        );
+    }
+
+    public function testShouldReturnTrueUsingMagicFunctionBasicIsNot() {
+        $this->assertTrue(
+            EnhancedUnitEnum::ANOTHER_ENUM->isNotEnum()
+        );
+    }
+
+    public function testShouldReturnFalseUsingMagicFunctionBasic() {
+        $this->assertFalse(
+            EnhancedUnitEnum::ENUM->isAnother_Enum()
+        );
+    }
+
+    public function testShouldReturnFalseUsingMagicFunctionBasicIsNot() {
+        $this->assertFalse(
+            EnhancedUnitEnum::ENUM->isNotEnum()
+        );
+    }
+
+    public function testShouldThrowExceptionWhenEnumNotExistsMagicFunction() {
+        $this->expectException(BadMethodCallException::class);
+        EnhancedUnitEnum::ENUM->isDoesNotExist();
+    }
+
+    public function testShouldThrowExceptionWhenMethodNotExistsMagicFunction() {
+        $this->expectException(BadMethodCallException::class);
+        EnhancedUnitEnum::ENUM->doesNotExist();
     }
 }

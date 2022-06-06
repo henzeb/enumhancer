@@ -60,3 +60,24 @@ YourThirdEnum::ENUM->equals('enum2'); //returns false
 YourThirdEnum::ENUM->equals('enum', 'enum2'); //returns true
 ```
 
+## Assertions
+Next to `equals`, you can also handle assertions with `is` and `isNot`.
+
+```php
+YourEnum::ENUM->isEnum(); // returns true
+YourEnum::ENUM->isNotEnum(); // returns false
+YourEnum::ENUM->isEnum2(); // returns false
+YourEnum::ENUM->isNotEnum2(); // returns true
+YourEnum::ENUM->isYour_Value(); //returns true
+
+YourOtherEnum::ENUM->isEnum(); // returns true
+YourOtherEnum::ENUM->is0(); // returns true
+YourOtherEnum::ENUM->isNot0(); //returns false;
+
+YourThirdEnum::ENUM->isEnum(); // returns true
+YourThirdEnum::ENUM->isNotEnum(); // returns false
+```
+Note: When a case name or value contains an underscore, your method has to 
+contain that underscore. You also cannot use values with spaces.
+
+Tip: Use the @method tag in your docblock to typehint the methods if you like.
