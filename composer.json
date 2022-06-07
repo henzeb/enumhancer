@@ -31,6 +31,9 @@
         "orchestra/testbench": "^7.0"
     },
     "autoload": {
+        "files": [
+            "src/Functions/Functions.php"
+        ],
         "psr-4": {
             "Henzeb\\Enumhancer\\": "src/"
         }

@@ -2,6 +2,9 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.8.0 - 2022-06-07
+- added [Helper functions](docs/functions.md) to ease usage of basic enums.
+
 ## 1.7.0 - 2022-06-06
 - When using [Comparison](docs/comparison.md), you can now assert with `is` or `isNot`
 

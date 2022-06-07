@@ -28,6 +28,11 @@ This package currently supports the following:
 Laravel specific features:
 - Casting (Laravel Specific)
 
+Helper functions:
+- backing
+- name
+- value
+
 Note: While functionality that also exists in Spatie's PHP Enum is made backwards 
 compatible to allow for an easy migration to PHP native enums, currently this is 
 not the case for the PHPUnit assertions or Faker Provider.
@@ -76,6 +81,11 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 - [Reporters](docs/reporters.md)
 - [Subset](docs/subset.md)
 - [Value](docs/value.md)
+
+### Helper functions
+- [Backing](docs/functions.md#backing)
+- [Name](docs/functions.md#name)
+- [Value](docs/functions.md#value)
 
 ### Laravel specific Features
 

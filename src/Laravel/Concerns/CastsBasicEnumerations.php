@@ -7,6 +7,7 @@ use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
+use function Henzeb\Enumhancer\Functions\b;
 
 /**
  * @mixin Model
@@ -22,18 +23,18 @@ trait CastsBasicEnumerations
 
         $castType = $this->getCasts()[$key];
 
-        /**
-         * @TODO: remove when fixed: https://github.com/laravel/framework/issues/42658
-         */
-        if ($this->shouldUseWorkaround($castType)) {
-            return $this->enumToArrayWorkaround($value);
+        if (!$value instanceof $castType) {
+            $value = EnumMakers::make($castType, $value);
         }
 
-        if ($value instanceof $castType) {
-            return $value;
+        if ($this->shouldUseBasicEnumWorkaround($castType)) {
+
+            $keepEnumCase = property_exists($this, 'keepEnumCase') ? $this->keepEnumCase : true;
+
+            return b($value, $keepEnumCase);
         }
 
-        return EnumMakers::make($castType, $value);
+        return $value;
     }
 
     protected function setEnumCastableAttribute($key, $value)
@@ -59,26 +60,7 @@ trait CastsBasicEnumerations
         }
     }
 
-    /**
-     * @TODO: remove when fixed: https://github.com/laravel/framework/issues/42658
-     * @param $value
-     * @return object
-     */
-    private function enumToArrayWorkaround(string|int $value): object
-    {
-        return new class($value) {
-            public function __construct(public readonly string|int $value)
-            {
-            }
-        };
-    }
-
-    /**
-     * @TODO: remove when fixed: https://github.com/laravel/framework/issues/42658
-     * @param string $enumClass
-     * @return bool
-     */
-    private function shouldUseWorkaround(string $enumClass): bool
+    private function shouldUseBasicEnumWorkaround(string $enumClass): bool
     {
         return (!is_subclass_of($enumClass, BackedEnum::class, true))
             && 'toArray' === (debug_backtrace(2)[5]['function'] ?? null);
