@@ -20,6 +20,7 @@ enum EnhancedBackedEnum: string
     case ENUM = 'an enum';
     case ANOTHER_ENUM = 'another enum';
     case ENUM_3 = 'third_enum';
+    case WITH_CAPITALS = 'THIRD enum';
 
     protected function labels(): array
     {

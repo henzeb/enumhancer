@@ -73,6 +73,13 @@ class ComparisonTest extends TestCase
         );
     }
 
+    public function testWhenStringEqualsValueWithCapitals()
+    {
+        $this->assertTrue(
+            EnhancedBackedEnum::WITH_CAPITALS->equals('THIRD enum')
+        );
+    }
+
     public function testWhenStringNotEqualsValue()
     {
         $this->assertFalse(
