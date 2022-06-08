@@ -26,6 +26,7 @@ This package currently supports the following:
 - Value (for basic enums)
 
 Laravel specific features:
+- Blade
 - Casting (Laravel Specific)
 
 Helper functions:
@@ -88,7 +89,7 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 - [Value](docs/functions.md#value)
 
 ### Laravel specific Features
-
+- [Blade](docs/blade.md)
 - [Casting](docs/casting.md)
 
 ### Laravel's auto-discovery

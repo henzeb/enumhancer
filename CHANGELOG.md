@@ -2,22 +2,25 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.9.0 - 2022-06-08
+- Added [Blade](docs/blade.md) support
+
 ## 1.8.0 - 2022-06-07
-- added [Helper functions](docs/functions.md) to ease usage of basic enums.
+- Added [Helper functions](docs/functions.md) to ease usage of basic enums
 
 ## 1.7.0 - 2022-06-06
 - When using [Comparison](docs/comparison.md), you can now assert with `is` or `isNot`
 
 ## 1.6.0 - 2022-06-04
-- added Eloquent Casting support for basic enumerations.
+- Added Eloquent Casting support for basic enumerations
 
 ## 1.5.0 - 2022-05-31
-- added [Extractor](docs/extractor.md) to extract enums from a string mentioned by value
-- some documentation repairs
+- Added [Extractor](docs/extractor.md) to extract enums from a string mentioned by value
+- Some documentation repairs
 
 ## 1.4.1 - 2022-03-04
 
-- added `cases` method to `Subset`
+- Added `cases` method to `Subset`
 
 ## 1.4.0 - 2022-03-02
 
@@ -28,15 +31,15 @@ All notable changes to `Enumhancer` will be documented in this file
 
 ## 1.3.0 - 2022-02-28
 
-- added Multi. Currently allows you to compare against a subset of your enum
+- Added Multi. Currently allows you to compare against a subset of your enum
 
 ## 1.2.0 - 2022-02-26
 
-- added Value (for use with basic enums)
+- Added Value (for use with basic enums)
 
 ## 1.1.0 - 2022-02-25
 
-- added From. Useful for situations where you need them with basic enums
+- Added From. Useful for situations where you need them with basic enums
 
 ## 1.0.2 - 2022-02-16
 
@@ -49,4 +52,4 @@ All notable changes to `Enumhancer` will be documented in this file
 
 ## 1.0.0 - 2022-02-15
 
-- initial release
+- Initial release
