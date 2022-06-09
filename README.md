@@ -3,7 +3,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg?style=flat-square)](https://packagist.org/packages/henzeb/enumhancer)
 [![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg?style=flat-square)](https://packagist.org/packages/henzeb/enumhancer)
 
-This package is your Swiss Army knife when it comes to PHP 8.1's enums. 
+This package is your Swiss Army knife when it comes to PHP 8.1's native enums. 
 In this package you will find a lot of tools for the most common use cases
 and more will be added in the future. 
 
@@ -11,28 +11,6 @@ If you have an idea, or you miss something that needs to be added,
 just let me know.
 
 This package currently supports the following:
-
-- Constructor (in case you're migrating from
-  [Spatie's PHP Enum](https://github.com/spatie/enum))
-- Comparison
-- Extractor
-- From (for unit enums)
-- Labels
-- Make (Ability to make from enum-name)
-- Mappers
-- Properties
-- Reporting (Logging)
-- Subset
-- Value (for basic enums)
-
-Laravel specific features:
-- Blade
-- Casting (Laravel Specific)
-
-Helper functions:
-- backing
-- name
-- value
 
 Note: While functionality that also exists in Spatie's PHP Enum is made backwards 
 compatible to allow for an easy migration to PHP native enums, currently this is 

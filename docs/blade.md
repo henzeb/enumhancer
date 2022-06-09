@@ -1,6 +1,6 @@
 # Blade
 
-Currently, in blade enums aren't casted to strings. Due to limitations, your can't automate this by just adding 
+Currently, in blade enums aren't casted to strings. Due to limitations, you can't automate this by just adding 
 UnitEnum/BackedEnum as stringables. Using this feature allows you easy registering of your enums for use in blade. 
 
 ## Example
