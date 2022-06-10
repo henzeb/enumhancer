@@ -180,4 +180,8 @@ class ComparisonTest extends TestCase
         $this->expectException(BadMethodCallException::class);
         EnhancedUnitEnum::ENUM->doesNotExist();
     }
+
+    public function testShouldWorkWithoutIssuesCallingSelf() {
+        $this->assertTrue(EnhancedUnitEnum::ENUM->isEnumFunction());
+    }
 }

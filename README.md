@@ -4,19 +4,13 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg?style=flat-square)](https://packagist.org/packages/henzeb/enumhancer)
 
 This package is your Swiss Army knife when it comes to PHP 8.1's native enums. 
-In this package you will find a lot of tools for the most common use cases
+In this package you will find a lot of tools for the most common use cases,
 and more will be added in the future. 
 
 If you have an idea, or you miss something that needs to be added, 
 just let me know.
 
-This package currently supports the following:
-
 Note: While functionality that also exists in Spatie's PHP Enum is made backwards 
-compatible to allow for an easy migration to PHP native enums, currently this is 
-not the case for the PHPUnit assertions or Faker Provider.
-
-While functionality that also exists in Spatie's PHP Enum is made backwards 
 compatible to allow for an easy migration to PHP native enums, currently this is 
 not the case for the PHPUnit assertions or Faker Provider.
 

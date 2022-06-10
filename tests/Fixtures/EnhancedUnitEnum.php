@@ -7,6 +7,7 @@ use Henzeb\Enumhancer\Concerns\Constructor;
 
 /**
  * @method static self anotherMappedEnum()
+ * * @method static self ENUM()
  * @method isAnother_Enum()
  * @method isEnum()
  * @method isNotEnum()
@@ -18,4 +19,9 @@ enum EnhancedUnitEnum
     case ENUM;
     case ANOTHER_ENUM;
     case THIRD_ENUM;
+
+    public function isEnumFunction(): bool
+    {
+        return $this->equals(self::ENUM());
+    }
 }

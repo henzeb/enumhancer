@@ -18,18 +18,23 @@ trait Comparison
         return EnumCompare::equals($this, ...$equals);
     }
 
-    final public function __call(string $name, array $arguments): bool
+    final public function __call(string $name, array $arguments): self|bool
     {
-        if ((! str_starts_with($name, 'is') && ! str_starts_with($name, 'isNot')) || count($arguments)) {
+        $nameIsEnum = !EnumMakers::tryMake(self::class, $name);
+        if (((!str_starts_with($name, 'is') && !str_starts_with($name, 'isNot')) || count($arguments)) && $nameIsEnum) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
 
-        $value = substr($name, str_starts_with($name, 'isNot')?5:2);
+        if (!$nameIsEnum) {
+            return self::__callStatic($name, []);
+        }
 
-        if(!EnumMakers::tryMake(self::class, $value)) {
+        $value = substr($name, str_starts_with($name, 'isNot') ? 5 : 2);
+
+        if (!EnumMakers::tryMake(self::class, $value)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
-        if(str_starts_with($name, 'isNot')) {
+        if (str_starts_with($name, 'isNot')) {
             return !$this->equals($value);
         }
         return $this->equals($value);
