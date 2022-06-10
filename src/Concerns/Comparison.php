@@ -20,7 +20,7 @@ trait Comparison
 
     final public function __call(string $name, array $arguments): self|bool
     {
-        $nameIsEnum = !EnumMakers::tryMake(self::class, $name);
+        $nameIsEnum = !EnumMakers::tryMake(self::class, $name, true);
         if (((!str_starts_with($name, 'is') && !str_starts_with($name, 'isNot')) || count($arguments)) && $nameIsEnum) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
@@ -31,7 +31,7 @@ trait Comparison
 
         $value = substr($name, str_starts_with($name, 'isNot') ? 5 : 2);
 
-        if (!EnumMakers::tryMake(self::class, $value)) {
+        if (!EnumMakers::tryMake(self::class, $value, true)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
         if (str_starts_with($name, 'isNot')) {
