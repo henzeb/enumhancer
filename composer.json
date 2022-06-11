@@ -32,7 +32,8 @@
         "casting",
         "cast",
         "eloquent",
-        "laravel"
+        "laravel",
+        "spatie"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
     "license": "AGPL-3.0-only",
