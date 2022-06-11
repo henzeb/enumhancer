@@ -1,8 +1,8 @@
 # Enumhancer
 
 [![Build Status](https://github.com/henzeb/enumhancer/workflows/Tests/badge.svg)](https://github.com/henzeb/enumhancer/actions)
-[![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg?style=flat-square)](https://packagist.org/packages/henzeb/enumhancer)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg?style=flat-square)](https://packagist.org/packages/henzeb/enumhancer)
+[![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![License](https://img.shields.io/packagist/l/henzeb/enumhancer)](https://packagist.org/packages/henzeb/enumhancer)
 
 
