@@ -10,7 +10,6 @@ use function Henzeb\Enumhancer\Functions\n;
 
 
 /**
- * @EnhancedBackedEnum
  * @method static self anotherMappedEnum()
  */
 enum EnhancedBackedEnum: string

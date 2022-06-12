@@ -41,22 +41,13 @@ class EnumSubsetMethods implements EnumSubset
 
     private function compare(UnitEnum $enum, UnitEnum|string|int ...$equals): bool
     {
-        $value = EnumValue::value($enum);
-
         foreach ($equals as $equal) {
-            if($enum === $equal) {
-                return true;
+
+            if (!$equal instanceof UnitEnum) {
+                $equal = EnumMakers::tryMake($enum::class, $equal, true);
             }
 
-            if(is_object($equal)) {
-                $equal = EnumValue::value($equal);
-            }
-
-            if(strtolower($enum->name) === strtolower($equal)) {
-                return true;
-            }
-
-            if(strtolower($value) === strtolower($equal)) {
+            if ($enum === $equal) {
                 return true;
             }
         }

@@ -4,5 +4,5 @@ namespace Henzeb\Enumhancer\Concerns;
 
 trait Enhancers
 {
-    use Comparison, Labels, Mappers, Properties, Value, Subset;
+    use Comparison, Labels, Mappers, Defaults, Properties, Value, Subset;
 }

@@ -25,7 +25,7 @@ trait Comparison
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
 
-        if (!$nameIsEnum) {
+        if (!$nameIsEnum && method_exists(self::class, '__callStatic')) {
             return self::__callStatic($name, []);
         }
 

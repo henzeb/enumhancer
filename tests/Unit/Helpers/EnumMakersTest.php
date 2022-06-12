@@ -8,6 +8,9 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
 
+/**
+ * @ignore
+ */
 class EnumMakersTest extends TestCase
 {
     public function testMakeShouldFailWithInvalidClass()

@@ -31,7 +31,7 @@ order to use almost all functionality of this package. All functionality
 should work with `unit` enums as well as `backed` enums'.
 
 ```php
-use Henzeb\Enumhancer\Concerns\Enhancers\Enhancers;
+use Henzeb\Enumhancer\Concerns\Enhancers;
 
 enum YourEnum {
     use Enhancers;
@@ -48,6 +48,7 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 ### Features
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
+- [Defaults](docs/defaults.md)
 - [Extractor](docs/extractor.md)
 - [From](docs/from.md)
 - [Labels](docs/labels.md)

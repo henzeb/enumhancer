@@ -34,4 +34,4 @@ and uppercase names, and you can also use mappers that you have defined using
 the `mappers` method.
 
 Note: This trait is not enabled by default when
-using the `Enumhancer` trait.
+using the `Enhancers` trait.
