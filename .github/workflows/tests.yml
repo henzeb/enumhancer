@@ -1,11 +1,15 @@
-name: "Tests"
+name: "tests"
 on:
   push:
+    branches:
+      - main
     paths-ignore:
       - '**.md'
+      - '**.yml'
   pull_request:
     paths-ignore:
       - '**.md'
+      - '**.yml'
 jobs:
   tests:
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
