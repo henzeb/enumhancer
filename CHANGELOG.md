@@ -2,6 +2,9 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.1.0 - 2022-06-12
+- Added [Defaults](docs/defaults.md) that allows you to have default enums
+
 ## 1.9.0 - 2022-06-08
 - Added [Blade](docs/blade.md) support
 

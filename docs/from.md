@@ -30,8 +30,7 @@ YourEnum::tryFrom('MY_ENUM'); // will return YourEnum::MY_ENUM;
 YourEnum::tryFrom('DOESNOTEXIST'); // will return null
 ```
 Note: Under the hood it uses the Makers functionality, so you can use lower-
-and uppercase names, and you can also use mappers that you have defined using 
-the `mappers` method.
+and uppercase names.
 
 Note: This trait is not enabled by default when
 using the `Enhancers` trait.
