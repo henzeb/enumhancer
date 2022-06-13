@@ -31,5 +31,7 @@ YourEnum::tryFrom('DOESNOTEXIST'); // will return null
 ```
 Note: Under the hood it uses the Makers functionality, so you can use lower-
 and uppercase names, and you can also use [Mappers](mappers.md) that you have defined using 
-the `mappers` method and the [Defaults](mappers.md). Be aware that those will not work
-if you have a backed enum
+the `mappers` method and the [Defaults](mappers.md). 
+
+Warning: Be aware that this feature will not work if you have a backed enum. Even when you use this trait, 
+currently the original methods take precedence.

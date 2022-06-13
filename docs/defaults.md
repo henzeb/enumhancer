@@ -63,8 +63,7 @@ MyDefaultEnum::tryMake('unknown'); // returns MyDefaultEnum::MyDefaultEnum
 
 ```
 
-Note: as [From](from.md) should work exactly like the `from` and `tryFrom` 
-on backed enums, this will not work there.
+Note: [From](from.md) will use the default value as well, but only when used with basic enums. 
 
 Note: You can also map default using [Mappers](mappers.md). The Defaults 
 methods will then use the mapped value.
