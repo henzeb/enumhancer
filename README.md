@@ -1,6 +1,6 @@
 # Enumhancer
 
-[![Build Status](https://github.com/henzeb/enumhancer/workflows/Tests/badge.svg)](https://github.com/henzeb/enumhancer/actions)
+[![Build Status](https://github.com/henzeb/enumhancer/workflows/tests/badge.svg)](https://github.com/henzeb/enumhancer/actions)
 [![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![License](https://img.shields.io/packagist/l/henzeb/enumhancer)](https://packagist.org/packages/henzeb/enumhancer)
@@ -27,8 +27,8 @@ composer require henzeb/enumhancer
 
 ## Usage
 You can simply add the `Enhancers` trait to your `enum` in 
-order to use almost all functionality of this package. All functionality 
-should work with `unit` enums as well as `backed` enums'.
+order to use almost all functionality of this package. All features 
+should work with `unit` enums as well as `backed` enums' unless stated otherwise.
 
 ```php
 use Henzeb\Enumhancer\Concerns\Enhancers;
@@ -39,8 +39,8 @@ enum YourEnum {
     // ...
 } 
 ```
-You can also just use one of the functionalities by using the specific trait 
-for that functionality. 
+You can also just use one of the features by using the specific trait 
+for that feature. 
 
 Note: all traits can be used next to each other, except for `Mappers`, which has 
 implemented the methods of `Makers`, `Extractor` and `Reporters`.

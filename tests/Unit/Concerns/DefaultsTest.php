@@ -102,15 +102,14 @@ class DefaultsTest extends TestCase
         $this->assertEquals($expected, $enum::tryMake('default'));
     }
 
-    public function testTryFromShouldNeverUseDefault(): void
+    public function testTryFromShouldUseDefault(): void
     {
-        $this->assertEquals(null, DefaultsOverriddenEnum::tryFrom('default'));
+        $this->assertEquals(DefaultsOverriddenEnum::Enum, DefaultsOverriddenEnum::tryFrom('default'));
     }
 
-    public function testFromShouldNeverUseDefault(): void
+    public function testFromShouldUseDefault(): void
     {
-        $this->expectError();
-        DefaultsOverriddenEnum::from('default');
+        $this->assertEquals(DefaultsOverriddenEnum::Enum, DefaultsOverriddenEnum::from('default'));
     }
 
     /**

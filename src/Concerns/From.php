@@ -8,11 +8,11 @@ trait From
 {
     final public static function from(string $key): static
     {
-        return EnumMakers::make(static::class, $key, useDefault: false);
+        return EnumMakers::make(static::class, $key, useDefault: true);
     }
 
     final public static function tryFrom(string $key): ?static
     {
-        return EnumMakers::tryMake(static::class, $key, useDefault: false);
+        return EnumMakers::tryMake(static::class, $key);
     }
 }
