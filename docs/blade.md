@@ -1,15 +1,17 @@
 # Blade
 
-Currently, in blade enums aren't casted to strings. Due to limitations, you can't automate this by just adding 
-UnitEnum/BackedEnum as stringables. Using this feature allows you easy registering of your enums for use in blade. 
+Currently, in blade enums aren't casted to strings. Due to limitations, you can't
+automate this by just adding UnitEnum/BackedEnum as stringables. Using this feature
+allows you easy registering of your enums for use in blade.
 
 ## Example
+
 ```php
 use Henzeb\Enumhancer\Concerns\Value;
 
 enum MyUnitEnum {
     use Value;
-    
+
     case Enum;
 }
 
@@ -23,6 +25,7 @@ enum MyIntEnum: int {
 ```
 
 In your Service Provider:
+
 ```php
 use Henzeb\Enumhancer\Helpers\EnumBlade;
 
@@ -33,6 +36,7 @@ EnumBlade::registerLowercase(MyUnitEnum::class, MyStringEnum::class, MyIntEnum::
 ```
 
 In your blade file:
+
 ```php
 /** With register */
 {{$unitEnum}} // Enum

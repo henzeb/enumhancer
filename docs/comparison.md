@@ -1,6 +1,7 @@
 # Comparison
-This will allow you to easily compare enums, integers and strings with each other. 
-This also is backwards-compatible with 
+
+This will allow you to easily compare enums, integers and strings with each
+other. This also is backwards-compatible with
 [Spatie's PHP Enum](https://github.com/spatie/enum)
 
 ## usage
@@ -10,28 +11,29 @@ use Henzeb\Enumhancer\Concerns\Comparison;
 
 enum YourEnum: string {
     use Comparison;
-    
+
     CASE ENUM = 'your_value';
     CASE ENUM2 = 'your_other_value';
 }
 
 enum YourOtherEnum: int {
     use Comparison;
-    
+
     CASE ENUM = 0;
     CASE ENUM2 = 1;
 }
 
 enum YourThirdEnum {
     use Comparison;
-    
+
     CASE ENUM;
     CASE ENUM2;
 }
 ```
 
 ### Examples
-The method equals accepts multiple strings, integers or enums of the same type. 
+
+The method equals accepts multiple strings, integers or enums of the same type.
 If one of them matches, true will be returned.
 
 ```php
@@ -61,6 +63,7 @@ YourThirdEnum::ENUM->equals('enum', 'enum2'); //returns true
 ```
 
 ## Assertions
+
 Next to `equals`, you can also handle assertions with `is` and `isNot`.
 
 ```php
@@ -77,7 +80,8 @@ YourOtherEnum::ENUM->isNot0(); //returns false;
 YourThirdEnum::ENUM->isEnum(); // returns true
 YourThirdEnum::ENUM->isNotEnum(); // returns false
 ```
-Note: When a case name or value contains an underscore, your method has to 
+
+Note: When a case name or value contains an underscore, your method has to
 contain that underscore. You also cannot use values with spaces.
 
 Tip: Use the @method tag in your docblock to typehint the methods if you like.

@@ -3,25 +3,34 @@
 All notable changes to `Enumhancer` will be documented in this file
 
 ## 1.11.0 - 2022-06-14
+
 - Added [State](docs/state.md) that allows you to have transitions with enums
 
 ## 1.10.0 - 2022-06-12
+
 - Added [Defaults](docs/defaults.md) that allows you to have default enums
 
 ## 1.9.0 - 2022-06-08
+
 - Added [Blade](docs/blade.md) support
 
 ## 1.8.0 - 2022-06-07
+
 - Added [Helper functions](docs/functions.md) to ease usage of basic enums
 
 ## 1.7.0 - 2022-06-06
-- When using [Comparison](docs/comparison.md), you can now assert with `is` or `isNot`
+
+- When using [Comparison](docs/comparison.md), you can now assert with `is`
+  or `isNot`
 
 ## 1.6.0 - 2022-06-04
+
 - Added Eloquent Casting support for basic enumerations
 
 ## 1.5.0 - 2022-05-31
-- Added [Extractor](docs/extractor.md) to extract enums from a string mentioned by value
+
+- Added [Extractor](docs/extractor.md) to extract enums from a string mentioned
+  by value
 - Some documentation repairs
 
 ## 1.4.1 - 2022-03-04

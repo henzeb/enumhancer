@@ -3,14 +3,14 @@
 To accommodate situations that haven't been solved (yet), a few helper
 functions.
 
-Each helper function that works with values has a lowercase version
-for easy usage. 
+Each helper function that works with values has a lowercase version for easy
+usage.
 
-Each helper function has a full name version and a shortcut, just pick your 
+Each helper function has a full name version and a shortcut, just pick your
 personal favorite poison.
 
-Each function also accepts null and returns null when
-this happens. This eases usage with optional situations.
+Each function also accepts null and returns null when this happens. This eases
+usage with optional situations.
 
 ## Backing
 
@@ -33,40 +33,45 @@ enum MyStringEnum: string {
     case String = 'My string';
 }
 
-\Henzeb\Enumhancer\Functions\b(MyEnum::Enum)->name; // Enum
-\Henzeb\Enumhancer\Functions\b(MyEnum::Enum)->value; // Enum
-(string)\Henzeb\Enumhancer\Functions\b(MyEnum::Enum); // Enum
+use Henzeb\Enumhancer\Functions\b;
+use Henzeb\Enumhancer\Functions\backing;
+use Henzeb\Enumhancer\Functions\bl;
+use Henzeb\Enumhancer\Functions\backingLowercase;
 
-\Henzeb\Enumhancer\Functions\b(MyEnum::Enum, false)->value; // enum
-(string)\Henzeb\Enumhancer\Functions\b(MyEnum::Enum, false); // enum
+(MyEnum::Enum)->name; // Enum
+b(MyEnum::Enum)->value; // Enum
+(string)b(MyEnum::Enum); // Enum
 
-\Henzeb\Enumhancer\Functions\b(MyStringEnum::String, false)->value; // My string
-(string)\Henzeb\Enumhancer\Functions\b(MyStringEnum::String, false); // My string
+b(MyEnum::Enum, false)->value; // enum
+(string)b(MyEnum::Enum, false); // enum
 
-\Henzeb\Enumhancer\Functions\backing(MyEnum::Enum)->name; // Enum
-\Henzeb\Enumhancer\Functions\backing(MyEnum::Enum)->value; // Enum
-(string)\Henzeb\Enumhancer\Functions\backing(MyEnum::Enum); // Enum
+b(MyStringEnum::String, false)->value; // My string
+(string)b(MyStringEnum::String, false); // My string
 
-\Henzeb\Enumhancer\Functions\backing(MyEnum::Enum, false)->value; // enum
-(string)\Henzeb\Enumhancer\Functions\backing(MyEnum::Enum, false); // enum
+backing(MyEnum::Enum)->name; // Enum
+backing(MyEnum::Enum)->value; // Enum
+(string)backing(MyEnum::Enum); // Enum
 
-\Henzeb\Enumhancer\Functions\backing(MyStringEnum::String, false)->value; // My string
-(string)\Henzeb\Enumhancer\Functions\backing(MyStringEnum::String, false); // My string
+backing(MyEnum::Enum, false)->value; // enum
+(string)backing(MyEnum::Enum, false); // enum
+
+backing(MyStringEnum::String, false)->value; // My string
+(string)backing(MyStringEnum::String, false); // My string
 
 # Lower case
-\Henzeb\Enumhancer\Functions\bl(MyEnum::Enum)->name; // Enum
-\Henzeb\Enumhancer\Functions\bl(MyEnum::Enum)->value; // enum
-(string)\Henzeb\Enumhancer\Functions\bl(MyEnum::Enum); // enum
+bl(MyEnum::Enum)->name; // Enum
+bl(MyEnum::Enum)->value; // enum
+(string)bl(MyEnum::Enum); // enum
 
-\Henzeb\Enumhancer\Functions\bl(MyStringEnum::String)->value; // My string
-(string)\Henzeb\Enumhancer\Functions\bl(MyStringEnum::String); // My string
+bl(MyStringEnum::String)->value; // My string
+(string)bl(MyStringEnum::String); // My string
 
-\Henzeb\Enumhancer\Functions\backingLowercase(MyEnum::Enum)->name; // Enum
-\Henzeb\Enumhancer\Functions\backingLowercase(MyEnum::Enum)->value; // enum
-(string)\Henzeb\Enumhancer\Functions\backingLowercase(MyEnum::Enum); // enum
+backingLowercase(MyEnum::Enum)->name; // Enum
+backingLowercase(MyEnum::Enum)->value; // enum
+(string)backingLowercase(MyEnum::Enum); // enum
 
-\Henzeb\Enumhancer\Functions\backingLowercase(MyStringEnum::String)->value; // My string
-(string)\Henzeb\Enumhancer\Functions\backingLowercase(MyStringEnum::String); // My string
+backingLowercase(MyStringEnum::String)->value; // My string
+(string)backingLowercase(MyStringEnum::String); // My string
 
 ```
 
@@ -79,15 +84,18 @@ enum MyEnum {
     case Enum;
 }
 
-\Henzeb\Enumhancer\Functions\n(MyEnum::Enum); // Enum
-\Henzeb\Enumhancer\Functions\name(MyEnum::Enum); // Enum
+use Henzeb\Enumhancer\Functions\n;
+use Henzeb\Enumhancer\Functions\name;
+
+n(MyEnum::Enum); // Enum
+name(MyEnum::Enum); // Enum
 ```
 
 ## Value
 
 This function returns the value of your Enum. Works just like
-[Value](value.md), except for the lower case variants which return the
-lower case version of the enum name.
+[Value](value.md), except for the lower case variants which return the lower
+case version of the enum name.
 
 ```php
 enum MyEnum {
@@ -98,19 +106,24 @@ enum MyStringEnum: string {
     case String = 'String';
 }
 
-\Henzeb\Enumhancer\Functions\v(MyEnum::Enum); // Enum
-\Henzeb\Enumhancer\Functions\v(MyEnum::Enum, false); // enum
-\Henzeb\Enumhancer\Functions\v(MyStringEnum::String, false); // My string
+use Henzeb\Enumhancer\Functions\v;
+use Henzeb\Enumhancer\Functions\value;
+use Henzeb\Enumhancer\Functions\vl;
+use Henzeb\Enumhancer\Functions\valueLowercase;
 
-\Henzeb\Enumhancer\Functions\value(MyEnum::Enum); // Enum
-\Henzeb\Enumhancer\Functions\value(MyEnum::Enum, false); // enum
-\Henzeb\Enumhancer\Functions\value(MyStringEnum::String, false); // My string
+v(MyEnum::Enum); // Enum
+v(MyEnum::Enum, false); // enum
+v(MyStringEnum::String, false); // My string
+
+value(MyEnum::Enum); // Enum
+value(MyEnum::Enum, false); // enum
+value(MyStringEnum::String, false); // My string
 
 # Lower case
-\Henzeb\Enumhancer\Functions\vl(MyEnum::Enum); // enum
-\Henzeb\Enumhancer\Functions\vl(MyStringEnum::String); // My string
+vl(MyEnum::Enum); // enum
+vl(MyStringEnum::String); // My string
 
-\Henzeb\Enumhancer\Functions\valueLowercase(MyEnum::Enum); // enum
-\Henzeb\Enumhancer\Functions\valueLowercase(MyStringEnum::String); // My string
+valueLowercase(MyEnum::Enum); // enum
+valueLowercase(MyStringEnum::String); // My string
 
 ```

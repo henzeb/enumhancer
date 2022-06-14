@@ -2,14 +2,10 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use Henzeb\Enumhancer\Contracts\Reporter;
-
-class EnumProperties
+abstract class EnumProperties
 {
     private static array $global = [];
     private static array $properties = [];
-    private static Reporter|string|null $reporter = null;
-
 
     public static function store(string $class, string $property, mixed $value): void
     {

@@ -1,26 +1,29 @@
 # Makers
-Enums have out of the box the methods `from` and `tryFrom`. One drawback is that 
+
+Enums have out of the box the methods `from` and `tryFrom`. One drawback is that
 you cannot use them to create `enum objects` with the name of the `enum`.
 
 This allows you to do so.
 
-Note: the name `make` is chosen because of Spatie, who started using them 
-and never moved away from them. So this is also backwards compatible with 
+Note: the name `make` is chosen because of Spatie, who started using them and
+never moved away from them. So this is also backwards compatible with
 [Spatie's PHP Enum](https://github.com/spatie/enum)
 
 ## Usage
+
 ```php
 use Henzeb\Enumhancer\Concerns\Makers;
 
 enum YourEnum: string {
     use Makers;
-    
+
     case ENUM = 'your_enum';
     case ENUM2 = 'your_other_enum';
 }
 ```
 
 ### Examples
+
 ```php
 /** make */
 YourEnum::make('ENUM'); // returns YourEnum::ENUM
@@ -38,10 +41,14 @@ YourEnum::tryMake('ENUM3'); // returns null
 
 /** makeArray */
 
-YourEnum::makeArray(['ENUM', 'your_other_enum']); // returns [YourEnum::ENUM, YourEnum::ENUM2]
+YourEnum::makeArray(
+    ['ENUM', 'your_other_enum']
+); // returns [YourEnum::ENUM, YourEnum::ENUM2]
 YourEnum::makeArray(['ENUM', 'unknown']); // throws exception
 /** tryMakeArray */
 
-YourEnum::tryMakeArray(['ENUM', 'your_other_enum']); // returns [YourEnum::ENUM, YourEnum::ENUM2]
+YourEnum::tryMakeArray(
+    ['ENUM', 'your_other_enum']
+); // returns [YourEnum::ENUM, YourEnum::ENUM2]
 YourEnum::tryMakeArray(['ENUM', 'unknown']); // returns [YourEnum::ENUM]
 ```

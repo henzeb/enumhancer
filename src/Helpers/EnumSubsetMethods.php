@@ -30,7 +30,6 @@ class EnumSubsetMethods implements EnumSubset
         EnumCheck::matches($this->enumType, ...$equals);
 
         foreach ($this->enums as $enum) {
-
             if ($this->compare($enum, ...$equals)) {
                 return true;
             }
@@ -42,7 +41,6 @@ class EnumSubsetMethods implements EnumSubset
     private function compare(UnitEnum $enum, UnitEnum|string|int ...$equals): bool
     {
         foreach ($equals as $equal) {
-
             if (!$equal instanceof UnitEnum) {
                 $equal = EnumMakers::tryMake($enum::class, $equal, true);
             }
@@ -62,11 +60,12 @@ class EnumSubsetMethods implements EnumSubset
     public function values(): array
     {
         return array_map(
-            fn(mixed $enum) => (
-                $enum->value
+            function (mixed $enum) {
+                return $enum->value
                 ?? (method_exists($enum, 'value') ? $enum->value() : null)
-                ?? $enum->name
-            ), $this->enums
+                ?? $enum->name;
+            },
+            $this->enums
         );
     }
 

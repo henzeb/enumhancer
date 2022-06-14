@@ -1,12 +1,14 @@
 <?php
+
 namespace Henzeb\Enumhancer\Laravel\Providers;
 
-use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Illuminate\Support\ServiceProvider;
+use Henzeb\Enumhancer\Helpers\EnumReporter;
 
 class EnumhancerServiceProvider extends ServiceProvider
 {
-    public function boot() {
+    public function boot()
+    {
         EnumReporter::laravel();
     }
 }

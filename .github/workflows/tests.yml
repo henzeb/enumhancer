@@ -14,7 +14,8 @@ jobs:
   tests:
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
     runs-on: ubuntu-latest
-
+    env:
+      CC_TOKEN: ${{ secrets.CODECLIMATE_TOKEN }}
     strategy:
       fail-fast: true
       matrix:
@@ -31,6 +32,15 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
           coverage: none
+        if: ${{ !env.CC_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          coverage: pcov
+        if: ${{ env.CC_TOKEN }}
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -56,4 +66,19 @@ jobs:
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
       - name: Execute PHPUnit
+        if: ${{ !env.CC_TOKEN || matrix.stability != 'prefer-stable' }}
         run: vendor/bin/phpunit
+
+      - name: Execute PHPUnit
+        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable'}}
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+
+      - name: Upload coverage to codeclimate
+        uses: paambaati/codeclimate-action@v3.0.0
+        continue-on-error: true
+        env:
+          CC_TEST_REPORTER_ID: ${{ env.CC_TOKEN }}
+        with:
+          coverageCommand: ''
+          coverageLocations: ./coverage.xml:clover
+        if: ${{ !env.ACT && env.CC_TOKEN && matrix.stability == 'prefer-stable' }}

@@ -6,7 +6,7 @@ use UnitEnum;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Concerns\Mappers;
 
-class EnumExtractor
+abstract class EnumExtractor
 {
     use Mappers;
 
@@ -27,15 +27,16 @@ class EnumExtractor
                 }
 
                 return $enum->name;
-            }, $class::cases()
+            },
+            $class::cases()
         );
-
         $match = implode(
             '\b|\b',
             array_merge(
                 $match,
                 ...array_map(fn(Mapper $map) => $map->keys($class), $mappers)
-            ));
+            )
+        );
 
         preg_match_all(sprintf('/\b%s\b/i', $match), $text, $matches);
 

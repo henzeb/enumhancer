@@ -6,7 +6,7 @@ use UnitEnum;
 use TypeError;
 use BackedEnum;
 
-class EnumCheck
+abstract class EnumCheck
 {
     public static function check(UnitEnum|string $enum): void
     {

@@ -28,7 +28,6 @@ trait CastsBasicEnumerations
         }
 
         if ($this->shouldUseBasicEnumWorkaround($castType)) {
-
             $keepEnumCase = property_exists($this, 'keepEnumCase') ? $this->keepEnumCase : true;
 
             return b($value, $keepEnumCase);
@@ -45,19 +44,18 @@ trait CastsBasicEnumerations
 
         if (!isset($value)) {
             $this->attributes[$key] = null;
-        } elseif ($value instanceof $enumClass) {
-            $this->attributes[$key] = EnumValue::value($value, $keepEnumCase);
-        } else {
-
-            if ($value instanceof UnitEnum) {
-                $value = EnumValue::value($value);
-            }
-
-            $this->attributes[$key] = EnumValue::value(
-                EnumMakers::make($enumClass, $value),
-                $keepEnumCase
-            );
+            return;
         }
+
+        if ($value instanceof $enumClass) {
+            $value = EnumValue::value($value, $keepEnumCase);
+        }
+
+        if ($value instanceof UnitEnum) {
+            $value = EnumValue::value($value, $keepEnumCase);
+        }
+
+        $this->attributes[$key] = EnumValue::value(EnumMakers::make($enumClass, $value), $keepEnumCase);
     }
 
     private function shouldUseBasicEnumWorkaround(string $enumClass): bool

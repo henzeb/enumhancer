@@ -11,8 +11,8 @@ For validation of basic enums see [From](from.md).
 
 This rule is for use in conjunction with [State](state.md).
 
-The state you start from can come from the database (when updating) or can 
-be a default one (when creating new).
+The state you start from can come from the database (when updating) or can be a
+default one (when creating new).
 
 ### example
 
@@ -32,6 +32,7 @@ use Henzeb\Enumhancer\Laravel\Rules\EnumTransition;
 ```
 
 ### message
+
 Key: `validation.enumhancer.transition`
 
 | Key   | description                    |

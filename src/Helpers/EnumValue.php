@@ -5,7 +5,7 @@ namespace Henzeb\Enumhancer\Helpers;
 use UnitEnum;
 use BackedEnum;
 
-class EnumValue
+abstract class EnumValue
 {
     public static function value(BackedEnum|UnitEnum $enum, bool $keepCase = false): string|int
     {

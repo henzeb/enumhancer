@@ -3,8 +3,8 @@
 namespace Henzeb\Enumhancer\Laravel\Reporters;
 
 use BackedEnum;
-use Henzeb\Enumhancer\Contracts\Reporter;
 use Illuminate\Support\Facades\Log;
+use Henzeb\Enumhancer\Contracts\Reporter;
 use function class_basename;
 
 class LaravelLogReporter implements Reporter

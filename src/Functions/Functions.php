@@ -14,7 +14,7 @@ use Henzeb\Enumhancer\Helpers\EnumValue;
  */
 function b(?UnitEnum $enum, bool $keepValueCase = true): ?EnumProxy
 {
-    if(!$enum) {
+    if (!$enum) {
         return null;
     }
 
@@ -67,7 +67,7 @@ function name(?UnitEnum $enum): ?string
  */
 function v(?UnitEnum $enum, bool $keepValueCase = true): string|int|null
 {
-    if(!$enum) {
+    if (!$enum) {
         return null;
     }
     return EnumValue::value($enum, $keepValueCase);

@@ -3,10 +3,12 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use UnitEnum;
+use RuntimeException;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Blade;
 use Henzeb\Enumhancer\Helpers\EnumBlade;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
+use Henzeb\Enumhancer\Exceptions\NotAnEnumException;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
@@ -69,5 +71,17 @@ class EnumBladeTest extends TestCase
                 ['data' => $enum], true
             )
         );
+    }
+
+    public function testShouldFailAddingNonEnumLowercase(): void
+    {
+        $this->expectException(NotAnEnumException::class);
+        EnumBlade::registerLowercase(self::class);
+    }
+
+    public function testShouldFailAddingNonEnum(): void
+    {
+        $this->expectException(NotAnEnumException::class);
+        EnumBlade::register(self::class);
     }
 }

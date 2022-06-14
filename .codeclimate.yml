@@ -1,0 +1,44 @@
+version: '2'
+plugins:
+  markdownlint:
+    exclude_patterns:
+      - '!**/*.md'
+      - vendor
+      - LICENSE.md
+    enabled: true
+    checks:
+      MD029:
+        enabled: false
+  phpcodesniffer:
+    exclude_patterns:
+      - !**/*.php
+    enabled: true
+  phpmd:
+    enabled: true
+    exclude_patterns:
+      - !**/*.php
+    checks:
+      CleanCode/StaticAccess:
+        enabled: false
+      CleanCode/BooleanArgumentFlag:
+        enabled: false
+      Naming/ShortMethodName:
+        enabled: false
+  duplication:
+    enabled: true
+exclude_patterns:
+  - config/
+  - 'coverage'
+  - .github
+  - db/
+  - dist/
+  - features/
+  - '**/node_modules/'
+  - script/
+  - '**/spec/'
+  - '**/test/'
+  - '**/tests/'
+  - Tests/
+  - '**/vendor/'
+  - '**/*_test.go'
+  - '**/*.d.ts'

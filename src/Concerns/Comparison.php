@@ -2,11 +2,9 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use BackedEnum;
 use BadMethodCallException;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
 use Henzeb\Enumhancer\Helpers\EnumCompare;
-use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 
 trait Comparison
 {
@@ -17,10 +15,11 @@ trait Comparison
 
     final public function __call(string $name, array $arguments): self|bool
     {
-        $nameIsEnum = !EnumMakers::tryMake(self::class, $name, true);
-        if (((!str_starts_with($name, 'is') && !str_starts_with($name, 'isNot')) || count($arguments)) && $nameIsEnum) {
+        if (EnumCompare::isValidCall(self::class, $name, $arguments)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
+
+        $nameIsEnum = !EnumMakers::tryMake(self::class, $name, true);
 
         if (!$nameIsEnum && method_exists(self::class, '__callStatic')) {
             return self::__callStatic($name, []);
@@ -31,10 +30,10 @@ trait Comparison
         if (!EnumMakers::tryMake(self::class, $value, true)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
+
         if (str_starts_with($name, 'isNot')) {
             return !$this->equals($value);
         }
         return $this->equals($value);
     }
-
 }

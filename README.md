@@ -1,21 +1,21 @@
 # Enumhancer
 
 [![Build Status](https://github.com/henzeb/enumhancer/workflows/tests/badge.svg)](https://github.com/henzeb/enumhancer/actions)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/5cee34b5dd839b0c2cdd/test_coverage)](https://codeclimate.com/github/henzeb/enumhancer/test_coverage)
 [![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![License](https://img.shields.io/packagist/l/henzeb/enumhancer)](https://packagist.org/packages/henzeb/enumhancer)
 
+This package is your Swiss Army knife when it comes to PHP 8.1's native enums.
+In this package you will find a lot of tools for the most common use cases, and
+more will be added in the future.
 
-This package is your Swiss Army knife when it comes to PHP 8.1's native enums. 
-In this package you will find a lot of tools for the most common use cases,
-and more will be added in the future. 
+If you have an idea, or you miss something that needs to be added, just let me
+know.
 
-If you have an idea, or you miss something that needs to be added, 
-just let me know.
-
-Note: While functionality that also exists in Spatie's PHP Enum is made backwards 
-compatible to allow for an easy migration to PHP native enums, currently this is 
-not the case for the PHPUnit assertions or Faker Provider.
+Note: While functionality that also exists in Spatie's PHP Enum is made
+backwards compatible to allow for an easy migration to PHP native enums,
+currently this is not the case for the PHPUnit assertions or Faker Provider.
 
 ## Installation
 
@@ -26,26 +26,29 @@ composer require henzeb/enumhancer
 ```
 
 ## Usage
-You can simply add the `Enhancers` trait to your `enum` in 
-order to use almost all functionality of this package. All features 
-should work with `unit` enums as well as `backed` enums' unless stated otherwise.
+
+You can simply add the `Enhancers` trait to your `enum` in order to use almost
+all functionality of this package. All features should work with `unit` enums as
+well as `backed` enums' unless stated otherwise.
 
 ```php
 use Henzeb\Enumhancer\Concerns\Enhancers;
 
 enum YourEnum {
     use Enhancers;
-    
-    // ...
-} 
-```
-You can also just use one of the features by using the specific trait 
-for that feature. 
 
-Note: all traits can be used next to each other, except for `Mappers`, which has 
+    // ...
+}
+```
+
+You can also just use one of the features by using the specific trait for that
+feature.
+
+Note: all traits can be used next to each other, except for `Mappers`, which has
 implemented the methods of `Makers`, `Extractor` and `Reporters`.
 
 ### Features
+
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
 - [Defaults](docs/defaults.md)
@@ -61,22 +64,25 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 - [Value](docs/value.md)
 
 ### Helper functions
+
 - [Backing](docs/functions.md#backing)
 - [Name](docs/functions.md#name)
 - [Value](docs/functions.md#value)
 
 ### Laravel specific Features
+
 - [Blade](docs/blade.md)
 - [Casting](docs/casting.md)
 - [Validation](docs/laravel.validation.md)
 
 ### Laravel's auto-discovery
+
 When you are installing this package into a laravel project, Enumhancer will
 automatically set the global `Reporter` for the `makeOrReport` methods, so that
 it will use Laravel's `Log` facade.
 
-If you don't want that to happen, you can tell Laravel not to 
-discover the package.
+If you don't want that to happen, you can tell Laravel not to discover the
+package.
 
 ```composer
 "extra": {
@@ -96,7 +102,8 @@ composer test
 
 ### Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](CHANGELOG.md) for more information what has changed
+recently.
 
 ## Contributing
 
@@ -104,7 +111,8 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email henzeberkheij@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email
+henzeberkheij@gmail.com instead of using the issue tracker.
 
 ## Credits
 

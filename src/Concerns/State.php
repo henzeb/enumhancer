@@ -7,7 +7,6 @@ use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 
-
 trait State
 {
     /**
@@ -36,7 +35,6 @@ trait State
         $state = EnumMakers::cast(self::class, $state);
 
         return in_array($state, $this->allowedTransitions());
-
     }
 
     final public function allowedTransitions(): array

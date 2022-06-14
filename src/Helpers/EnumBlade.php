@@ -2,9 +2,9 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use Blade;
 use UnitEnum;
-use function Henzeb\Enumhancer\Functions\backing;
+use Blade;
+use Henzeb\Enumhancer\Exceptions\NotAnEnumException;
 use function Henzeb\Enumhancer\Functions\value as value;
 
 abstract class EnumBlade
@@ -26,7 +26,7 @@ abstract class EnumBlade
     private static function add(string $enumClass, bool $keepValueCase): void
     {
         if (!is_subclass_of($enumClass, UnitEnum::class, true)) {
-            throw new \RuntimeException('not an enum class');
+            NotAnEnumException::throw($enumClass);
         }
 
         Blade::stringable(

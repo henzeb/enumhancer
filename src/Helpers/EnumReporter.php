@@ -3,11 +3,11 @@
 namespace Henzeb\Enumhancer\Helpers;
 
 use BackedEnum;
+use RuntimeException;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
-use RuntimeException;
 
-class EnumReporter
+abstract class EnumReporter
 {
     private static Reporter|string|null $reporter = null;
 
@@ -22,20 +22,26 @@ class EnumReporter
             throw new RuntimeException($reporter . ' is not a ' . Reporter::class);
         }
 
-        self::$reporter = $reporter;
+        static::$reporter = $reporter;
     }
 
     public static function get(): ?Reporter
     {
+        if (empty(self::$reporter)) {
+            return null;
+        }
+
         if (is_string(self::$reporter)) {
-            return new self::$reporter();
+            return new (self::$reporter)();
         }
         return self::$reporter;
     }
 
-    public static function makeOrReport(string $class, $key, ?BackedEnum $context, ?Reporter $reporter) {
+    public static function makeOrReport(string $class, $key, ?BackedEnum $context, ?Reporter $reporter)
+    {
+        $enum = EnumMakers::tryMake($class, $key);
 
-        if (!$enum = EnumMakers::tryMake($class, $key)) {
+        if (!$enum) {
             $reporter?->report($class, $key, $context);
         }
 

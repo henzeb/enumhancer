@@ -8,7 +8,7 @@ use Henzeb\Enumhancer\Helpers\EnumCompare;
 
 trait Defaults
 {
-    public static function default(): ?self
+    final public static function default(): ?self
     {
         try {
             return EnumMakers::make(self::class, 'default', true);
@@ -17,15 +17,18 @@ trait Defaults
         }
     }
 
-    public function isDefault(): bool
+    final public function isDefault(): bool
     {
-        if ($default = self::default()) {
+        $default = self::default();
+
+        if ($default) {
             return EnumCompare::equals($this, $default);
         }
+        
         return false;
     }
 
-    public function isNotDefault(): bool
+    final public function isNotDefault(): bool
     {
         return !$this->isDefault();
     }

@@ -1,7 +1,8 @@
 # State
-State is a feature that allows you to use enums state-driven. Think of state pattern. Out of the box it
-operates like a one-way traffic-light, from top to bottom. But you can make it
-as complex as you need it to be.
+
+State is a feature that allows you to use enums state-driven. Think of state
+pattern. Out of the box it operates like a one-way traffic-light, from top to
+bottom. But you can make it as complex as you need it to be.
 
 ## Usage
 
@@ -22,6 +23,7 @@ enum elevator
 ### examples
 
 #### Basic usage
+
 ```php
 elevator::Open->allowsTransition('Close'); // returns true
 elevator::Open->allowsTransition(elevator::Move); // returns false
@@ -32,6 +34,7 @@ elevator::Close->transitionTo('Open'); // throws exception
 ```
 
 #### Complex Usage
+
 ```php
 use Henzeb\Enumhancer\Concerns\State;
 
@@ -43,7 +46,7 @@ enum elevator
     case Close;
     case Move;
     case Stop;
-    
+
     public static function transitions(): array
     {
         return [
@@ -68,22 +71,27 @@ elevator::Open->transitionTo(elevator::Close)
 
 elevator::Move->transitionTo('Open'); //throws exception
 ```
+
 The array returned by the `transitions` method can return an array containing
 the name or value as key, and the name, value or enum instance as value.
 
 Note: You can only go one level deep.
 
 #### Allowed transitions
-When you want to present the transition options to your user, you can use 
+
+When you want to present the transition options to your user, you can use
 `allowedTransitions` to get them (complex example):
+
 ```php
 elevator::Open->allowedTransitions(); // returns [elevator::Close]
 elevator::Close->allowedTransitions(); // returns [elevator::Open, elevator::Move]
 elevator::Move->allowedTransitions(); // returns [elevator::Stop]
 elevator::Stop->allowedTransitions(); // returns [elevator::Open]
 ```
-Note: when there are no transitions possible, `allowedTranslations` returns
-an empty array
+
+Note: when there are no transitions possible, `allowedTranslations` returns an
+empty array
 
 ### Validation (laravel)
+
 see [State](laravel.validation.md#state)

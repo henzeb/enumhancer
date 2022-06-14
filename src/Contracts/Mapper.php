@@ -11,19 +11,19 @@ abstract class Mapper
     private function parse(mixed $value): ?string
     {
         if (null === $value) {
-            return null;
+            $value = null;
         }
 
         if (empty($value)) {
-            return null;
+            $value = null;
         }
 
         if ($value instanceof UnitEnum) {
-            return $value->name;
+            $value = $value->name;
         }
 
         if (!is_string($value)) {
-            return null;
+            $value = null;
         }
 
         return $value;
@@ -35,7 +35,8 @@ abstract class Mapper
             $this->mappable()[$prefix][$key] ??
             $this->mappable()[$prefix][strtolower($key)] ??
             $this->mappable()[$key] ??
-            $this->mappable()[strtolower($key)] ?? null);
+            $this->mappable()[strtolower($key)] ?? null
+        );
     }
 
     public function defined(string $key, string $prefix = null): bool

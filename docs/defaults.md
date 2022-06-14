@@ -1,8 +1,8 @@
 # Defaults
 
-[Mappers](mappers.md) already allow you to define a 'default' value. This 
-however require you to create a mapper object. If you don't need mappers, 
-or want a convenient `default` method, `Defaults` is your poison.
+[Mappers](mappers.md) already allow you to define a 'default' value. This
+however require you to create a mapper object. If you don't need mappers, or
+want a convenient `default` method, `Defaults` is your poison.
 
 ## Usage
 
@@ -12,32 +12,33 @@ use Henzeb\Enumhancer\Concerns\Makers;
 
 enum YourEnum {
     use Defaults;
-    
+
     case MyEnum;
 }
 
 enum YourDefaultEnum {
     use Defaults;
-    
+
     case MyEnum;
-    case Default;  
+    case Default;
 }
 
 enum MyDefaultEnum {
     use Defaults, Makers;
-    
+
     case MyEnum;
     case Default;
     case MyDefaultEnum;
-    
+
     public static function default() : ?self
     {
         return self::MyDefaultEnum;
     }
-    
 }
 ```
+
 ### examples
+
 ```php
 YourEnum::default(); //returns null
 YourEnum::MyEnum->isDefault(); // returns false
@@ -63,7 +64,8 @@ MyDefaultEnum::tryMake('unknown'); // returns MyDefaultEnum::MyDefaultEnum
 
 ```
 
-Note: [From](from.md) will use the default value as well, but only when used with basic enums. 
+Note: [From](from.md) will use the default value as well, but only when used
+with basic enums.
 
-Note: You can also map default using [Mappers](mappers.md). The Defaults 
-methods will then use the mapped value.
+Note: You can also map default using [Mappers](mappers.md). The Defaults methods
+will then use the mapped value.

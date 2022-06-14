@@ -8,8 +8,8 @@ trait Properties
 {
     final public static function property(string $property, mixed $value = null): mixed
     {
-        if(null === $value) {
-           return EnumProperties::get(self::class, $property);
+        if (null === $value) {
+            return EnumProperties::get(self::class, $property);
         }
 
         EnumProperties::store(self::class, $property, $value);

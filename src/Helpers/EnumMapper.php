@@ -5,7 +5,7 @@ namespace Henzeb\Enumhancer\Helpers;
 use RuntimeException;
 use Henzeb\Enumhancer\Contracts\Mapper;
 
-class EnumMapper
+abstract class EnumMapper
 {
     public static function map(string $enum, string|int|null $value, Mapper|string|null ...$mappers): ?string
     {
@@ -47,7 +47,8 @@ class EnumMapper
 
                     if (!$mapper instanceof Mapper) {
                         throw new RuntimeException(
-                            sprintf('object of type \'%s\' expected, got \'%s\'',
+                            sprintf(
+                                'object of type \'%s\' expected, got \'%s\'',
                                 Mapper::class,
                                 $mapper::class
                             )
@@ -56,6 +57,6 @@ class EnumMapper
                     return $mapper;
                 },
                 array_filter($mappers)
-        );
+            );
     }
 }

@@ -2,12 +2,12 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use BackedEnum;
 use UnitEnum;
 use ValueError;
+use Henzeb\Enumhancer\Concerns\Makers;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use Henzeb\Enumhancer\Concerns\Defaults;
-
+use function Henzeb\Enumhancer\Functions\backingLowercase;
 
 abstract class EnumMakers
 {
@@ -21,36 +21,31 @@ abstract class EnumMakers
         return in_array(Defaults::class, class_uses_recursive($enum));
     }
 
-    public static function make(string $class, int|string|null $value, bool $useMapper = false, bool $useDefault = false): mixed
-    {
+    public static function make(
+        string $class,
+        int|string|null $value,
+        bool $useMapper = false,
+        bool $useDefault = false
+    ): mixed {
         EnumCheck::check($class);
 
-        if (null === $value) {
-            throw new ValueError('Invalid value!');
-        }
-
-        if ($useMapper && self::implementsMappers($class) && method_exists($class, 'make')) {
+        if ($useMapper && self::implementsMappers($class)) {
+            /**
+             * @var $class Makers;
+             */
             return $class::make($value);
         }
 
-        if($useDefault && strtolower($value)==='default' && $default = self::default($class)) {
+        $default = self::useDefaultIf($class, $value, $useDefault);
+
+        if ($default) {
             return $default;
         }
 
-        $isBackedEnum = is_subclass_of($class, BackedEnum::class);
+        $match = self::match($class, $value);
 
-        /**
-         * @var $class UnitEnum|static
-         */
-        foreach ($class::cases() as $case) {
-
-            if (strtoupper($value) === strtoupper($case->name)) {
-                return $case;
-            }
-
-            if ($isBackedEnum && strtolower($value) === strtolower((string)$case->value)) {
-                return $case;
-            }
+        if ($match) {
+            return $match;
         }
 
         throw new ValueError('Invalid Enum key!');
@@ -60,15 +55,14 @@ abstract class EnumMakers
         string $class,
         int|string|null $value,
         bool $useMapper = false,
-        bool $useDefault = true,
-    ): mixed
-    {
+        bool $useDefault = true
+    ): mixed {
         EnumCheck::check($class);
 
         try {
             return self::make($class, $value, $useMapper, $useDefault);
         } catch (ValueError) {
-            return $useDefault?self::default($class):null;
+            return $useDefault ? self::default($class) : null;
         }
     }
 
@@ -109,9 +103,42 @@ abstract class EnumMakers
     public static function cast(string $class, UnitEnum|string|int $enum): mixed
     {
         EnumCheck::check($class);
-        if($enum instanceof $class) {
+
+        if ($enum instanceof $class) {
             return $enum;
         }
         return self::make($class, $enum, useMapper: true, useDefault: true);
+    }
+
+    private static function match(string $class, int|string|null $value): ?UnitEnum
+    {
+        $value = strtolower($value);
+        /**
+         * @var $class UnitEnum
+         */
+        foreach ($class::cases() as $case) {
+            if ($value === strtolower($case->name)) {
+                return $case;
+            }
+
+            if (strtolower(backingLowercase($case)->value) === $value) {
+                return $case;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @param string $class
+     * @param bool $useDefault
+     * @param int|string|null $value
+     * @return UnitEnum|null
+     */
+    protected static function useDefaultIf(string $class, int|string|null $value, bool $useDefault): ?UnitEnum
+    {
+        if ($value && $useDefault && is_string($value) && strtolower($value) === 'default') {
+            return self::default($class);
+        }
+        return null;
     }
 }

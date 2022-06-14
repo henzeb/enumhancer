@@ -57,10 +57,9 @@ trait Mappers
 
     final public static function makeOrReport(
         int|string|null $value,
-        BackedEnum      $context = null,
-        Mapper|string   $mapper = null
-    ): ?self
-    {
+        BackedEnum $context = null,
+        Mapper|string $mapper = null
+    ): ?self {
         return EnumReporter::makeOrReport(
             self::class,
             EnumMapper::map(self::class, $value, $mapper, self::mapper()),
@@ -70,11 +69,10 @@ trait Mappers
     }
 
     public static function makeOrReportArray(
-        iterable      $values,
-        BackedEnum    $context = null,
+        iterable $values,
+        BackedEnum $context = null,
         Mapper|string $mapper = null
-    ): array
-    {
+    ): array {
         return EnumReporter::makeOrReportArray(
             self::class,
             EnumMapper::mapArray(self::class, $values, $mapper, self::mapper()),
