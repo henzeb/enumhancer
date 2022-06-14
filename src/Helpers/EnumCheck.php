@@ -8,9 +8,9 @@ use BackedEnum;
 
 class EnumCheck
 {
-    public static function check(string $enum): void
+    public static function check(UnitEnum|string $enum): void
     {
-        if (!enum_exists($enum, true)) {
+        if (!$enum instanceof UnitEnum && !enum_exists($enum, true)) {
             self::throwError();
         }
     }

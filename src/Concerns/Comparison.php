@@ -10,9 +10,6 @@ use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 
 trait Comparison
 {
-    /**
-     * @mixin BackedEnum
-     */
     final public function equals(self|string|int ...$equals): bool
     {
         return EnumCompare::equals($this, ...$equals);

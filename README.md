@@ -56,6 +56,7 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 - [Mappers](docs/mappers.md)
 - [Properties](docs/properties.md)
 - [Reporters](docs/reporters.md)
+- [State](docs/state.md)
 - [Subset](docs/subset.md)
 - [Value](docs/value.md)
 
@@ -67,6 +68,7 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 ### Laravel specific Features
 - [Blade](docs/blade.md)
 - [Casting](docs/casting.md)
+- [Validation](docs/laravel.validation.md)
 
 ### Laravel's auto-discovery
 When you are installing this package into a laravel project, Enumhancer will

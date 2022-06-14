@@ -105,4 +105,13 @@ abstract class EnumMakers
 
         return null;
     }
+
+    public static function cast(string $class, UnitEnum|string|int $enum): mixed
+    {
+        EnumCheck::check($class);
+        if($enum instanceof $class) {
+            return $enum;
+        }
+        return self::make($class, $enum, useMapper: true, useDefault: true);
+    }
 }

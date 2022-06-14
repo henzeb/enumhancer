@@ -34,7 +34,13 @@
         "eloquent",
         "laravel",
         "spatie",
-        "default"
+        "default",
+        "php 8.1",
+        "8.1",
+        "state",
+        "machine",
+        "transition",
+        "rules"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
     "license": "AGPL-3.0-only",

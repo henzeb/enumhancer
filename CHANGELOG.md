@@ -2,7 +2,10 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
-## 1.1.0 - 2022-06-12
+## 1.11.0 - 2022-06-14
+- Added [State](docs/state.md) that allows you to have transitions with enums
+
+## 1.10.0 - 2022-06-12
 - Added [Defaults](docs/defaults.md) that allows you to have default enums
 
 ## 1.9.0 - 2022-06-08
