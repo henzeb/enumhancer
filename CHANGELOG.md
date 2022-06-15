@@ -2,6 +2,10 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.12.0 - 2022-06-15
+
+- Added casting support for [State](docs/state.md)
+
 ## 1.11.0 - 2022-06-14
 
 - Added [State](docs/state.md) that allows you to have transitions with enums
