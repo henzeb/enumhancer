@@ -4,12 +4,13 @@
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
 
+use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Concerns\Makers;
 
 
 enum StringBackedMakersEnum: string
 {
-    use Makers;
+    use Makers, State;
 
     case TEST = 'TEST';
 

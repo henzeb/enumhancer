@@ -6,18 +6,18 @@ use UnitEnum;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Concerns\Makers;
 use Henzeb\Enumhancer\Concerns\Defaults;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\DefaultsEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\DefaultsNullEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\DefaultsMappedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsStringEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsNullIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\DefaultsOverriddenEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsMappedIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsNullStringEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsMappedStringEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsOverriddenIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\DefaultsOverriddenStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsNullEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsMappedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsOverriddenEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsMappedIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsMappedStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsOverriddenIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsOverriddenStringEnum;
 
 class DefaultsTest extends TestCase
 {

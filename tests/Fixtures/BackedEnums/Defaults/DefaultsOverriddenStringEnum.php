@@ -1,17 +1,17 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Fixtures\BackedEnums;
+namespace Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults;
 
 use Henzeb\Enumhancer\Concerns\From;
 use Henzeb\Enumhancer\Concerns\Makers;
 use Henzeb\Enumhancer\Concerns\Defaults;
 
-enum DefaultsOverriddenIntEnum: int
+enum DefaultsOverriddenStringEnum: string
 {
     use Defaults, From, Makers;
 
-    case Enum = 1;
-    case Default = 0;
+    case Enum = 'enum';
+    case Default = 'default';
 
     public static function default(): ?self
     {

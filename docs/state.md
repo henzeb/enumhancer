@@ -92,6 +92,10 @@ elevator::Stop->allowedTransitions(); // returns [elevator::Open]
 Note: when there are no transitions possible, `allowedTranslations` returns an
 empty array
 
-### Validation (laravel)
+### Validation (Laravel)
 
 see [State](laravel.validation.md#state)
+
+### Casting (Laravel)
+
+see [Casting](casting.md#state)

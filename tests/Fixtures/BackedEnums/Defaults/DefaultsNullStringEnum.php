@@ -1,6 +1,6 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Fixtures\BackedEnums;
+namespace Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults;
 
 use Henzeb\Enumhancer\Concerns\From;
 use Henzeb\Enumhancer\Concerns\Makers;

@@ -9,11 +9,14 @@ use Orchestra\Testbench\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\CastsBasicEnumsModel;
+use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\CastsBasicEnumsLowerCaseModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsLowerCaseModel;
 
-class CastsBasicEnumsTest extends TestCase
+class CastsStatefulEnumerationsTest extends TestCase
 {
     public function providesEnums()
     {
@@ -35,7 +38,7 @@ class CastsBasicEnumsTest extends TestCase
      */
     public function testShouldCastCorrectlyFromString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
-        $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
+        $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
         $model->setRawAttributes([
             $key => EnumValue::value($enum, $keepCase)
         ]);
@@ -53,7 +56,7 @@ class CastsBasicEnumsTest extends TestCase
      */
     public function testShouldCastCorrectlyToString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
-        $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
+        $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
         $model->$key = $enum;
 
         $this->assertEquals(
@@ -94,14 +97,52 @@ class CastsBasicEnumsTest extends TestCase
 
     public function testShouldFailIfStringIsNotValid() {
         $this->expectException(ValueError::class);
-        $model = new CastsBasicEnumsModel();
+        $model = new CastsStatefulEnumsModel();
         $model->unitEnum = 'NotAnEnum';
     }
 
     public function testShouldFailIfEnumIsNotValid() {
         $this->expectException(ValueError::class);
 
-        $model = new CastsBasicEnumsModel();
+        $model = new CastsStatefulEnumsModel();
         $model->unitEnum = IntBackedEnum::TEST;
+    }
+
+    public function testShouldNotThrowErrorWhenChangingStatelessEnumValue()
+    {
+        $model = new CastsStatefulEnumsModel();
+        $model->unitEnum = 'Enum';
+        $model->unitEnum = 'THIRD_ENUM';
+
+        $this->assertEquals(SubsetUnitEnum::THIRD_ENUM, $model->unitEnum);
+    }
+
+    public function testShouldJustCastWhenEnumIsNotStatefulValue()
+    {
+        $model = new CastsStatefulEnumsModel();
+        $model->intBackedEnum = 0;
+        $model->intBackedEnum = 2;
+
+        $this->assertEquals(IntBackedEnum::TEST_3, $model->intBackedEnum);
+    }
+
+    public function testShouldAllowTransition()
+    {
+        $this->expectException(IllegalEnumTransitionException::class);
+        $model = new CastsStatefulEnumsModel();
+
+        $model->stringBackedEnum = StringBackedMakersEnum::TEST;
+        $model->stringBackedEnum = StringBackedMakersEnum::TEST1;
+
+        $this->assertEquals(StringBackedMakersEnum::TEST1, $model->stringBackedEnum);
+    }
+
+    public function testShouldThrowExceptionWhenTransitionIsNotAllowed()
+    {
+        $this->expectException(IllegalEnumTransitionException::class);
+        $model = new CastsStatefulEnumsModel();
+
+        $model->stringBackedEnum = StringBackedMakersEnum::TEST;
+        $model->stringBackedEnum = StringBackedMakersEnum::TEST_STRING_TO_UPPER;
     }
 }

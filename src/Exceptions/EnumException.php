@@ -7,7 +7,7 @@ use Exception;
 abstract class EnumException extends Exception
 {
     /**
-     * @throws EnumException|Exception
+     * @throws static
      */
     public static function throw(mixed ...$parameters): never
     {

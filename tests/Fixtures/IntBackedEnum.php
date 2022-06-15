@@ -21,4 +21,6 @@ enum IntBackedEnum: int
 
     case TEST = 0;
     case TEST_2 = 1;
+    case TEST_3 = 2;
+
 }

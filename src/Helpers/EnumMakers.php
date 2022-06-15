@@ -5,22 +5,10 @@ namespace Henzeb\Enumhancer\Helpers;
 use UnitEnum;
 use ValueError;
 use Henzeb\Enumhancer\Concerns\Makers;
-use Henzeb\Enumhancer\Concerns\Mappers;
-use Henzeb\Enumhancer\Concerns\Defaults;
 use function Henzeb\Enumhancer\Functions\backingLowercase;
 
 abstract class EnumMakers
 {
-    private static function implementsMappers(string $enum): bool
-    {
-        return in_array(Mappers::class, class_uses_recursive($enum));
-    }
-
-    private static function implementsDefaulting(string $enum): bool
-    {
-        return in_array(Defaults::class, class_uses_recursive($enum));
-    }
-
     public static function make(
         string $class,
         int|string|null $value,
@@ -29,7 +17,7 @@ abstract class EnumMakers
     ): mixed {
         EnumCheck::check($class);
 
-        if ($useMapper && self::implementsMappers($class)) {
+        if ($useMapper && EnumImplements::mappers($class)) {
             /**
              * @var $class Makers;
              */
@@ -93,7 +81,7 @@ abstract class EnumMakers
 
     private static function default(string $class): ?UnitEnum
     {
-        if (self::implementsDefaulting($class) && method_exists($class, 'default')) {
+        if (EnumImplements::defaults($class) && method_exists($class, 'default')) {
             return $class::default();
         }
 

@@ -5,7 +5,6 @@ namespace Henzeb\Enumhancer\Tests\Fixtures;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Concerns\Constructor;
-use function Henzeb\Enumhancer\Functions\s;
 use function Henzeb\Enumhancer\Functions\n;
 
 

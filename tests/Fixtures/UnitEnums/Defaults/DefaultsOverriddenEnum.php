@@ -1,6 +1,6 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Fixtures\UnitEnums;
+namespace Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults;
 
 use Henzeb\Enumhancer\Concerns\From;
 use Henzeb\Enumhancer\Concerns\Makers;

@@ -1,8 +1,11 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Fixtures;
+namespace Henzeb\Enumhancer\Tests\Fixtures\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 use Henzeb\Enumhancer\Laravel\Concerns\CastsBasicEnumerations;
 
 class CastsBasicEnumsLowerCaseModel extends Model

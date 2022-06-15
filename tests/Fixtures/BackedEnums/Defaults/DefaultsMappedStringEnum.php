@@ -1,19 +1,18 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Fixtures\UnitEnums;
+namespace Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults;
 
 use Henzeb\Enumhancer\Concerns\From;
-use Henzeb\Enumhancer\Concerns\Makers;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Concerns\Defaults;
 
-enum DefaultsMappedEnum
+enum DefaultsMappedStringEnum: string
 {
     use Defaults, From, Mappers;
 
-    case Enum;
-    case DefaultEnum;
+    case Enum = 'enum';
+    case DefaultEnum = 'defaultEnum';
 
     protected static function mapper(): ?Mapper
     {
@@ -21,7 +20,7 @@ enum DefaultsMappedEnum
             protected function mappable(): array
             {
                 return [
-                    'default' => DefaultsMappedEnum::Enum
+                    'default' => DefaultsMappedStringEnum::Enum
                 ];
             }
         };
