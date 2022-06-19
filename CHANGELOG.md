@@ -2,6 +2,12 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.12.0 - 2022-06-19
+
+- Added transition hooks [State](docs/state.md)
+- [Makers](docs/makers.md) & [From](docs/from.md) now allow you to use integer 
+  keys on basic and string enums
+
 ## 1.12.0 - 2022-06-15
 
 - Added casting support for [State](docs/state.md)

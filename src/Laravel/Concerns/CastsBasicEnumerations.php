@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Laravel\Concerns;
 
 use UnitEnum;
 use BackedEnum;
+use ValueError;
 use Illuminate\Database\Eloquent\Model;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
@@ -51,8 +52,10 @@ trait CastsBasicEnumerations
             $value = EnumValue::value($value, $keepEnumCase);
         }
 
-        if ($value instanceof UnitEnum) {
-            $value = EnumValue::value($value, $keepEnumCase);
+        if ($value instanceof UnitEnum && !$value instanceof $enumClass) {
+            throw new ValueError(
+                sprintf('Enum of `%s` expected, got `%s`', $enumClass, $value::class)
+            );
         }
 
         $this->attributes[$key] = EnumValue::value(EnumMakers::make($enumClass, $value), $keepEnumCase);

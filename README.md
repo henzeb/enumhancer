@@ -13,6 +13,12 @@ more will be added in the future.
 If you have an idea, or you miss something that needs to be added, just let me
 know.
 
+Enumhancer is case-agnostic, which means `Enum` equals `ENUM` equals `enum`. It
+Is also agnostic in what type of enum you use. Which means you can use
+numeric keys with basic and string backed enums as well as string keys with
+basic and integer backed enums. New projects rarely needs more than basic
+enums anyway.
+
 Note: While functionality that also exists in Spatie's PHP Enum is made
 backwards compatible to allow for an easy migration to PHP native enums,
 currently this is not the case for the PHPUnit assertions or Faker Provider.

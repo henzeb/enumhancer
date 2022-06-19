@@ -21,6 +21,7 @@ enum yourEnum {
 
 ```php
 YourEnum::from('my_enum'); // will return YourEnum::MY_ENUM;
+YourEnum::from(0); // will return YourEnum::MY_ENUM;
 YourEnum::from('MY_ENUM'); // will return YourEnum::MY_ENUM;
 YourEnum::from('CALLABLE'); // will throw error
 
@@ -34,4 +35,4 @@ uppercase names, and you can also use [Mappers](mappers.md) that you have
 defined using the `mappers` method and the [Defaults](mappers.md).
 
 Warning: Be aware that this feature will not work if you have a backed enum.
-Even when you use this trait, currently the original methods take precedence.
+Even when you use this trait, currently, the original methods take precedence.

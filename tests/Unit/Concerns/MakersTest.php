@@ -7,6 +7,7 @@ use Generator;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 use PHPUnit\Framework\TestCase;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Makers\MakersUnitEnum;
 
 
 class MakersTest extends TestCase
@@ -159,6 +160,18 @@ class MakersTest extends TestCase
                     yield 'DOES_NOT_EXIST';
                 })()
             )
+        );
+    }
+
+    public function testMakeStringBackedEnumWithInteger() {
+        $this->assertEquals(
+            StringBackedMakersEnum::TEST1, StringBackedMakersEnum::make(1)
+        );
+    }
+
+    public function testMakeUnitEnumWithInteger() {
+        $this->assertEquals(
+            MakersUnitEnum::Zero, MakersUnitEnum::make(0)
         );
     }
 }

@@ -5,6 +5,7 @@ namespace Henzeb\Enumhancer\Helpers;
 use UnitEnum;
 use ValueError;
 use Henzeb\Enumhancer\Concerns\Makers;
+use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 use function Henzeb\Enumhancer\Functions\backingLowercase;
 
 abstract class EnumMakers
@@ -110,10 +111,27 @@ abstract class EnumMakers
 
     private static function match(string $class, int|string|null $value): ?UnitEnum
     {
-        $value = strtolower($value);
+        if (null === $value) {
+            return null;
+        }
+
         /**
          * @var $class UnitEnum
          */
+        if (isset($class::cases()[$value])) {
+            return $class::cases()[$value];
+        }
+
+        return self::findInCases($class, $value);
+    }
+
+    private static function findInCases(string $class, int|string $value): ?UnitEnum
+    {
+        /**
+         * @var $class UnitEnum
+         */
+        $value = strtolower($value);
+
         foreach ($class::cases() as $case) {
             if ($value === strtolower($case->name)) {
                 return $case;
