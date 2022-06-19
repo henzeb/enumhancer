@@ -2,14 +2,25 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use Mockery;
 use UnitEnum;
+use Mockery\Mock;
 use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorDisableTransitionEnum;
 
-class StateTest extends TestCase
+class StateTest extends MockeryTestCase
 {
+    protected function tearDown(): void
+    {
+        StateElevatorEnum::unsetAll();
+        parent::tearDown();
+    }
+
     public function testBasicTransition(): void
     {
         $this->assertEquals(
@@ -78,15 +89,160 @@ class StateTest extends TestCase
         $from->transitionTo($to);
     }
 
+    public function testNullParameterDisablesTransition(): void
+    {
+        $this->assertFalse(StateElevatorDisableTransitionEnum::Open->isTransitionAllowed('close'));
+
+        $this->expectException(IllegalEnumTransitionException::class);
+
+        StateElevatorDisableTransitionEnum::Open->transitionTo('close');
+    }
+
+    public function testCloseToMoveStillWorksWhenCustomTransitions(): void
+    {
+        $this->assertTrue(StateElevatorDisableTransitionEnum::Close->isTransitionAllowed('move'));
+    }
+
+    public function testTransitionsShouldBeFullyPropagatedWhenUsingCustomTransitions() {
+
+        $this->assertEquals(
+            [
+                'Open'=> null,
+                'Close'=> StateElevatorDisableTransitionEnum::Move,
+                'Move' => StateElevatorDisableTransitionEnum::Stop,
+            ],
+            StateElevatorDisableTransitionEnum::transitions()
+        );
+
+    }
+
     /**
-     * @param UnitEnum|StateElevatorEnum|StateElevatorComplexEnum|string|int $from
-     * @param StateElevatorEnum|StateElevatorComplexEnum|string|int $to
-     * @return void
-     *
      * @dataProvider providesNotAllowedTransitionTestcases
      */
     public function testTransitionsNotAllowed(mixed $from, mixed $to): void
     {
         $this->assertFalse($from->isTransitionAllowed($to));
+    }
+
+    public function testTransitionNotAllowedByTransitionHook(): void
+    {
+        $hook = new class extends TransitionHook {
+
+            public function OpenClose(): void
+            {
+            }
+
+            public function allowsOpenClose(): bool
+            {
+                return false;
+            }
+        };
+
+        /**
+         * @var $hook TransitionHook|Mock
+         */
+        $hook = Mockery::mock($hook)->makePartial();
+        $hook->expects('OpenClose')->never();
+
+        $this->assertFalse(StateElevatorEnum::Open->isTransitionAllowed('close', $hook));
+    }
+
+    public function testTransitionNotAllowedByStoredTransitionHook(): void
+    {
+        $hook = new class extends TransitionHook {
+
+            public function OpenClose(): void
+            {
+            }
+
+            public function allowsOpenClose(): bool
+            {
+                return false;
+            }
+        };
+
+        /**
+         * @var $hook TransitionHook|Mock
+         */
+        $hook = Mockery::mock($hook)->makePartial();
+        $hook->expects('OpenClose')->never();
+        StateElevatorEnum::setTransitionHook($hook);
+        $this->assertFalse(StateElevatorEnum::Open->isTransitionAllowed('close'));
+    }
+
+    public function testRunsTransitionHook(): void
+    {
+        $hook = new class extends TransitionHook {
+
+            public function OpenClose(): void
+            {
+            }
+
+            public function allowsOpenClose(): bool
+            {
+                return true;
+            }
+        };
+        /**
+         * @var $hook TransitionHook|Mock
+         */
+        $hook = Mockery::mock($hook)->makePartial();
+        $hook->expects('OpenClose');
+
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->transitionTo('close', $hook));
+    }
+
+    public function testRunsStoredTransitionHook(): void
+    {
+        $hook = new class extends TransitionHook {
+
+            public function openClose(): void
+            {
+            }
+
+            public function allowsOpenClose(): bool
+            {
+                return true;
+            }
+        };
+        /**
+         * @var $hook TransitionHook|Mock
+         */
+        $hook = Mockery::mock($hook)->makePartial();
+        $hook->expects('openClose');
+        StateElevatorEnum::setTransitionHook($hook);
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->transitionTo('close'));
+    }
+
+    public function testTransitionFailsWithBothTransitionHooks(): void
+    {
+        $hookFail = new class extends TransitionHook {
+
+            public function allowsOpenClose(): bool
+            {
+                return false;
+            }
+        };
+
+        $hookSuccess = new class extends TransitionHook {
+
+
+            public function allowsOpenClose(): bool
+            {
+                return true;
+            }
+        };
+
+        StateElevatorEnum::setTransitionHook($hookFail);
+        $this->assertFalse(StateElevatorEnum::Open->isTransitionAllowed('close', $hookSuccess));
+
+        StateElevatorEnum::setTransitionHook($hookFail);
+        $this->assertFalse(StateElevatorEnum::Open->isTransitionAllowed('close', $hookFail));
+
+        StateElevatorEnum::setTransitionHook($hookSuccess);
+        $this->assertFalse(StateElevatorEnum::Open->isTransitionAllowed('close', $hookFail));
+
+        StateElevatorEnum::setTransitionHook($hookSuccess);
+        $this->assertTrue(StateElevatorEnum::Open->isTransitionAllowed('close', $hookSuccess));
     }
 }

@@ -1,14 +1,12 @@
 <?php
 
-namespace Unit\Laravel\Provider;
+namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Provider;
 
 
-
-
-use Henzeb\Enumhancer\Helpers\EnumReporter;
-use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
-use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use Orchestra\Testbench\TestCase;
+use Henzeb\Enumhancer\Helpers\EnumReporter;
+use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
+use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 
 class EnumhancerServiceProviderTest extends TestCase
 {
@@ -24,7 +22,8 @@ class EnumhancerServiceProviderTest extends TestCase
         return [EnumhancerServiceProvider::class];
     }
 
-    public function testHasSetLaravelReporter() {
+    public function testHasSetLaravelReporter()
+    {
         $this->assertEquals(
             LaravelLogReporter::class,
             EnumReporter::get()::class

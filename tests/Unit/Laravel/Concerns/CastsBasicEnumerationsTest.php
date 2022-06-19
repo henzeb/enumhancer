@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Laravel\Concerns;
+namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
 
 
 use UnitEnum;
@@ -9,8 +9,8 @@ use Orchestra\Testbench\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
 
 class CastsBasicEnumerationsTest extends TestCase
@@ -62,21 +62,24 @@ class CastsBasicEnumerationsTest extends TestCase
         );
     }
 
-    public function testShouldHandleNull() {
+    public function testShouldHandleNull()
+    {
         $model = new CastsBasicEnumsModel();
         $model->unitEnum = null;
 
         $this->assertEquals(null, $model->unitEnum);
     }
 
-    public function testShouldHandleObjectInAttribute() {
+    public function testShouldHandleObjectInAttribute()
+    {
         $model = new CastsBasicEnumsModel();
-        $model->setRawAttributes(['unitEnum'=>SubsetUnitEnum::ENUM]);
+        $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
 
         $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
     }
 
-    public function testShouldHandleStringValue() {
+    public function testShouldHandleStringValue()
+    {
         $model = new CastsBasicEnumsModel();
         $model->unitEnum = 'enum';
 
@@ -85,20 +88,23 @@ class CastsBasicEnumerationsTest extends TestCase
         $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
     }
 
-    public function testShouldHandleStringValueLowerCase() {
+    public function testShouldHandleStringValueLowerCase()
+    {
         $model = new CastsBasicEnumsLowerCaseModel();
         $model->unitEnum = 'ENUM';
 
         $this->assertEquals('enum', $model->getAttributes()['unitEnum']);
     }
 
-    public function testShouldFailIfStringIsNotValid() {
+    public function testShouldFailIfStringIsNotValid()
+    {
         $this->expectException(ValueError::class);
         $model = new CastsBasicEnumsModel();
         $model->unitEnum = 'NotAnEnum';
     }
 
-    public function testShouldFailIfEnumIsNotValid() {
+    public function testShouldFailIfEnumIsNotValid()
+    {
         $this->expectException(ValueError::class);
 
         $model = new CastsBasicEnumsModel();

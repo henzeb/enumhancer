@@ -72,6 +72,13 @@ class YourModel extends Model
     $casts = [
         'state' => elevator::class
     ];
+
+    /** Use this when you want to use hooks. */
+    public function getTransactionHooks(string $attribute) : ?TransitionHooks{
+        return match($attribute) {
+            'state' => new YourElevatorHook($this->currentFloor);
+        }
+    }
 }
 
 ```
@@ -96,3 +103,4 @@ class YourModel extends Model
     protected $castsIgnoreEnumState = ['maintenance_mode'];
 }
 ```
+

@@ -9,6 +9,9 @@ use function Henzeb\Enumhancer\Functions\value as value;
 
 abstract class EnumBlade
 {
+    /**
+     * @throws NotAnEnumException
+     */
     public static function register(string ...$enumclasses): void
     {
         foreach ($enumclasses as $enumClass) {
@@ -16,6 +19,9 @@ abstract class EnumBlade
         }
     }
 
+    /**
+     * @throws NotAnEnumException
+     */
     public static function registerLowercase(string ...$enumclasses): void
     {
         foreach ($enumclasses as $enumClass) {
@@ -23,10 +29,13 @@ abstract class EnumBlade
         }
     }
 
+    /**
+     * @throws NotAnEnumException
+     */
     private static function add(string $enumClass, bool $keepValueCase): void
     {
         if (!is_subclass_of($enumClass, UnitEnum::class, true)) {
-            NotAnEnumException::throw($enumClass);
+            throw new NotAnEnumException($enumClass);
         }
 
         Blade::stringable(

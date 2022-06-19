@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Contracts;
+namespace Henzeb\Enumhancer\Tests\Unit\Contracts;
 
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;

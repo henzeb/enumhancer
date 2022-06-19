@@ -30,7 +30,7 @@ abstract class EnumImplements
         return self::traitOn($class, State::class);
     }
 
-    private static function classUsesTrait(string $class)
+    private static function classUsesTrait(string $class): array
     {
         $results = [];
 

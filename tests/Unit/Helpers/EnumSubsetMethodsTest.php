@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Helpers;
+namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;

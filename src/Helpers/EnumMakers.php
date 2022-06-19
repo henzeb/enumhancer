@@ -88,14 +88,24 @@ abstract class EnumMakers
         return null;
     }
 
-    public static function cast(string $class, UnitEnum|string|int $enum): mixed
+    public static function cast(string $class, UnitEnum|string|int $enum): UnitEnum
     {
         EnumCheck::check($class);
 
         if ($enum instanceof $class) {
             return $enum;
         }
+
         return self::make($class, $enum, useMapper: true, useDefault: true);
+    }
+
+    public static function tryCast(string $class, int|string $key): ?UnitEnum
+    {
+        try {
+            return self::cast($class, $key);
+        } catch (ValueError) {
+            return null;
+        }
     }
 
     private static function match(string $class, int|string|null $value): ?UnitEnum

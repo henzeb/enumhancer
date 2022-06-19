@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Helpers;
+namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use Henzeb\Enumhancer\Helpers\EnumMakers;
 

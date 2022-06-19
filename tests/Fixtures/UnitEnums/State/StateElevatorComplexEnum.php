@@ -14,10 +14,9 @@ enum StateElevatorComplexEnum
     case Move;
     case Stop;
 
-    public static function transitions(): array
+    private static function customTransitions(): array
     {
         return [
-            'Open' => self::Close,
             'Close' => [
                 self::Open,
                 'Move',

@@ -5,6 +5,7 @@ namespace Henzeb\Enumhancer\Laravel\Rules;
 use UnitEnum;
 use Henzeb\Enumhancer\Concerns\State;
 use Illuminate\Contracts\Validation\Rule;
+use Henzeb\Enumhancer\Contracts\TransitionHook;
 
 class EnumTransition implements Rule
 {
@@ -13,10 +14,12 @@ class EnumTransition implements Rule
      */
     private UnitEnum $currentState;
     private ?string $transitionTo = null;
+    private ?TransitionHook $hook;
 
-    public function __construct(UnitEnum $currentState)
+    public function __construct(UnitEnum $currentState, TransitionHook $hook = null)
     {
         $this->currentState = $currentState;
+        $this->hook = $hook;
     }
 
     /**
@@ -29,7 +32,7 @@ class EnumTransition implements Rule
     public function passes($attribute, $value)
     {
         $this->transitionTo = $value;
-        return $this->currentState->isTransitionAllowed($value);
+        return $this->currentState->isTransitionAllowed($value, $this->hook);
     }
 
     /**

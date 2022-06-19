@@ -92,9 +92,66 @@ elevator::Stop->allowedTransitions(); // returns [elevator::Open]
 Note: when there are no transitions possible, `allowedTranslations` returns an
 empty array
 
+#### Transition hooks
+
+Transition hooks will give you more granular control about transitions. It
+allows you to allow a transaction based on a condition and it also allows you to
+do some other things when a transaction occurs.
+
+For example: You could use it to allow stopping the elevator only when the floor
+is reached and you can change the current level by every move up or down.
+
+We start out with making an `TransitionHook` class. The method-names are based
+on the enum's name. cases don't really matter here, just like always.
+
+- allow\<From name\>\<To name\>
+- \<From name\>\<To name\>
+
+Example:
+
+```php
+use Henzeb\Enumhancer\Contracts\TransitionHook;
+
+class ElevatorHooks extends TransitionHook {
+    private int $floor = 1;
+    protected function allowMoveStop(): bool
+    {
+        return false;
+    }
+
+    protected function closeMove() {
+        $this->floor++;
+    }
+}
+```
+
+```php
+$hooks = new ElevatorHooks();
+elevator::Move->allowTransition('stop', $hook); // returns false
+elevator::Move->allowedTransitions($hook); // returns []
+elevator::Move->transitionTo('stop', $hook); // throws IllegalEnumTransitionException
+elevator::Close->allowTransition('move', $hook); // returns true
+elevator::Close->transitionTo('move', $hook); // returns increases $floor to 2
+```
+
+You can also add a `TransitionHook` directly on to your enum class.
+
+```php
+enum elevator {
+    use State;
+
+    public static function transitionHooks(): ?TransitionHooks
+    {
+        return new ElevatorHooks();
+    }
+}
+```
+
+If you use both ways, both need to return true, in order to allow a transition.
+
 ### Validation (Laravel)
 
-see [State](laravel.validation.md#state)
+see [State](laravel.validation.md#EnumTransition)
 
 ### Casting (Laravel)
 

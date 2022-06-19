@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Laravel\Concerns;
 
 use Henzeb\Enumhancer\Helpers\EnumImplements;
+use Henzeb\Enumhancer\Contracts\TransitionHook;
 
 /**
  * @property array $castsIgnoreEnumState Change public to private/protected if needed.
@@ -11,6 +12,17 @@ trait CastsStatefulEnumerations
 {
     use CastsBasicEnumerations {
         setEnumCastableAttribute as private setEnumCastableAttributeAnyway;
+    }
+
+    /**
+     * @param string $attribute
+     * @return TransitionHook|null
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function getTransactionHooks(string $attribute): ?TransitionHook
+    {
+        return null;
     }
 
     protected function setEnumCastableAttribute($key, $value)
@@ -24,7 +36,7 @@ trait CastsStatefulEnumerations
 
         $this->setEnumCastableAttributeAnyway(
             $key,
-            $currentAttribute->transitionTo($value)
+            $currentAttribute->transitionTo($value, $this->getTransactionHooks($key))
         );
     }
 

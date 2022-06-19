@@ -3,8 +3,13 @@
 Enums do not support properties. This is due to the simple fact that enums are
 forbidden to have any form of state. But sometimes you need to store something.
 
+For example, if you use `Enumhancer` outside a framework with
+dependency injection and you want to inject a
+[TransitionHook](state.md#transition-hooks) or a
+[Mapper](mappers.md).
+
 Note: Just to follow the rules of PHP, the properties are stored per
-`enum object` or globally for all enums and the methods are therefore `static`.
+`enum class` or globally for all enums and the methods are therefore `static`.
 
 ## Usage
 

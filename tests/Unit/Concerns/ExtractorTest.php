@@ -1,6 +1,6 @@
 <?php
 
-namespace Unit\Concerns;
+namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;

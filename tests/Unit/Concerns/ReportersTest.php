@@ -1,6 +1,6 @@
 <?php
 
-namespace Henzeb\Tests\Unit\Concerns;
+namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 
 use BackedEnum;

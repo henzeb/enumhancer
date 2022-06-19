@@ -7,12 +7,14 @@ can help you out.
 
 For validation of basic enums see [From](from.md).
 
-## State
+## EnumTransition
 
 This rule is for use in conjunction with [State](state.md).
 
 The state you start from can come from the database (when updating) or can be a
 default one (when creating new).
+
+It's also possible to pass a `TransitionHooks` as second parameter.
 
 ### example
 
@@ -22,6 +24,9 @@ use Henzeb\Enumhancer\Laravel\Rules\EnumTransition;
 # rules
 [
     'state' => [new EnumTransition(elevator::Open)]
+]
+[
+    'state' => [new EnumTransition(elevator::Open, new YourTransitionHooks())]
 ]
 
 # input

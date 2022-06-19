@@ -1,12 +1,12 @@
 <?php
 
-namespace Unit\Laravel\Reporters;
+namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Reporters;
 
 
-use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use Illuminate\Support\Facades\Log;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Support\Facades\Log;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 
 class LaravelLogReporterTest extends TestCase
 {
@@ -40,7 +40,6 @@ class LaravelLogReporterTest extends TestCase
             ]
         ]);
     }
-
 
 
 }

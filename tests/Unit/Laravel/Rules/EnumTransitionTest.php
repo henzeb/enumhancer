@@ -5,6 +5,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Rules;
 use UnitEnum;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Support\Facades\Validator;
+use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Laravel\Rules\EnumTransition;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
@@ -77,6 +78,49 @@ class EnumTransitionTest extends TestCase
                 ]
             )->fails()
         );
+    }
+
+    public function testValidateTransitionFailsWithHook()
+    {
+        $hook = new class extends TransitionHook {
+            protected function allowsOpenClose(): bool
+            {
+                return false;
+            }
+        };
+
+        $this->assertEquals(true,
+            Validator::make(
+                [
+                    'state' => StateElevatorEnum::Close->name
+                ],
+                [
+                    'state' => [new EnumTransition(StateElevatorEnum::Open, $hook)]
+                ]
+            )->fails()
+        );
+    }
+
+    public function testValidateTransitionWithHook()
+    {
+        $hook = new class extends TransitionHook {
+            protected function allowsOpenClose(): bool
+            {
+                return true;
+            }
+        };
+
+        $this->assertEquals(false,
+            Validator::make(
+                [
+                    'state' => StateElevatorEnum::Close->name
+                ],
+                [
+                    'state' => [new EnumTransition(StateElevatorEnum::Open, $hook)]
+                ]
+            )->fails()
+        );
+        \Mockery::close();
     }
 
     public function testBasicValidationMessage()

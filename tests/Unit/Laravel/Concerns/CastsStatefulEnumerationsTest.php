@@ -1,18 +1,22 @@
 <?php
 
-namespace Unit\Laravel\Concerns;
+namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
 
 
 use UnitEnum;
 use ValueError;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Database\Eloquent\Model;
 use Henzeb\Enumhancer\Helpers\EnumValue;
+use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Laravel\Concerns\CastsStatefulEnumerations;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsLowerCaseModel;
 
@@ -65,21 +69,24 @@ class CastsStatefulEnumerationsTest extends TestCase
         );
     }
 
-    public function testShouldHandleNull() {
+    public function testShouldHandleNull()
+    {
         $model = new CastsBasicEnumsModel();
         $model->unitEnum = null;
 
         $this->assertEquals(null, $model->unitEnum);
     }
 
-    public function testShouldHandleObjectInAttribute() {
+    public function testShouldHandleObjectInAttribute()
+    {
         $model = new CastsBasicEnumsModel();
-        $model->setRawAttributes(['unitEnum'=>SubsetUnitEnum::ENUM]);
+        $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
 
         $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
     }
 
-    public function testShouldHandleStringValue() {
+    public function testShouldHandleStringValue()
+    {
         $model = new CastsBasicEnumsModel();
         $model->unitEnum = 'enum';
 
@@ -88,20 +95,23 @@ class CastsStatefulEnumerationsTest extends TestCase
         $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
     }
 
-    public function testShouldHandleStringValueLowerCase() {
+    public function testShouldHandleStringValueLowerCase()
+    {
         $model = new CastsBasicEnumsLowerCaseModel();
         $model->unitEnum = 'ENUM';
 
         $this->assertEquals('enum', $model->getAttributes()['unitEnum']);
     }
 
-    public function testShouldFailIfStringIsNotValid() {
+    public function testShouldFailIfStringIsNotValid()
+    {
         $this->expectException(ValueError::class);
         $model = new CastsStatefulEnumsModel();
         $model->unitEnum = 'NotAnEnum';
     }
 
-    public function testShouldFailIfEnumIsNotValid() {
+    public function testShouldFailIfEnumIsNotValid()
+    {
         $this->expectException(ValueError::class);
 
         $model = new CastsStatefulEnumsModel();
@@ -144,5 +154,32 @@ class CastsStatefulEnumerationsTest extends TestCase
 
         $model->stringBackedEnum = StringBackedMakersEnum::TEST;
         $model->stringBackedEnum = StringBackedMakersEnum::TEST_STRING_TO_UPPER;
+    }
+
+    public function testShouldThrowExceptionWhenTransitionIsNotAllowedWithHook()
+    {
+        $model = new class extends Model {
+            use CastsStatefulEnumerations;
+
+            protected $casts = [
+                'state' => StateElevatorEnum::class
+            ];
+
+            public function getTransactionHooks(string $attribute): ?TransitionHook
+            {
+                return match ($attribute) {
+                    'state' => new class extends TransitionHook {
+                        protected function allowsOpenClose(): bool
+                        {
+                            return false;
+                        }
+                    }
+                };
+            }
+        };
+
+        $model->state = StateElevatorEnum::Open;
+        $this->expectException(IllegalEnumTransitionException::class);
+        $model->state = StateElevatorEnum::Close;
     }
 }
