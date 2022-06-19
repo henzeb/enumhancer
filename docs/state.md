@@ -47,7 +47,7 @@ enum elevator
     case Move;
     case Stop;
 
-    public static function transitions(): array
+    public static function customTransitions(): array
     {
         return [
             'open' => 'close',
@@ -72,7 +72,7 @@ elevator::Open->transitionTo(elevator::Close)
 elevator::Move->transitionTo('Open'); //throws exception
 ```
 
-The array returned by the `transitions` method can return an array containing
+The array returned by the `customTransitions` method can return an array containing
 the name or value as key, and the name, value or enum instance as value.
 
 Note: You can only go one level deep.
