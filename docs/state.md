@@ -104,7 +104,7 @@ is reached and you can change the current level by every move up or down.
 We start out with making an `TransitionHook` class. The method-names are based
 on the enum's name. cases don't really matter here, just like always.
 
-- allow\<From name\>\<To name\>
+- allows\<From name\>\<To name\>
 - \<From name\>\<To name\>
 
 Example:
@@ -114,7 +114,7 @@ use Henzeb\Enumhancer\Contracts\TransitionHook;
 
 class ElevatorHooks extends TransitionHook {
     private int $floor = 1;
-    protected function allowMoveStop(): bool
+    protected function allowsMoveStop(): bool
     {
         return false;
     }
