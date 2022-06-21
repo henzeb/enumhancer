@@ -7,6 +7,7 @@ use Henzeb\Enumhancer\Helpers\EnumMakers;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 
 /**
  * @ignore
@@ -39,5 +40,20 @@ class EnumMakersTest extends TestCase
         $this->expectError();
 
         EnumMakers::tryMakeArray(stdClass::class, ['test']);
+    }
+
+    public function testTryCastReturnsNull()
+    {
+        $this->assertNull(EnumMakers::tryCast(EnhancedUnitEnum::class, 'DoesnotExist'));
+    }
+
+    public function testTryCast()
+    {
+        $this->assertEquals(EnhancedUnitEnum::ENUM, EnumMakers::tryCast(EnhancedUnitEnum::class, 'ENUM'));
+    }
+
+    public function testTryCastAlreadyEnum()
+    {
+        $this->assertEquals(EnhancedUnitEnum::ENUM, EnumMakers::tryCast(EnhancedUnitEnum::class, EnhancedUnitEnum::ENUM));
     }
 }

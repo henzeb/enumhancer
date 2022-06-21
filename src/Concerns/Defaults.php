@@ -2,13 +2,14 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
+use UnitEnum;
 use ValueError;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
 use Henzeb\Enumhancer\Helpers\EnumCompare;
 
 trait Defaults
 {
-    final static public function default(): ?self
+    static public function default(): ?UnitEnum
     {
         try {
             return EnumMakers::make(self::class, 'default', true);
@@ -17,7 +18,7 @@ trait Defaults
         }
     }
 
-    final public function isDefault(): bool
+    public function isDefault(): bool
     {
         $default = self::default();
 
@@ -28,7 +29,7 @@ trait Defaults
         return false;
     }
 
-    final public function isNotDefault(): bool
+    public function isNotDefault(): bool
     {
         return !$this->isDefault();
     }

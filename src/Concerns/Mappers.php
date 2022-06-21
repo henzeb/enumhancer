@@ -22,7 +22,7 @@ trait Mappers
         return null;
     }
 
-    final public static function make(string|int|null $value, Mapper|string $mapper = null): self
+    public static function make(string|int|null $value, Mapper|string $mapper = null): self
     {
         return EnumMakers::make(
             self::class,
@@ -30,7 +30,7 @@ trait Mappers
         );
     }
 
-    final public static function tryMake(string|int|null $value, Mapper|string $mapper = null): ?self
+    public static function tryMake(string|int|null $value, Mapper|string $mapper = null): ?self
     {
         return EnumMakers::tryMake(
             self::class,
@@ -38,7 +38,7 @@ trait Mappers
         );
     }
 
-    final public static function makeArray(iterable $values, Mapper|string $mapper = null): array
+    public static function makeArray(iterable $values, Mapper|string $mapper = null): array
     {
 
         return EnumMakers::makeArray(
@@ -47,7 +47,7 @@ trait Mappers
         );
     }
 
-    final public static function tryMakeArray(iterable $values, Mapper|string $mapper = null): array
+    public static function tryMakeArray(iterable $values, Mapper|string $mapper = null): array
     {
         return EnumMakers::tryMakeArray(
             self::class,
@@ -55,7 +55,7 @@ trait Mappers
         );
     }
 
-    final public static function makeOrReport(
+    public static function makeOrReport(
         int|string|null $value,
         BackedEnum $context = null,
         Mapper|string $mapper = null

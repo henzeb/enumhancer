@@ -77,4 +77,20 @@ enum YourEnum: string {
 
 ## Laravel
 
-For laravel there is out of the box support, see [README](../README.md#Laravel)
+For laravel, there is out of the box support, which is automatically loaded
+see [README](../README.md#laravels-auto-discovery).
+
+Out of the box, the reporter will report to your configured default channel,
+but you can change the channel and the `LogLevel`.
+
+Note: You don't need to disable autodiscovery for this, as it will override
+the configuration.
+
+```php
+use Henzeb\Enumhancer\Enums\LogLevel;
+use Henzeb\Enumhancer\Helpers\EnumReporter;
+
+EnumReporter::laravel(LogLevel::Alert); // alerts to configured channel
+EnumReporter::laravel(null, 'stack'); // notices to stack
+EnumReporter::laravel(null, 'stack', 'daily'); // notices to stack and daily
+```

@@ -100,7 +100,7 @@ abstract class EnumMakers
         return self::make($class, $enum, useMapper: true, useDefault: true);
     }
 
-    public static function tryCast(string $class, int|string $key): ?UnitEnum
+    public static function tryCast(string $class, UnitEnum|int|string $key): ?UnitEnum
     {
         try {
             return self::cast($class, $key);

@@ -8,12 +8,12 @@ use Henzeb\Enumhancer\Helpers\EnumCompare;
 
 trait Comparison
 {
-    final public function equals(self|string|int ...$equals): bool
+    public function equals(self|string|int ...$equals): bool
     {
         return EnumCompare::equals($this, ...$equals);
     }
 
-    final public function __call(string $name, array $arguments): self|bool
+    public function __call(string $name, array $arguments): self|bool
     {
         if (EnumCompare::isValidCall(self::class, $name, $arguments)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));

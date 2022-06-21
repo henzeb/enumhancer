@@ -6,7 +6,7 @@ use Henzeb\Enumhancer\Helpers\EnumProperties;
 
 trait Properties
 {
-    final public static function property(string $property, mixed $value = null): mixed
+    public static function property(string $property, mixed $value = null): mixed
     {
         if (null === $value) {
             return EnumProperties::get(self::class, $property);
@@ -16,12 +16,12 @@ trait Properties
         return $value;
     }
 
-    final public static function unset(string $property): void
+    public static function unset(string $property): void
     {
         EnumProperties::clear(self::class, $property);
     }
 
-    final public static function unsetAll(): void
+    public static function unsetAll(): void
     {
         EnumProperties::clear(self::class);
     }

@@ -9,7 +9,7 @@ trait Labels
         return [];
     }
 
-    final public function label(): ?string
+    public function label(): ?string
     {
         return self::labels()[$this->name]
             ?? (method_exists($this, 'value') ? $this->value() : null)

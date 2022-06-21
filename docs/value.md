@@ -1,8 +1,8 @@
 # Value
 
-When you have a basic enum, you have no value. You have to use the `name` value.
-But what if you want to have the lowercase version of that name? That's where
-`Value` comes in.
+Basic enums don't have a value. But if you want to know their numeric key or
+their value, you are referred to name and `cases()` respectively to find out.
+`Value` eases that problem for you.
 
 ## Usage
 
@@ -13,6 +13,7 @@ enum yourEnum {
     use Value;
 
     case MY_ENUM;
+    case Other;
 
 }
 ```
@@ -21,7 +22,13 @@ enum yourEnum {
 
 ```php
 YourEnum::MY_ENUM->value(); // will return `my_enum`;
+YourEnum::Other->value(); // will return `other`;
+
+YourEnum::MY_ENUM->key(); // will return `0`;
+YourEnum::Other->key(); // will return `1`;
 ```
 
-Note: When used with a string or int backed enum, this method will return it's
+Note: When used with a string or int backed enum, `value` will return it's
 actual value.
+
+Note: When used with an int backed enum, `key` will return the value.

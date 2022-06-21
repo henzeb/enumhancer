@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Helpers;
 
 use BackedEnum;
 use RuntimeException;
+use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 
@@ -11,9 +12,9 @@ abstract class EnumReporter
 {
     private static Reporter|string|null $reporter = null;
 
-    public static function laravel(): void
+    public static function laravel(LogLevel $logLevel = null, string ...$channels): void
     {
-        self::set(LaravelLogReporter::class);
+        self::set(new LaravelLogReporter($logLevel, ...$channels));
     }
 
     public static function set(Reporter|string|null $reporter): void
