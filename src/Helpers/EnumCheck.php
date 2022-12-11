@@ -15,9 +15,9 @@ abstract class EnumCheck
         }
     }
 
-    public static function matches($class, BackedEnum|UnitEnum|string ...$enums): void
+    public static function matches($class, BackedEnum|UnitEnum|string|null ...$enums): void
     {
-        foreach ($enums as $enum) {
+        foreach (array_filter($enums) as $enum) {
             if (!is_string($enum) && !is_a($enum, $class)) {
                 self::throwSameError($class, $enum::class);
             }

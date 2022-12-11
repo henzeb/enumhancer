@@ -2,6 +2,14 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.16.0 - 2022-12-11
+
+- Added [Configure](docs/configure.md)
+- Added [Dropdown](docs/dropdown.md)
+- [Comparison](docs/configure.md) now accepts null values
+- Fixed bug in [Casting](docs/casting.md) where in the latest Laravel versions
+ the `Keep Enum Value Case` switch no longer worked.
+
 ## 1.15.0 - 2022-06-21
 
 - Made the Laravel [Reporter](docs/reporters.md#laravel) configurable

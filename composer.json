@@ -1,6 +1,6 @@
 {
     "name": "henzeb/enumhancer",
-    "description": "Your Swiss Army knife for PHP 8.1 native enums",
+    "description": "Your Swiss Army knife for PHP 8.1+ native enums",
     "keywords": [
         "henzeb",
         "enumhancer",
@@ -40,6 +40,7 @@
         "state",
         "machine",
         "transition",
+        "validation",
         "rules"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
@@ -57,7 +58,7 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.5",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^9.5.27",
         "orchestra/testbench": "v6.24.1|^7.0"
     },
     "autoload": {

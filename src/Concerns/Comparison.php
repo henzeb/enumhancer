@@ -8,7 +8,7 @@ use Henzeb\Enumhancer\Helpers\EnumCompare;
 
 trait Comparison
 {
-    public function equals(self|string|int ...$equals): bool
+    public function equals(self|string|int|null ...$equals): bool
     {
         return EnumCompare::equals($this, ...$equals);
     }

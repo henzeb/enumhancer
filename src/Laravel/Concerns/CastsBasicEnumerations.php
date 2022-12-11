@@ -2,13 +2,13 @@
 
 namespace Henzeb\Enumhancer\Laravel\Concerns;
 
-use UnitEnum;
 use BackedEnum;
-use ValueError;
-use Illuminate\Database\Eloquent\Model;
-use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
-use function Henzeb\Enumhancer\Functions\b;
+use Henzeb\Enumhancer\Helpers\EnumValue;
+use Illuminate\Database\Eloquent\Model;
+use UnitEnum;
+use ValueError;
+use function Henzeb\Enumhancer\Functions\backing;
 
 /**
  * @mixin Model
@@ -31,7 +31,7 @@ trait CastsBasicEnumerations
         if ($this->shouldUseBasicEnumWorkaround($castType)) {
             $keepEnumCase = property_exists($this, 'keepEnumCase') ? $this->keepEnumCase : true;
 
-            return b($value, $keepEnumCase);
+            return backing($value, $keepEnumCase);
         }
 
         return $value;
@@ -65,5 +65,16 @@ trait CastsBasicEnumerations
     {
         return (!is_subclass_of($enumClass, BackedEnum::class, true))
             && 'toArray' === (debug_backtrace(2)[5]['function'] ?? null);
+    }
+
+    protected function getStorableEnumValue($value)
+    {
+        if ($value instanceof UnitEnum) {
+            $keepEnumCase = property_exists($this, 'keepEnumCase') ? $this->keepEnumCase : true;
+
+            return EnumValue::value($value, $keepEnumCase);
+        }
+
+        return $value;
     }
 }

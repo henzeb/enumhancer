@@ -3,22 +3,18 @@
 namespace Henzeb\Enumhancer\Enums;
 
 use Henzeb\Enumhancer\Concerns\Enhancers;
+use Henzeb\Enumhancer\Concerns\Configure;
 
 enum LogLevel
 {
-    use Enhancers;
+    use Enhancers, Configure;
 
-    case Emergency;
-    case Alert;
-    case Critical;
-    case Error;
-    case Warning;
-    case Notice;
-    case Info;
     case Debug;
-
-    public static function default(): ?self
-    {
-        return self::Notice;
-    }
+    case Info;
+    case Notice;
+    case Warning;
+    case Error;
+    case Critical;
+    case Alert;
+    case Emergency;
 }

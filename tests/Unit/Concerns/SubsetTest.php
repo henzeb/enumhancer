@@ -2,10 +2,8 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
-use Henzeb\Enumhancer\Concerns\Comparison;
-use PHPUnit\Framework\TestCase;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use PHPUnit\Framework\TestCase;
 
 
 class SubsetTest extends TestCase
@@ -49,5 +47,41 @@ class SubsetTest extends TestCase
         $this->assertFalse(EnhancedBackedEnum::of()->equals(
             'DOESNOTEXIST'
         ));
+    }
+
+    public function testWithoutAll(): void
+    {
+        $this->assertEquals(
+            [],
+            EnhancedBackedEnum::without(
+                ...EnhancedBackedEnum::cases()
+            )->cases()
+        );
+    }
+
+    public function testWithoutSingleCase(): void
+    {
+        $this->assertEquals(
+            [
+                EnhancedBackedEnum::ENUM,
+                EnhancedBackedEnum::ANOTHER_ENUM,
+                EnhancedBackedEnum::ENUM_3
+            ],
+            EnhancedBackedEnum::without(EnhancedBackedEnum::WITH_CAPITALS)->cases()
+        );
+    }
+
+    public function testWithoutMultipleCase(): void
+    {
+        $this->assertEquals(
+            [
+                EnhancedBackedEnum::ENUM_3,
+                EnhancedBackedEnum::WITH_CAPITALS,
+            ],
+            EnhancedBackedEnum::without(
+                EnhancedBackedEnum::ANOTHER_ENUM,
+                EnhancedBackedEnum::ENUM,
+            )->cases()
+        );
     }
 }

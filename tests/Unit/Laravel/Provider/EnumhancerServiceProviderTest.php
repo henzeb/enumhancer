@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Provider;
 
 
 use Orchestra\Testbench\TestCase;
+use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
@@ -27,6 +28,14 @@ class EnumhancerServiceProviderTest extends TestCase
         $this->assertEquals(
             LaravelLogReporter::class,
             EnumReporter::get()::class
+        );
+    }
+
+    public function testHasSetDefaultLogLevel()
+    {
+        $this->assertEquals(
+            LogLevel::Notice,
+            LogLevel::default(),
         );
     }
 }

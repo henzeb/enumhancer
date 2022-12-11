@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Helpers\EnumMakers;
 use Henzeb\Enumhancer\Helpers\EnumMapper;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Helpers\EnumExtractor;
+use Henzeb\Enumhancer\Helpers\EnumProperties;
 
 trait Mappers
 {
@@ -19,7 +20,10 @@ trait Mappers
 
     protected static function mapper(): ?Mapper
     {
-        return null;
+        return EnumProperties::get(
+            self::class,
+            EnumProperties::reservedWord('mapper')
+        );
     }
 
     public static function make(string|int|null $value, Mapper|string $mapper = null): self

@@ -6,16 +6,18 @@ use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Labels\LabelNoLabelsEnum;
 
 
 class LabelsTest extends TestCase
 {
     public function testShouldGetNameWhenNoLabelsSpecifiedAtAll()
     {
-        $enum = Mockery::mock(Labels::class);
-        $enum->name = 'MY_ENUM';
 
-        $this->assertEquals('MY_ENUM', $enum->label());
+        $this->assertEquals('NO_LABEL', LabelNoLabelsEnum::NO_LABEL->label());
+        $this->assertEquals('nolabel', LabelNoLabelsEnum::nolabel->label());
+
+        $this->assertEquals('NoLabel', LabelNoLabelsEnum::NoLabel->label());
     }
 
     public function testShouldGetLabelByName()

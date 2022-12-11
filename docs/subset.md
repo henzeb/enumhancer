@@ -19,6 +19,30 @@ enum yourEnum {
 
 ### Examples
 
+### of
+
+to get a subset of cases you can use `of`.
+
+```php
+YourEnum::of(
+    yourEnum::MY_ENUM,
+    yourEnum::MY_OTHER_ENUM
+)->cases(); // will return [yourEnum::MY_ENUM, yourEnum::MY_OTHER_ENUM]
+```
+
+### without
+
+If you just want to single out one or more cases, you can use `without`.
+
+```php
+YourEnum::without(
+    yourEnum::MY_ENUM,
+    yourEnum::MY_OTHER_ENUM
+)->cases(); // will return [yourEnum::MY_THIRD_ENUM]
+```
+
+Note: Each method used on `of` can be used on `without`
+
 #### equals
 
 The `equals` method can come in handy when you need to compare one or more enums
@@ -31,6 +55,11 @@ YourEnum::of(
     yourEnum::MY_ENUM,
     yourEnum::MY_OTHER_ENUM
 )->equals(YourEnum::MY_ENUM); // will return true
+
+YourEnum::without(
+    yourEnum::MY_ENUM,
+    yourEnum::MY_OTHER_ENUM
+)->equals(YourEnum::MY_ENUM); // will return false
 
 YourEnum::of(
     yourEnum::MY_ENUM,
@@ -78,17 +107,6 @@ YourEnum::of(
     yourEnum::MY_ENUM,
     yourEnum::MY_OTHER_ENUM
 )->values(); // will return ['my_enum', 'my_other_enum']
-```
-
-### cases
-
-This method returns the all the cases of the specified subset.
-
-```php
-YourEnum::of(
-    yourEnum::MY_ENUM,
-    yourEnum::MY_OTHER_ENUM
-)->cases(); // will return [yourEnum::MY_ENUM, yourEnum::MY_OTHER_ENUM]
 ```
 
 ### do

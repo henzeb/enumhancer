@@ -2,11 +2,17 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
+use Henzeb\Enumhancer\Helpers\EnumProperties;
+
 trait Labels
 {
     public static function labels(): array
     {
-        return [];
+        return
+            EnumProperties::get(
+                self::class,
+                EnumProperties::reservedWord('labels')
+            ) ?? [];
     }
 
     public function label(): ?string

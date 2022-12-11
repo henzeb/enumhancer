@@ -27,7 +27,7 @@ class ComparisonTest extends TestCase
         );
     }
 
-    /** @noinspection PhpExpressionResultUnusedInspection */
+
     public function testEqualsDoesNotAcceptDifferentObject()
     {
         $class = new class {
@@ -183,5 +183,10 @@ class ComparisonTest extends TestCase
 
     public function testShouldWorkWithoutIssuesCallingSelf() {
         $this->assertTrue(EnhancedUnitEnum::ENUM->isEnumFunction());
+    }
+
+    public function testPassingNullReturnsFalse() {
+        $this->assertFalse(EnhancedUnitEnum::ENUM->equals(null));
+        $this->assertFalse(EnhancedBackedEnum::ENUM->equals(null));
     }
 }

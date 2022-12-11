@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use Henzeb\Enumhancer\Concerns\Defaults;
@@ -28,6 +29,11 @@ abstract class EnumImplements
     public static function state(string $class): bool
     {
         return self::traitOn($class, State::class);
+    }
+
+    public static function labels(string $class): bool
+    {
+        return self::traitOn($class, Labels::class);
     }
 
     private static function classUsesTrait(string $class): array

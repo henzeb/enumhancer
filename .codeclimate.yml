@@ -9,6 +9,8 @@ plugins:
       MD029:
         enabled: false
   phpcodesniffer:
+    config:
+      standard: "PSR1,PSR2"
     exclude_patterns:
       - "**/*"
       - "!src/*"

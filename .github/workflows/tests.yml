@@ -1,8 +1,10 @@
 name: "tests"
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+      - master
     paths-ignore:
       - '**.md'
       - '**.yml'
@@ -19,20 +21,12 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.1']
+        php: ['8.1','8.2']
         stability: [prefer-lowest, prefer-stable]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:v2
-          coverage: none
-        if: ${{ !env.CC_TOKEN }}
+        uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -40,45 +34,39 @@ jobs:
           php-version: ${{ matrix.php }}
           tools: composer:v2
           coverage: pcov
-        if: ${{ env.CC_TOKEN }}
 
       - name: Setup Problem Matchers
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
         if: ${{ !env.ACT }}
 
       - name: Cache composer dependencies
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-
+          key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
         if: ${{ !env.ACT }}
 
       - name: Install PHP Dependencies
-        uses: nick-invision/retry@v1
+        uses: nick-invision/retry@v2
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
       - name: Execute PHPUnit
-        if: ${{ !env.CC_TOKEN || matrix.stability != 'prefer-stable' }}
-        run: vendor/bin/phpunit
-
-      - name: Execute PHPUnit
-        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable'}}
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
 
       - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v3.0.0
+        uses: paambaati/codeclimate-action@v3.1.1
         continue-on-error: true
         env:
           CC_TEST_REPORTER_ID: ${{ env.CC_TOKEN }}
         with:
           coverageCommand: ''
           coverageLocations: ./coverage.xml:clover
-        if: ${{ !env.ACT && env.CC_TOKEN && matrix.stability == 'prefer-stable' }}
+        if: ${{ !env.ACT && env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.2' }}

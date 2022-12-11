@@ -13,10 +13,16 @@ use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
+use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 
 
 class EnumReporterTest extends TestCase
 {
+    protected function getPackageProviders($app)
+    {
+        return [EnumhancerServiceProvider::class];
+    }
+
     public function testReporterNotSet()
     {
         EnumReporter::set(null);

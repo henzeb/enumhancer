@@ -2,10 +2,11 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use Closure;
-use UnitEnum;
 use BackedEnum;
+use Closure;
+use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Contracts\EnumSubset;
+use UnitEnum;
 
 class EnumSubsetMethods implements EnumSubset
 {
@@ -25,7 +26,7 @@ class EnumSubsetMethods implements EnumSubset
         }
     }
 
-    public function equals(UnitEnum|string|int ...$equals): bool
+    public function equals(UnitEnum|string|int|null ...$equals): bool
     {
         EnumCheck::matches($this->enumType, ...$equals);
 
@@ -38,7 +39,7 @@ class EnumSubsetMethods implements EnumSubset
         return false;
     }
 
-    private function compare(UnitEnum $enum, UnitEnum|string|int ...$equals): bool
+    private function compare(UnitEnum $enum, UnitEnum|string|int|null ...$equals): bool
     {
         foreach ($equals as $equal) {
             if (!$equal instanceof UnitEnum) {
@@ -62,10 +63,30 @@ class EnumSubsetMethods implements EnumSubset
         return array_map(
             function (mixed $enum) {
                 return $enum->value
-                ?? (method_exists($enum, 'value') ? $enum->value() : null)
-                ?? $enum->name;
+                    ?? (method_exists($enum, 'value') ? $enum->value() : null)
+                    ?? $enum->name;
             },
             $this->enums
+        );
+    }
+
+    public function dropdown(bool $keepEnumCase = false): array
+    {
+        return array_replace(
+            [],
+            ...array_map(
+                function (UnitEnum $case) use ($keepEnumCase) {
+                    /**
+                     * @var $case UnitEnum|Labels
+                     */
+                    return [
+                        EnumValue::value($case, $keepEnumCase)
+                        =>
+                            EnumImplements::labels($case::class) ? $case->label() : $case->name
+                    ];
+                },
+                $this->enums
+            )
         );
     }
 

@@ -59,7 +59,9 @@ implemented the methods of `Makers`, `Extractor` and `Reporters`.
 
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
+- [Configure](docs/configure.md)
 - [Defaults](docs/defaults.md)
+- [Dropdown](docs/dropdown.md)
 - [Extractor](docs/extractor.md)
 - [From](docs/from.md)
 - [Labels](docs/labels.md)

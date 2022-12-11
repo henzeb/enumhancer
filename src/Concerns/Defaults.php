@@ -6,13 +6,16 @@ use UnitEnum;
 use ValueError;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
 use Henzeb\Enumhancer\Helpers\EnumCompare;
+use Henzeb\Enumhancer\Helpers\EnumProperties;
 
 trait Defaults
 {
     static public function default(): ?UnitEnum
     {
         try {
-            return EnumMakers::make(self::class, 'default', true);
+            return
+                EnumProperties::get(self::class, EnumProperties::reservedWord('defaults'))
+                ?? EnumMakers::make(self::class, 'default', true);
         } catch (ValueError) {
             return null;
         }

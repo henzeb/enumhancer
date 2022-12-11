@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
+use Henzeb\Enumhancer\Helpers\EnumProperties;
 use UnitEnum;
 use Henzeb\Enumhancer\Helpers\EnumState;
 use Henzeb\Enumhancer\Helpers\EnumMakers;
@@ -67,11 +68,14 @@ trait State
 
     protected static function customTransitions(): array
     {
-        return [];
+        return EnumProperties::get(self::class, EnumProperties::reservedWord('state')) ?? [];
     }
 
     protected static function transitionHook(): ?TransitionHook
     {
-        return null;
+        return EnumProperties::get(
+            self::class,
+            EnumProperties::reservedWord('hooks')
+        );
     }
 }

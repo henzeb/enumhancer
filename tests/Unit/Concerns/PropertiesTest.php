@@ -6,10 +6,13 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use PHPUnit\Framework\TestCase;
+use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
 
 
 class PropertiesTest extends TestCase
 {
+    use ClearsEnumProperties;
+
     public function testSetProperty()
     {
         EnhancedBackedEnum::property('MyProperty', 'A Value');

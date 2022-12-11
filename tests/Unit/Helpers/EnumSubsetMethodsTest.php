@@ -2,6 +2,8 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
+use Henzeb\Enumhancer\Concerns\Dropdown;
+use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
@@ -19,11 +21,19 @@ class EnumSubsetMethodsTest extends TestCase
     }
 
 
-    public function testEqualsShouldReturnNullWhenNoEnumsPassed()
+    public function testEqualsShouldReturnFalseWhenNoEnumsPassed()
     {
         $this->assertFalse(
             (new EnumSubsetMethods(IntBackedEnum::class))
-                ->equals(IntBackedEnum::TEST)
+                ->equals()
+        );
+    }
+
+    public function testEqualsShouldReturnFalseWhenNullPassed()
+    {
+        $this->assertFalse(
+            (new EnumSubsetMethods(IntBackedEnum::class))
+                ->equals(null)
         );
     }
 
@@ -40,6 +50,14 @@ class EnumSubsetMethodsTest extends TestCase
         $this->assertTrue(
             (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->equals(IntBackedEnum::TEST)
+        );
+    }
+
+    public function testEqualsMultiWithNullShouldReturnTrue()
+    {
+        $this->assertTrue(
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+                ->equals(IntBackedEnum::TEST, null)
         );
     }
 
@@ -118,6 +136,26 @@ class EnumSubsetMethodsTest extends TestCase
             $cases,
             (new EnumSubsetMethods(EnhancedUnitEnum::class, ...$cases))->cases()
         );
+    }
+
+    public function providesDropdownTestcases(): array
+    {
+        return DropdownTest::dropdownTestcases();
+    }
+
+    /**
+     * @param string $enum
+     * @param array $expected
+     * @param bool $keepCase
+     * @return void
+     * @dataProvider providesDropdownTestcases
+     */
+    public function testDropdown(string $enum, array $expected, bool $keepCase = false)
+    {
+        /**
+         * @var $enum Dropdown|string
+         */
+        $this->assertEquals($expected, (new EnumSubsetMethods($enum, ...$enum::cases()))->dropdown($keepCase));
     }
 
     private function getNames(array $cases): array
