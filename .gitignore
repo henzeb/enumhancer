@@ -4,6 +4,7 @@
 .phpunit.result.cache
 build
 coverage
+composer.lock
 phpstan.neon
 testbench.yaml
 vendor

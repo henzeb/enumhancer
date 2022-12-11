@@ -47,7 +47,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }} }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
         if: ${{ !env.ACT }}
 
