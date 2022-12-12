@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use Henzeb\Enumhancer\Concerns\Getters;
 use UnitEnum;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Concerns\Makers;
@@ -97,9 +98,9 @@ class DefaultsTest extends TestCase
     public function testShouldReturnTryMakeDefault(string $enum, mixed $expected): void
     {
         /**
-         * @var $enum Makers
+         * @var $enum Getters
          */
-        $this->assertEquals($expected, $enum::tryMake('default'));
+        $this->assertEquals($expected, $enum::tryGet('default'));
     }
 
     public function testTryFromShouldUseDefault(): void

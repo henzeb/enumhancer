@@ -11,6 +11,7 @@ abstract class EnumProperties
         'defaults' => '@default_configure',
         'labels' => '@labels_configure',
         'mapper' => '@mapper_configure',
+        'with_mapper' => '@with_mapper',
         'state' => '@state_configure',
         'hooks' => '@state_hook_configure'
     ];

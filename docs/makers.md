@@ -1,5 +1,7 @@
 # Makers
 
+DEPRECATED. PLEASE USE [Getters](getters.md) instead!
+
 Enums have out of the box the methods `from` and `tryFrom`. One drawback is that
 you cannot use them to create `enum objects` with the name of the `enum`.
 

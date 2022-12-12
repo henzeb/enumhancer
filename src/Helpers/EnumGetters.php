@@ -2,28 +2,29 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Henzeb\Enumhancer\Concerns\Getters;
 use UnitEnum;
 use ValueError;
-use Henzeb\Enumhancer\Concerns\Makers;
-use SebastianBergmann\CodeCoverage\Report\Xml\Unit;
 use function Henzeb\Enumhancer\Functions\backingLowercase;
 
-abstract class EnumMakers
+abstract class EnumGetters
 {
-    public static function make(
+    public static function get(
         string $class,
-        int|string|null $value,
+        int|string|UnitEnum|null $value,
         bool $useMapper = false,
         bool $useDefault = false
-    ): mixed {
+    ): UnitEnum {
         EnumCheck::check($class);
 
         if ($useMapper && EnumImplements::mappers($class)) {
             /**
-             * @var $class Makers;
+             * @var $class Getters;
              */
-            return $class::make($value);
+            return $class::get($value);
         }
+
+        $value = $value?->name ?? $value;
 
         $default = self::useDefaultIf($class, $value, $useDefault);
 
@@ -37,44 +38,50 @@ abstract class EnumMakers
             return $match;
         }
 
-        throw new ValueError('Invalid Enum key!');
+        throw new ValueError(
+            sprintf(
+                '"%s" is not a valid backing value for enum "%s"',
+                $value,
+                $class,
+            )
+        );
     }
 
-    public static function tryMake(
+    public static function tryGet(
         string $class,
-        int|string|null $value,
+        int|string|UnitEnum|null $value,
         bool $useMapper = false,
         bool $useDefault = true
-    ): mixed {
+    ): ?UnitEnum {
         EnumCheck::check($class);
 
         try {
-            return self::make($class, $value, $useMapper, $useDefault);
+            return self::get($class, $value, $useMapper, $useDefault);
         } catch (ValueError) {
             return $useDefault ? self::default($class) : null;
         }
     }
 
-    public static function makeArray(string $class, iterable $values, bool $useMapper = false): array
+    public static function getArray(string $class, iterable $values, bool $useMapper = false): array
     {
         EnumCheck::check($class);
         $return = [];
 
         foreach ($values as $value) {
-            $return[] = self::make($class, $value, $useMapper);
+            $return[] = self::get($class, $value, $useMapper);
         }
 
         return $return;
     }
 
-    public static function tryMakeArray(string $class, iterable $values, bool $useMapper = false): array
+    public static function tryArray(string $class, iterable $values, bool $useMapper = false): array
     {
         EnumCheck::check($class);
 
         $return = [];
 
         foreach ($values as $value) {
-            $return[] = self::tryMake($class, $value, $useMapper);
+            $return[] = self::tryGet($class, $value, $useMapper);
         }
 
         return array_filter($return);
@@ -97,7 +104,7 @@ abstract class EnumMakers
             return $enum;
         }
 
-        return self::make($class, $enum, useMapper: true, useDefault: true);
+        return self::get($class, $enum, useMapper: true, useDefault: true);
     }
 
     public static function tryCast(string $class, UnitEnum|int|string $key): ?UnitEnum
@@ -152,7 +159,7 @@ abstract class EnumMakers
      */
     protected static function useDefaultIf(string $class, int|string|null $value, bool $useDefault): ?UnitEnum
     {
-        if ($value && $useDefault && is_string($value) && strtolower($value) === 'default') {
+        if ($useDefault && is_string($value) && strtolower($value) === 'default') {
             return self::default($class);
         }
         return null;

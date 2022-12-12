@@ -11,7 +11,7 @@ use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Laravel\Concerns\CastsStatefulEnumerations;
@@ -27,11 +27,11 @@ class CastsStatefulEnumerationsTest extends TestCase
         return [
             [SubsetUnitEnum::ENUM, 'unitEnum'],
             [IntBackedEnum::TEST, 'intBackedEnum'],
-            [StringBackedMakersEnum::TEST, 'stringBackedEnum'],
+            [StringBackedGetEnum::TEST, 'stringBackedEnum'],
 
             [SubsetUnitEnum::ENUM, 'unitEnum', false],
             [IntBackedEnum::TEST, 'intBackedEnum', false],
-            [StringBackedMakersEnum::TEST, 'stringBackedEnum', false],
+            [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
         ];
     }
 
@@ -141,10 +141,10 @@ class CastsStatefulEnumerationsTest extends TestCase
         $this->expectException(IllegalEnumTransitionException::class);
         $model = new CastsStatefulEnumsModel();
 
-        $model->stringBackedEnum = StringBackedMakersEnum::TEST;
-        $model->stringBackedEnum = StringBackedMakersEnum::TEST1;
+        $model->stringBackedEnum = StringBackedGetEnum::TEST;
+        $model->stringBackedEnum = StringBackedGetEnum::TEST1;
 
-        $this->assertEquals(StringBackedMakersEnum::TEST1, $model->stringBackedEnum);
+        $this->assertEquals(StringBackedGetEnum::TEST1, $model->stringBackedEnum);
     }
 
     public function testShouldThrowExceptionWhenTransitionIsNotAllowed()
@@ -152,8 +152,8 @@ class CastsStatefulEnumerationsTest extends TestCase
         $this->expectException(IllegalEnumTransitionException::class);
         $model = new CastsStatefulEnumsModel();
 
-        $model->stringBackedEnum = StringBackedMakersEnum::TEST;
-        $model->stringBackedEnum = StringBackedMakersEnum::TEST_STRING_TO_UPPER;
+        $model->stringBackedEnum = StringBackedGetEnum::TEST;
+        $model->stringBackedEnum = StringBackedGetEnum::TEST_STRING_TO_UPPER;
     }
 
     public function testShouldThrowExceptionWhenTransitionIsNotAllowedWithHook()

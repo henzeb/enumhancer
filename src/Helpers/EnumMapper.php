@@ -2,12 +2,13 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use RuntimeException;
 use Henzeb\Enumhancer\Contracts\Mapper;
+use RuntimeException;
+use UnitEnum;
 
 abstract class EnumMapper
 {
-    public static function map(string $enum, string|int|null $value, Mapper|string|null ...$mappers): ?string
+    public static function map(string $enum, string|int|UnitEnum|null $value, Mapper|string|null ...$mappers): ?string
     {
         EnumCheck::check($enum);
 
@@ -21,7 +22,7 @@ abstract class EnumMapper
             $value = $mapper->map($value, $enum) ?? $value;
         }
 
-        return $value;
+        return $value instanceof UnitEnum ? $value->name : $value;
     }
 
     public static function mapArray(string $enum, iterable $values, Mapper|string|null ...$mappers): array

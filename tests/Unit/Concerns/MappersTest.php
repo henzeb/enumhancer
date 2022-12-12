@@ -4,7 +4,9 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 
 class MappersTest extends TestCase
@@ -27,21 +29,21 @@ class MappersTest extends TestCase
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::make('ENUM')
+            EnhancedBackedEnum::get('ENUM')
         );
     }
 
     public function testMakeShouldErrorWithoutMapper()
     {
         $this->expectError();
-        EnhancedBackedEnum::make('mappedEnum');
+        EnhancedBackedEnum::get('mappedEnum');
     }
 
     public function testMakeShouldMap()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::make('mappedEnum', $this->getMapper())
+            EnhancedBackedEnum::get('mappedEnum', $this->getMapper())
         );
     }
 
@@ -49,149 +51,149 @@ class MappersTest extends TestCase
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::make('mappedEnum', $this->getMapper()::class)
+            EnhancedBackedEnum::get('mappedEnum', $this->getMapper()::class)
         );
     }
 
     public function testMakeShouldThrowExceptionForNonMap()
     {
             $this->expectException(\RuntimeException::class);
-            EnhancedBackedEnum::make('mappedEnum', self::class);
+            EnhancedBackedEnum::get('mappedEnum', self::class);
     }
 
     public function testMakeShouldNotMapWhenNull()
     {
         $this->expectError();
-        EnhancedBackedEnum::make(null, $this->getMapper());
+        EnhancedBackedEnum::get(null, $this->getMapper());
     }
 
     public function testMakeShouldMapWithoutMapperGiven()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::make('anotherMappedEnum')
+            EnhancedBackedEnum::get('anotherMappedEnum')
         );
     }
 
     public function testMakeShouldErrorWithMap()
     {
         $this->expectError();
-        EnhancedBackedEnum::make('not existing', $this->getMapper());
+        EnhancedBackedEnum::get('not existing', $this->getMapper());
     }
 
     public function testTryMakeShouldWorkWithoutMapper()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::tryMake('ENUM')
+            EnhancedBackedEnum::tryGet('ENUM')
         );
     }
 
-    public function testTryMakeShouldReturnNullWithoutMapper()
+    public function testTryGetShouldReturnNullWithoutMapper()
     {
-        $this->assertNull(EnhancedBackedEnum::tryMake('mappedEnum'));
+        $this->assertNull(EnhancedBackedEnum::tryGet('mappedEnum'));
     }
 
-    public function testTryMakeShouldNotMapWhenNull()
+    public function testTryGetShouldNotMapWhenNull()
     {
 
         $this->assertNull(
-            EnhancedBackedEnum::tryMake(null, $this->getMapper())
+            EnhancedBackedEnum::tryGet(null, $this->getMapper())
         );
     }
 
-    public function testTryMakeShouldMap()
+    public function testTryGetShouldMap()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::tryMake('mappedEnum', $this->getMapper())
+            EnhancedBackedEnum::tryGet('mappedEnum', $this->getMapper())
         );
     }
 
-    public function testTryMakeShouldMapWithoutMapperGiven()
+    public function testTryGetShouldMapWithoutMapperGiven()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
-            EnhancedBackedEnum::tryMake('anotherMappedEnum')
+            EnhancedBackedEnum::tryGet('anotherMappedEnum')
         );
     }
 
 
-    public function testTryMakeShouldReturnNullWithMap()
+    public function testTryGetShouldReturnNullWithMap()
     {
-        $this->assertNull(EnhancedBackedEnum::tryMake('not existing', $this->getMapper()));
+        $this->assertNull(EnhancedBackedEnum::tryGet('not existing', $this->getMapper()));
     }
 
 
-    public function testMakeArrayShouldNotMapWhenNull()
+    public function testGetArrayShouldNotMapWhenNull()
     {
         $this->expectError();
-        EnhancedBackedEnum::makeArray([null], $this->getMapper());
+        EnhancedBackedEnum::getArray([null], $this->getMapper());
     }
 
-    public function testMakeArrayShouldWorkWithoutMapper()
+    public function testGetArrayShouldWorkWithoutMapper()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::makeArray(['ENUM'])
+            EnhancedBackedEnum::getArray(['ENUM'])
         );
     }
 
-    public function testMakeArrayShouldThrowErrorWorkWithoutMapper()
+    public function testGetArrayShouldThrowErrorWorkWithoutMapper()
     {
         $this->expectError();
-        EnhancedBackedEnum::makeArray(['Does Not exist']);
+        EnhancedBackedEnum::getArray(['Does Not exist']);
     }
 
-    public function testMakeArrayShouldWorkWitMapper()
+    public function testGetArrayShouldWorkWitMapper()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::tryMakeArray(['mappedEnum'], $this->getMapper())
+            EnhancedBackedEnum::tryArray(['mappedEnum'], $this->getMapper())
         );
     }
 
 
-    public function testMakeArrayShouldMapWithoutMapperGiven()
+    public function testGetArrayShouldMapWithoutMapperGiven()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::MakeArray(['anotherMappedEnum'])
+            EnhancedBackedEnum::GetArray(['anotherMappedEnum'])
         );
     }
 
-    public function testMakeArrayShouldThrowErrorWitMapper()
+    public function testGetArrayShouldThrowErrorWitMapper()
     {
         $this->expectError();
-        EnhancedBackedEnum::makeArray(['ENUM', 'doesNotExist'], $this->getMapper());
+        EnhancedBackedEnum::getArray(['ENUM', 'doesNotExist'], $this->getMapper());
     }
 
-    public function testTryMakeArrayShouldWorkWithoutMapper()
+    public function testTryGetArrayShouldWorkWithoutMapper()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::tryMakeArray(['ENUM', 'DoesNotExist'])
+            EnhancedBackedEnum::tryArray(['ENUM', 'DoesNotExist'])
         );
     }
 
-    public function testTryMakeArrayShouldNotMapWhenNull()
+    public function testTryGetArrayShouldNotMapWhenNull()
     {
-        $this->assertEquals([], EnhancedBackedEnum::tryMakeArray([null], $this->getMapper()));
+        $this->assertEquals([], EnhancedBackedEnum::tryArray([null], $this->getMapper()));
     }
 
-    public function testTryMakeArrayShouldWorkWitMapper()
+    public function testTryGetArrayShouldWorkWitMapper()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::tryMakeArray(['mappedEnum', 'DoesNotExist'], $this->getMapper())
+            EnhancedBackedEnum::tryArray(['mappedEnum', 'DoesNotExist'], $this->getMapper())
         );
     }
 
-    public function testTryMakeArrayShouldMapWithoutMapperGiven()
+    public function testtryArrayShouldMapWithoutMapperGiven()
     {
         $this->assertEquals(
             [EnhancedBackedEnum::ENUM],
-            EnhancedBackedEnum::TryMakeArray(['anotherMappedEnum'])
+            EnhancedBackedEnum::tryArray(['anotherMappedEnum'])
         );
     }
 
@@ -230,4 +232,85 @@ class MappersTest extends TestCase
         );
     }
 
+    public function testShouldAcceptEnumsAsValue(): void
+    {
+        //EnhancedUnitEnum::Mapped->name => EnhancedBackedEnum::ANOTHER_ENUM
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::tryGet(EnhancedBackedEnum::ENUM)
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ANOTHER_ENUM,
+            EnhancedBackedEnum::tryGet(EnhancedUnitEnum::Mapped)
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::tryGet(EnhancedUnitEnum::ENUM)
+        );
+
+        $this->assertNull(
+            EnhancedBackedEnum::tryGet(EnhancedUnitEnum::Unique)
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::get(EnhancedBackedEnum::ENUM)
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ANOTHER_ENUM,
+            EnhancedBackedEnum::get(EnhancedUnitEnum::Mapped)
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::get(EnhancedUnitEnum::ENUM)
+        );
+
+        $this->expectException(ValueError::class);
+        EnhancedBackedEnum::get(EnhancedUnitEnum::Unique);
+    }
+
+    public function testShouldAcceptEnumsAsValueArrays(): void
+    {
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::tryArray([EnhancedBackedEnum::ENUM])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ANOTHER_ENUM],
+            EnhancedBackedEnum::tryArray([EnhancedUnitEnum::Mapped])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::tryArray([EnhancedUnitEnum::ENUM])
+        );
+
+        $this->assertEquals(
+            [],
+            EnhancedBackedEnum::tryArray([EnhancedUnitEnum::Unique])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::tryArray([EnhancedBackedEnum::ENUM])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::getArray([EnhancedUnitEnum::ENUM])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ANOTHER_ENUM],
+            EnhancedBackedEnum::getArray([EnhancedUnitEnum::Mapped])
+        );
+
+        $this->expectException(ValueError::class);
+        EnhancedBackedEnum::getArray([EnhancedUnitEnum::Unique]);
+    }
 }

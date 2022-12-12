@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Laravel\Concerns;
 
 use BackedEnum;
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
@@ -25,7 +25,7 @@ trait CastsBasicEnumerations
         $castType = $this->getCasts()[$key];
 
         if (!$value instanceof $castType) {
-            $value = EnumMakers::make($castType, $value);
+            $value = EnumGetters::get($castType, $value);
         }
 
         if ($this->shouldUseBasicEnumWorkaround($castType)) {
@@ -58,7 +58,7 @@ trait CastsBasicEnumerations
             );
         }
 
-        $this->attributes[$key] = EnumValue::value(EnumMakers::make($enumClass, $value), $keepEnumCase);
+        $this->attributes[$key] = EnumValue::value(EnumGetters::get($enumClass, $value), $keepEnumCase);
     }
 
     private function shouldUseBasicEnumWorkaround(string $enumClass): bool

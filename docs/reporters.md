@@ -37,16 +37,16 @@ class YourReporter implements Reporter {
 Henzeb\Enumhancer\Helpers\EnumReporter::set(new YourReporter());
 Henzeb\Enumhancer\Helpers\EnumReporter::set(YourReporter::class);
 
-/** makeOrReport */
-YourEnum::makeOrReport('ENUM'); // will just return the enum
-YourEnum::makeOrReport('your_enum'); // will just return the enum
-YourEnum::makeOrReport('unknown'); // will return null and call the Reporter
+/** getOrReport */
+YourEnum::getOrReport('ENUM'); // will just return the enum
+YourEnum::getOrReport('your_enum'); // will just return the enum
+YourEnum::getOrReport('unknown'); // will return null and call the Reporter
 
-YourEnum::makeOrReportArray(
+YourEnum::getOrReportArray(
     ['ENUM', 'your_other_enum']
 ); // will just return the enums
 
-YourEnum::makeOrReportArray(
+YourEnum::getOrReportArray(
     ['ENUM', 'unknown']
 ); // will return [YourEnum::ENUM] and call the Reporter for 'unknown'
 ```

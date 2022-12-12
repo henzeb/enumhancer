@@ -3,12 +3,13 @@
 namespace Henzeb\Enumhancer\Concerns;
 
 use BadMethodCallException;
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumCompare;
+use UnitEnum;
 
 trait Comparison
 {
-    public function equals(self|string|int|null ...$equals): bool
+    public function equals(UnitEnum|string|int|null ...$equals): bool
     {
         return EnumCompare::equals($this, ...$equals);
     }
@@ -19,7 +20,7 @@ trait Comparison
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
 
-        $nameIsEnum = !EnumMakers::tryMake(self::class, $name, true);
+        $nameIsEnum = !EnumGetters::tryGet(self::class, $name, true);
 
         if (!$nameIsEnum && method_exists(self::class, '__callStatic')) {
             return self::__callStatic($name, []);
@@ -27,7 +28,7 @@ trait Comparison
 
         $value = substr($name, str_starts_with($name, 'isNot') ? 5 : 2);
 
-        if (!EnumMakers::tryMake(self::class, $value, true)) {
+        if (!EnumGetters::tryGet(self::class, $value, true)) {
             throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $this::class, $name));
         }
 

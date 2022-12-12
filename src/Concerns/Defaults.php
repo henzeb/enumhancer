@@ -4,7 +4,7 @@ namespace Henzeb\Enumhancer\Concerns;
 
 use UnitEnum;
 use ValueError;
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumCompare;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 
@@ -15,7 +15,7 @@ trait Defaults
         try {
             return
                 EnumProperties::get(self::class, EnumProperties::reservedWord('defaults'))
-                ?? EnumMakers::make(self::class, 'default', true);
+                ?? EnumGetters::get(self::class, 'default', true);
         } catch (ValueError) {
             return null;
         }

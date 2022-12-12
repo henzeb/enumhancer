@@ -5,7 +5,7 @@ namespace Henzeb\Enumhancer\Concerns;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use UnitEnum;
 use Henzeb\Enumhancer\Helpers\EnumState;
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\SyntaxException;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
@@ -18,7 +18,7 @@ trait State
      */
     public function transitionTo(self|string|int $state, TransitionHook $hook = null): self
     {
-        $state = EnumMakers::cast(self::class, $state);
+        $state = EnumGetters::cast(self::class, $state);
 
         if ($this->isTransitionAllowed($state, $hook)) {
             $hook?->execute($this, $state);
@@ -41,7 +41,7 @@ trait State
         /**
          * @var $this UnitEnum
          */
-        $state = EnumMakers::cast(self::class, $state);
+        $state = EnumGetters::cast(self::class, $state);
 
         return in_array($state, $this->allowedTransitions($hook));
     }

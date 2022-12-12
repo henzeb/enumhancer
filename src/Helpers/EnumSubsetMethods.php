@@ -28,8 +28,6 @@ class EnumSubsetMethods implements EnumSubset
 
     public function equals(UnitEnum|string|int|null ...$equals): bool
     {
-        EnumCheck::matches($this->enumType, ...$equals);
-
         foreach ($this->enums as $enum) {
             if ($this->compare($enum, ...$equals)) {
                 return true;
@@ -41,16 +39,26 @@ class EnumSubsetMethods implements EnumSubset
 
     private function compare(UnitEnum $enum, UnitEnum|string|int|null ...$equals): bool
     {
+        $result = false;
         foreach ($equals as $equal) {
-            if (!$equal instanceof UnitEnum) {
-                $equal = EnumMakers::tryMake($enum::class, $equal, true);
-            }
+            $equal = $this->asEnumObject($equal);
+
+            EnumCheck::matches($this->enumType, $equal);
 
             if ($enum === $equal) {
-                return true;
+                $result = true;
             }
         }
-        return false;
+        return $result;
+    }
+
+    private function asEnumObject(mixed $value): ?UnitEnum
+    {
+        if (!$value instanceof UnitEnum || $this->enumType !== $value::class) {
+            return EnumGetters::tryGet($this->enumType, $value, true);
+        }
+
+        return $value;
     }
 
     public function names(): array

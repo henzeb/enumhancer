@@ -42,6 +42,6 @@ abstract class EnumExtractor
 
         $matches = array_map(fn($value) => EnumMapper::map($class, $value, ...$mappers), $matches[0] ?? []);
 
-        return EnumMakers::makeArray($class, $matches);
+        return EnumGetters::getArray($class, $matches);
     }
 }

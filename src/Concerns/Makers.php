@@ -2,35 +2,47 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 
+/**
+ * @deprecated
+ */
 trait Makers
 {
+    use Getters;
+    /**
+     * @deprecated
+     */
     public static function make(int|string|null $value): self
     {
-        return EnumMakers::make(self::class, $value);
+        return self::get($value);
     }
 
+    /**
+     * @deprecated
+     */
     public static function tryMake(int|string|null $value): ?self
     {
-        return EnumMakers::tryMake(self::class, $value);
+        return self::tryGet($value);
     }
 
     /**
      * @param iterable $values
      * @return self[]
+     * @deprecated
      */
     public static function makeArray(iterable $values): array
     {
-        return EnumMakers::makeArray(self::class, $values);
+        return self::getArray($values);
     }
 
     /**
      * @param iterable $values
      * @return self[]
+     * @deprecated
      */
     public static function tryMakeArray(iterable $values): array
     {
-        return EnumMakers::tryMakeArray(self::class, $values);
+        return self::tryArray($values);
     }
 }

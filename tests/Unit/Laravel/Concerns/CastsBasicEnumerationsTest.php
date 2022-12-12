@@ -9,7 +9,7 @@ use Orchestra\Testbench\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
 
@@ -20,11 +20,11 @@ class CastsBasicEnumerationsTest extends TestCase
         return [
             [SubsetUnitEnum::ENUM, 'unitEnum'],
             [IntBackedEnum::TEST, 'intBackedEnum'],
-            [StringBackedMakersEnum::TEST, 'stringBackedEnum'],
+            [StringBackedGetEnum::TEST, 'stringBackedEnum'],
 
             [SubsetUnitEnum::ENUM, 'unitEnum', false],
             [IntBackedEnum::TEST, 'intBackedEnum', false],
-            [StringBackedMakersEnum::TEST, 'stringBackedEnum', false],
+            [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
         ];
     }
 

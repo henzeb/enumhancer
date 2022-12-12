@@ -20,6 +20,10 @@ enum EnhancedUnitEnum
     case ANOTHER_ENUM;
     case THIRD_ENUM;
 
+    case Unique;
+
+    case Mapped;
+
     public function isEnumFunction(): bool
     {
         return $this->equals(self::ENUM());

@@ -43,24 +43,24 @@ enum MyDefaultEnum {
 YourEnum::default(); //returns null
 YourEnum::MyEnum->isDefault(); // returns false
 YourEnum::MyEnum->isNotDefault(); // returns true
-YourEnum::make('default'); // throws error
-YourEnum::tryMake('default'); // returns null
+YourEnum::get('default'); // throws error
+YourEnum::tryGet('default'); // returns null
 
 YourDefaultEnum::default(); //returns YourDefaultEnum::Default
 YourDefaultEnum::Default->isDefault(); // returns true
 YourDefaultEnum::Default->isNotDefault(); // returns false
-YourDefaultEnum::make('default'); // YourDefaultEnum::Default
-YourDefaultEnum::make('unknown'); // crashes
-YourDefaultEnum::tryMake('default'); // returns YourDefaultEnum::Default
-YourDefaultEnum::tryMake('unknown'); // returns YourDefaultEnum::Default
+YourDefaultEnum::get('default'); // YourDefaultEnum::Default
+YourDefaultEnum::get('unknown'); // crashes
+YourDefaultEnum::tryGet('default'); // returns YourDefaultEnum::Default
+YourDefaultEnum::tryGet('unknown'); // returns YourDefaultEnum::Default
 
 MyDefaultEnum::default(); //returns MyDefaultEnum::MyDefaultEnum
 MyDefaultEnum::MyDefaultEnum->isDefault(); // returns true
 MyDefaultEnum::MyDefaultEnum->isNotDefault(); // returns false
-MyDefaultEnum::make('default'); // MyDefaultEnum::MyDefaultEnum
-MyDefaultEnum::make('unknown'); // crashes
-MyDefaultEnum::tryMake('default'); // returns MyDefaultEnum::MyDefaultEnum
-MyDefaultEnum::tryMake('unknown'); // returns MyDefaultEnum::MyDefaultEnum
+MyDefaultEnum::get('default'); // MyDefaultEnum::MyDefaultEnum
+MyDefaultEnum::get('unknown'); // crashes
+MyDefaultEnum::tryGet('default'); // returns MyDefaultEnum::MyDefaultEnum
+MyDefaultEnum::tryGet('unknown'); // returns MyDefaultEnum::MyDefaultEnum
 
 ```
 

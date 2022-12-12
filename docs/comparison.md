@@ -85,3 +85,48 @@ Note: When a case name or value contains an underscore, your method has to
 contain that underscore. You also cannot use values with spaces.
 
 Tip: Use the @method tag in your docblock to typehint the methods if you like.
+
+## Comparing and mapping
+
+Comparison automatically uses [Mappers](mappers.md) whenever available.
+
+````php
+use Henzeb\Enumhancer\Concerns\Mappers;
+use Henzeb\Enumhancer\Concerns\Comparison;
+use Henzeb\Enumhancer\Contracts\Mapper;
+
+enum Animal
+{
+    use Mappers, Comparison;
+
+    case Dog;
+    case Cat;
+
+    protected static function mapper(): ?Mapper
+    {
+        return new AnimalMapper();
+    }
+}
+
+enum LatinAnimalName
+{
+    case Canine;
+    case Feline;
+}
+
+Animal::Dog->isCanine(); // returns true;
+Animal::Dog->isFeline(); // returns false;
+Animal::Dog->isSomething(); // throws error
+````
+
+You can even match with enum cases that are not part of the same enum
+object, but do match by name or are mapped using a mapper.
+
+````php
+Animal::Dog->equals(LatinAnimalName::Canine); // returns true;
+Animal::Dog->equals(LatinAnimalName::Feline); // returns false;
+
+Animal::Dog->equals(SomeOtherEnum::Canine); // return true
+Animal::Dog->equals(SomeOtherEnum::Dog); // return true
+Animal::Dog->equals(SomeOtherEnum::Something); // throws error
+````

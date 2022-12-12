@@ -14,7 +14,7 @@ abstract class EnumCompare
 
     public static function isValidCall(string $class, $name, array $arguments): bool
     {
-        $nameIsEnum = !EnumMakers::tryMake($class, $name, true);
+        $nameIsEnum = !EnumGetters::tryGet($class, $name, true);
         return ((!str_starts_with($name, 'is') && !str_starts_with($name, 'isNot'))
                 || count($arguments))
             && $nameIsEnum;

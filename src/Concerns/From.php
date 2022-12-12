@@ -2,17 +2,18 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
+use UnitEnum;
 
 trait From
 {
-    public static function from(string $key): self
+    public static function from(UnitEnum|string $key): self
     {
-        return EnumMakers::make(static::class, $key, useDefault: true);
+        return EnumGetters::get(static::class, $key, $key instanceof UnitEnum, true);
     }
 
-    public static function tryFrom(string $key): ?self
+    public static function tryFrom(UnitEnum|string $key): ?self
     {
-        return EnumMakers::tryMake(static::class, $key);
+        return EnumGetters::tryGet(static::class, $key, $key instanceof UnitEnum);
     }
 }

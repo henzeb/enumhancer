@@ -8,7 +8,7 @@ use Henzeb\Enumhancer\Concerns\ConfigureDefaults;
 use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use stdClass;
@@ -38,7 +38,7 @@ class EnumPropertiesTest extends TestCase
                 true,
                 null,
                 ConstructableUnitEnum::class,
-                StringBackedMakersEnum::class
+                StringBackedGetEnum::class
             ],
 
         ];
@@ -149,12 +149,12 @@ class EnumPropertiesTest extends TestCase
     public function testClearsProperties()
     {
         EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
-        EnumProperties::store(StringBackedMakersEnum::class, 'property', 'a value');
+        EnumProperties::store(StringBackedGetEnum::class, 'property', 'a value');
 
         EnumProperties::clear(ConstructableUnitEnum::class);
 
         $this->assertNull(EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-        $this->assertEquals('a value', EnumProperties::get(StringBackedMakersEnum::class, 'property'));
+        $this->assertEquals('a value', EnumProperties::get(StringBackedGetEnum::class, 'property'));
     }
 
     public function testDoesntClearPropertiesOnce()
@@ -194,7 +194,7 @@ class EnumPropertiesTest extends TestCase
 
         EnumProperties::clearGlobal();
 
-        $this->assertNull(EnumProperties::get(StringBackedMakersEnum::class, 'globalProperty'));
+        $this->assertNull(EnumProperties::get(StringBackedGetEnum::class, 'globalProperty'));
     }
 
     /**
@@ -212,7 +212,7 @@ class EnumPropertiesTest extends TestCase
 
         $this->assertEquals(
             $expectedValue,
-            EnumProperties::get(StringBackedMakersEnum::class, $key)
+            EnumProperties::get(StringBackedGetEnum::class, $key)
         );
     }
 

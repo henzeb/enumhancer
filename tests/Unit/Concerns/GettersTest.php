@@ -10,92 +10,92 @@ use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Getters\GetUnitEnum;
 use PHPUnit\Framework\TestCase;
 
 
-class MakersTest extends TestCase
+class GettersTest extends TestCase
 {
-    public function testExpectValueErrorWhenMakeNull()
+    public function testExpectValueErrorWhenGetNull()
     {
         $this->expectError();
-        StringBackedGetEnum::make(null);
+        StringBackedGetEnum::get(null);
     }
 
-    public function testExpectValueErrorWhenMakeUnknownValue()
+    public function testExpectValueErrorWhenGetUnknownValue()
     {
         $this->expectError();
-        StringBackedGetEnum::make('RANDOM_UNKNOWN_VALUE');
+        StringBackedGetEnum::get('RANDOM_UNKNOWN_VALUE');
     }
 
-    public function testMake()
+    public function testGet()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST,
-            StringBackedGetEnum::make('TEST')
+            StringBackedGetEnum::get('TEST')
         );
     }
 
-    public function testMakeStrToUpper()
+    public function testGetStrToUpper()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST,
-            StringBackedGetEnum::make('test')
+            StringBackedGetEnum::get('test')
         );
     }
 
-    public function testMakeByValue()
+    public function testGetByValue()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST1,
-            StringBackedGetEnum::make('Different')
+            StringBackedGetEnum::get('Different')
         );
     }
 
-    public function testMakeByValueStrToUpper()
+    public function testGetByValueStrToUpper()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST_STRING_TO_UPPER,
-            StringBackedGetEnum::make('stringtoupper')
+            StringBackedGetEnum::get('stringtoupper')
         );
     }
 
-    public function testMakeByValueOnIntbackedEnum()
+    public function testGetByValueOnIntbackedEnum()
     {
         $this->assertEquals(
             IntBackedEnum::TEST,
-            IntBackedEnum::make(0)
+            IntBackedEnum::get(0)
         );
     }
 
-    public function testTryMakeReturnNullWhenDoesNotExist()
+    public function testTryGetReturnNullWhenDoesNotExist()
     {
         $this->assertNull(
-            StringBackedGetEnum::tryMake('DOES NOT EXISTS')
+            StringBackedGetEnum::tryGet('DOES NOT EXISTS')
         );
     }
 
-    public function testTryMakeByName()
+    public function testTryGetByName()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST,
-            StringBackedGetEnum::tryMake('TEST')
+            StringBackedGetEnum::tryGet('TEST')
         );
     }
 
-    public function testTryMakeByValue()
+    public function testTryGetByValue()
     {
         $this->assertEquals(
             StringBackedGetEnum::TEST1,
-            StringBackedGetEnum::tryMake('different')
+            StringBackedGetEnum::tryGet('different')
         );
     }
 
-    public function testTryMakeByValueOnIntbackedEnum()
+    public function testTryGetByValueOnIntbackedEnum()
     {
         $this->assertEquals(
             IntBackedEnum::TEST,
-            IntBackedEnum::tryMake(0)
+            IntBackedEnum::tryGet(0)
         );
     }
 
-    public function testMakeArray()
+    public function testGetArray()
     {
         $this->assertEquals(
             [
@@ -103,11 +103,11 @@ class MakersTest extends TestCase
                 StringBackedGetEnum::TEST1,
                 StringBackedGetEnum::TEST_STRING_TO_UPPER
             ],
-            StringBackedGetEnum::makeArray(['TEST', 'different', 'stringtoupper'])
+            StringBackedGetEnum::getArray(['TEST', 'different', 'stringtoupper'])
         );
     }
 
-    public function testMakeArrayWithGenerator()
+    public function testGetArrayWithGenerator()
     {
         $this->assertEquals(
             [
@@ -115,7 +115,7 @@ class MakersTest extends TestCase
                 StringBackedGetEnum::TEST1,
                 StringBackedGetEnum::TEST_STRING_TO_UPPER
             ],
-            StringBackedGetEnum::makeArray(
+            StringBackedGetEnum::getArray(
                 (function (): Generator {
                     yield 'TEST';
                     yield 'different';
@@ -125,14 +125,14 @@ class MakersTest extends TestCase
         );
     }
 
-    public function testMakeArrayFails()
+    public function testGetArrayFails()
     {
         $this->expectError();
 
-        StringBackedGetEnum::makeArray(['DOES_NOT_EXIST']);
+        StringBackedGetEnum::getArray(['DOES_NOT_EXIST']);
     }
 
-    public function testTryMakeArray()
+    public function testTryGetArray()
     {
         $this->assertEquals(
             [
@@ -140,11 +140,11 @@ class MakersTest extends TestCase
                 StringBackedGetEnum::TEST1,
                 StringBackedGetEnum::TEST_STRING_TO_UPPER
             ],
-            StringBackedGetEnum::tryMakeArray(['TEST', 'different', 'stringtoupper', 'DOES_NOT_EXIST'])
+            StringBackedGetEnum::tryArray(['TEST', 'different', 'stringtoupper', 'DOES_NOT_EXIST'])
         );
     }
 
-    public function testTryMakeArrayWithGenerator()
+    public function testTryGetArrayWithGenerator()
     {
         $this->assertEquals(
             [
@@ -152,7 +152,7 @@ class MakersTest extends TestCase
                 StringBackedGetEnum::TEST1,
                 StringBackedGetEnum::TEST_STRING_TO_UPPER
             ],
-            StringBackedGetEnum::tryMakeArray(
+            StringBackedGetEnum::tryArray(
                 (function (): Generator {
                     yield 'TEST';
                     yield 'different';
@@ -163,15 +163,15 @@ class MakersTest extends TestCase
         );
     }
 
-    public function testMakeStringBackedEnumWithInteger() {
+    public function testGetStringBackedEnumWithInteger() {
         $this->assertEquals(
-            StringBackedGetEnum::TEST1, StringBackedGetEnum::make(1)
+            StringBackedGetEnum::TEST1, StringBackedGetEnum::get(1)
         );
     }
 
-    public function testMakeUnitEnumWithInteger() {
+    public function testGetUnitEnumWithInteger() {
         $this->assertEquals(
-            GetUnitEnum::Zero, GetUnitEnum::make(0)
+            GetUnitEnum::Zero, GetUnitEnum::get(0)
         );
     }
 }

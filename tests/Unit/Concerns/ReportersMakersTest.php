@@ -15,13 +15,13 @@ use Henzeb\Enumhancer\Tests\Fixtures\ReporterTestEnum;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
-class ReportersTest extends TestCase
+class ReportersMakersTest extends TestCase
 {
     public function providesEnumsToTestWith(): array
     {
         return [
             'just-reporters' => [ReporterTestEnum::class],
-            'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+            'with-mappers-enhancment' => [EnhancedBackedEnum::class]
         ];
     }
 
@@ -36,7 +36,7 @@ class ReportersTest extends TestCase
     {
         $this->assertEquals(
             $enum::ENUM,
-            $enum::getOrReport('ENUM')
+            $enum::makeOrReport('ENUM')
         );
     }
 
@@ -48,7 +48,7 @@ class ReportersTest extends TestCase
      */
     public function testNoreporting(string $enum)
     {
-        $this->assertNull($enum::getOrReport('NOT EXIST'));
+        $this->assertNull($enum::makeOrReport('NOT EXIST'));
     }
 
     /**
@@ -68,7 +68,7 @@ class ReportersTest extends TestCase
             $reporter
         );
 
-        $this->assertNull($enum::getOrReport('NOT EXIST'));
+        $this->assertNull($enum::makeOrReport('NOT EXIST'));
     }
 
     /**
@@ -88,7 +88,7 @@ class ReportersTest extends TestCase
             $globalReporter
         );
 
-        $this->assertNull(NotReportingEnum::getOrReport('NOT EXIST'));
+        $this->assertNull(NotReportingEnum::makeOrReport('NOT EXIST'));
     }
 
     public function testOverridesGlobalReporterWithOwnReporter()
@@ -109,7 +109,7 @@ class ReportersTest extends TestCase
 
         CustomReportingEnum::property('reporter', $customReporter);
 
-        $this->assertNull(CustomReportingEnum::getOrReport('NOT EXIST'));
+        $this->assertNull(CustomReportingEnum::makeOrReport('NOT EXIST'));
     }
 
     /**
@@ -122,7 +122,7 @@ class ReportersTest extends TestCase
     {
         $this->assertEquals(
             [$enum::ENUM, $enum::ANOTHER_ENUM],
-            $enum::getOrReportArray(['ENUM', 'ANOTHER_ENUM'])
+            $enum::makeOrReportArray(['ENUM', 'ANOTHER_ENUM'])
         );
     }
 
@@ -143,7 +143,7 @@ class ReportersTest extends TestCase
 
         $this->assertEquals(
             [$enum::ENUM],
-            $enum::getOrReportArray(['ENUM', 'DOESNOTEXIST'])
+            $enum::makeOrReportArray(['ENUM', 'DOESNOTEXIST'])
         );
     }
 
@@ -165,7 +165,7 @@ class ReportersTest extends TestCase
 
         EnumReporter::set($reporter);
 
-        $this->assertNull($enum::getOrReport('DOESNOTEXIST', EnhancedBackedEnum::ANOTHER_ENUM));
+        $this->assertNull($enum::makeOrReport('DOESNOTEXIST', EnhancedBackedEnum::ANOTHER_ENUM));
 
     }
 
@@ -175,7 +175,7 @@ class ReportersTest extends TestCase
      *
      * @dataProvider providesEnumsToTestWith
      */
-    public function testGetOrReportArrayWithContext(string $enum)
+    public function testMakeOrReportArrayWithContext(string $enum)
     {
         $reporter = new class implements Reporter {
 
@@ -187,8 +187,7 @@ class ReportersTest extends TestCase
 
         EnumReporter::set($reporter);
 
-        $this->assertEquals([], $enum::getOrReportArray(['DOESNOTEXIST'], EnhancedBackedEnum::ANOTHER_ENUM));
-
+        $this->assertEquals([], $enum::makeOrReportArray(['DOESNOTEXIST'], EnhancedBackedEnum::ANOTHER_ENUM));
     }
 
     protected function tearDown(): void

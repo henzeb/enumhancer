@@ -2,6 +2,17 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.17.0 - 2022-12-13
+
+- Added [Flip](docs/mappers.md#flip), allowing to use
+ a single mapper for mapping between enums
+- [From](docs/from.md)
+ now allows `UnitEnum` objects for use with `Flip`
+- [Comparison](docs/comparison.md) now allows different enums
+ when used with [Mappers](docs/mappers.md)
+- Deprecated [Makers](docs/makers.md), replaced by
+ [Getters](docs/getters.md)
+
 ## 1.16.0 - 2022-12-11
 
 - Added [Configure](docs/configure.md)

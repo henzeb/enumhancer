@@ -2,12 +2,12 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Helpers\EnumMakers;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
 
 trait Constructor
 {
     public static function __callStatic(string $name, array $arguments)
     {
-        return EnumMakers::make(self::class, $name, true);
+        return EnumGetters::get(self::class, $name, true);
     }
 }

@@ -10,6 +10,7 @@ use function Henzeb\Enumhancer\Functions\n;
 
 /**
  * @method static self anotherMappedEnum()
+ * @method static bool isMapped()
  */
 enum EnhancedBackedEnum: string
 {
@@ -19,6 +20,7 @@ enum EnhancedBackedEnum: string
     case ANOTHER_ENUM = 'another enum';
     case ENUM_3 = 'third_enum';
     case WITH_CAPITALS = 'THIRD enum';
+
 
     protected function labels(): array
     {
@@ -33,7 +35,8 @@ enum EnhancedBackedEnum: string
             protected function mappable(): array
             {
                 return [
-                    'anotherMappedEnum' => EnhancedBackedEnum::ENUM
+                    'anotherMappedEnum' => EnhancedBackedEnum::ENUM,
+                    EnhancedUnitEnum::Mapped->name => EnhancedBackedEnum::ANOTHER_ENUM
                 ];
             }
         };

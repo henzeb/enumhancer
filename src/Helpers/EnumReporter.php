@@ -3,10 +3,11 @@
 namespace Henzeb\Enumhancer\Helpers;
 
 use BackedEnum;
-use RuntimeException;
-use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Contracts\Reporter;
+use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
+use RuntimeException;
+use UnitEnum;
 
 abstract class EnumReporter
 {
@@ -38,9 +39,9 @@ abstract class EnumReporter
         return self::$reporter;
     }
 
-    public static function makeOrReport(string $class, $key, ?BackedEnum $context, ?Reporter $reporter)
+    public static function getOrReport(string $class, $key, ?BackedEnum $context, ?Reporter $reporter): ?UnitEnum
     {
-        $enum = EnumMakers::tryMake($class, $key);
+        $enum = EnumGetters::tryGet($class, $key);
 
         if (!$enum) {
             $reporter?->report($class, $key, $context);
@@ -49,14 +50,18 @@ abstract class EnumReporter
         return $enum;
     }
 
-    public static function makeOrReportArray(string $class, iterable $keys, ?BackedEnum $context, ?Reporter $reporter)
-    {
+    public static function getOrReportArray(
+        string $class,
+        iterable $keys,
+        ?BackedEnum $context,
+        ?Reporter $reporter
+    ): array {
         EnumCheck::check($class);
 
         $result = [];
 
         foreach ($keys as $key) {
-            $result[] = self::makeOrReport($class, $key, $context, $reporter);
+            $result[] = self::getOrReport($class, $key, $context, $reporter);
         }
 
         return array_filter($result);

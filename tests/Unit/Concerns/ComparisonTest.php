@@ -189,4 +189,15 @@ class ComparisonTest extends TestCase
         $this->assertFalse(EnhancedUnitEnum::ENUM->equals(null));
         $this->assertFalse(EnhancedBackedEnum::ENUM->equals(null));
     }
+
+    public function testPassingEnums(): void
+    {
+        $this->assertTrue(EnhancedBackedEnum::ENUM->equals(EnhancedUnitEnum::ENUM));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isMapped());
+
+        $this->expectException(BadMethodCallException::class);
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isFailure());
+    }
 }

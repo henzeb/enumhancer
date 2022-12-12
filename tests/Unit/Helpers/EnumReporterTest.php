@@ -139,12 +139,12 @@ class EnumReporterTest extends TestCase
     public function testMakeOrReportShouldErrorWithNonEnum()
     {
         $this->expectError();
-        EnumReporter::makeOrReport(stdClass::class, '', null, new LaravelLogReporter());
+        EnumReporter::getOrReport(stdClass::class, '', null, new LaravelLogReporter());
     }
 
     public function testMakeOrReportArrayShouldErrorWithNonEnum()
     {
         $this->expectError();
-        EnumReporter::makeOrReportArray(stdClass::class, [], null, new LaravelLogReporter());
+        EnumReporter::getOrReportArray(stdClass::class, [], null, new LaravelLogReporter());
     }
 }

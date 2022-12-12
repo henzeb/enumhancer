@@ -56,14 +56,14 @@ abstract class EnumState
         foreach ($transitions as $key => $value) {
             unset($transitions[$key]);
 
-            $key = EnumMakers::tryCast($class, $key)?->name ?? $key;
+            $key = EnumGetters::tryCast($class, $key)?->name ?? $key;
 
             if (is_array($value)) {
                 $transitions[$key] = self::castTransitions($class, $value);
                 continue;
             }
 
-            $transitions[$key] = $value ? EnumMakers::cast($class, $value) : null;
+            $transitions[$key] = $value ? EnumGetters::cast($class, $value) : null;
         }
 
         return $transitions;

@@ -9,7 +9,7 @@ use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedMakersEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 
 class EnumSubsetMethodsTest extends TestCase
 {
@@ -73,8 +73,8 @@ class EnumSubsetMethodsTest extends TestCase
     public function testValueShouldReturnArrayOfValuesStringBacked()
     {
         $this->assertEquals(
-            $this->getValues(StringBackedMakersEnum::cases()),
-            (new EnumSubsetMethods(StringBackedMakersEnum::class, ...StringBackedMakersEnum::cases()))
+            $this->getValues(StringBackedGetEnum::cases()),
+            (new EnumSubsetMethods(StringBackedGetEnum::class, ...StringBackedGetEnum::cases()))
                 ->values()
         );
     }

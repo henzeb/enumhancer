@@ -8,18 +8,34 @@ use Henzeb\Enumhancer\Helpers\EnumReporter;
 
 trait Reporters
 {
-    final protected static function reporter(): ?Reporter
+    protected static function reporter(): ?Reporter
     {
         return EnumReporter::get();
     }
 
-    final public static function makeOrReport(int|string|null $key, BackedEnum $context = null): ?self
+    /**
+     * @deprecated
+     */
+    public static function makeOrReport(int|string|null $key, BackedEnum $context = null): ?self
     {
-        return EnumReporter::makeOrReport(self::class, $key, $context, self::reporter());
+        return self::getOrReport($key, $context);
     }
 
-    final public static function makeOrReportArray(iterable $keys, BackedEnum $context = null): array
+    /**
+     * @deprecated
+     */
+    public static function makeOrReportArray(iterable $keys, BackedEnum $context = null): array
     {
-        return EnumReporter::makeOrReportArray(self::class, $keys, $context, self::reporter());
+        return self::getOrReportArray($keys, $context);
+    }
+
+    public static function getOrReport(int|string|null $key, BackedEnum $context = null): ?self
+    {
+        return EnumReporter::getOrReport(self::class, $key, $context, self::reporter());
+    }
+
+    public static function getOrReportArray(iterable $keys, BackedEnum $context = null): array
+    {
+        return EnumReporter::getOrReportArray(self::class, $keys, $context, self::reporter());
     }
 }
