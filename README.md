@@ -6,9 +6,9 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![License](https://img.shields.io/packagist/l/henzeb/enumhancer)](https://packagist.org/packages/henzeb/enumhancer)
 
-This package is your Swiss Army knife when it comes to PHP 8.1's native enums.
-In this package you will find a lot of tools for the most common use cases, and
-more will be added in the future.
+This package is your framework-agnostic Swiss Army knife when it comes to
+PHP 8.1's native enums. In this package you will find a lot of tools for
+the most common use cases, and more will be added in the future.
 
 If you have an idea, or you miss something that needs to be added, just let me
 know.

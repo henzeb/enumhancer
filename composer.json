@@ -1,6 +1,6 @@
 {
     "name": "henzeb/enumhancer",
-    "description": "Your Swiss Army knife for PHP 8.1+ native enums",
+    "description": "Your framework-agnostic Swiss Army knife for PHP 8.1+ native enums",
     "keywords": [
         "henzeb",
         "enumhancer",
@@ -41,6 +41,8 @@
         "default",
         "php 8.1",
         "8.1",
+        "php 8.2",
+        "8.2",
         "state",
         "machine",
         "transition",
