@@ -2,17 +2,19 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Helpers\EnumProperties;
-use UnitEnum;
-use Henzeb\Enumhancer\Helpers\EnumState;
-use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
-use Henzeb\Enumhancer\Exceptions\SyntaxException;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 use Henzeb\Enumhancer\Exceptions\IllegalNextEnumTransitionException;
+use Henzeb\Enumhancer\Exceptions\SyntaxException;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
+use Henzeb\Enumhancer\Helpers\EnumProperties;
+use Henzeb\Enumhancer\Helpers\EnumState;
+use UnitEnum;
 
 trait State
 {
+    use MagicCalls;
+
     /**
      * @throws IllegalEnumTransitionException|SyntaxException
      */
@@ -30,20 +32,32 @@ trait State
         throw new IllegalEnumTransitionException($this, $state);
     }
 
+    public function to(self|string|int $state, TransitionHook $hook = null): self
+    {
+        return $this->transitionTo($state, $hook);
+    }
+
+    public function tryTo(self|string|int $state, TransitionHook $hook = null): self
+    {
+        if ($this->isTransitionAllowed($state, $hook)) {
+            return $this->transitionTo($state, $hook);
+        }
+        return $this;
+    }
+
     /**
      * @param self|string|int $state
      * @param TransitionHook|null $hook
      * @return bool
-     * @throws SyntaxException
      */
     public function isTransitionAllowed(self|string|int $state, TransitionHook $hook = null): bool
     {
         /**
          * @var $this UnitEnum
          */
-        $state = EnumGetters::cast(self::class, $state);
+        $state = EnumGetters::tryCast(self::class, $state);
 
-        return in_array($state, $this->allowedTransitions($hook));
+        return $state && in_array($state, $this->allowedTransitions($hook));
     }
 
     /**

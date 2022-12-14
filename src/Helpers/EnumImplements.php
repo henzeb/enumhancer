@@ -2,6 +2,8 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Henzeb\Enumhancer\Concerns\Comparison;
+use Henzeb\Enumhancer\Concerns\Constructor;
 use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Concerns\Mappers;
@@ -34,6 +36,16 @@ abstract class EnumImplements
     public static function labels(string $class): bool
     {
         return self::traitOn($class, Labels::class);
+    }
+
+    public static function constructor(string $class): bool
+    {
+        return self::traitOn($class, Constructor::class);
+    }
+
+    public static function comparison(string $class): bool
+    {
+        return self::traitOn($class, Comparison::class);
     }
 
     private static function classUsesTrait(string $class): array

@@ -198,6 +198,70 @@ class ComparisonTest extends TestCase
 
         $this->expectException(BadMethodCallException::class);
 
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isFailure());
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isExpectedToFail());
+    }
+
+    public function testIs(): void
+    {
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('another_enum'));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(1));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(EnhancedUnitEnum::ANOTHER_ENUM));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('mapped'));
+
+        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->is('something else'));
+    }
+
+    public function testIsNot(): void
+    {
+        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot('another_enum'));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isNot(2));
+
+        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot(EnhancedUnitEnum::ANOTHER_ENUM));
+
+        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot('mapped'));
+
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isNot('something else'));
+    }
+
+    public function testIsIn(): void
+    {
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isIn('another_enum', 'somethingElse')
+        );
+
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isIn(EnhancedUnitEnum::ANOTHER_ENUM, 'somethingElse')
+        );
+
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 1)
+        );
+
+        $this->assertFalse(
+            EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 2)
+        );
+    }
+
+    public function testIsNotIn(): void
+    {
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn('other_enums', 'somethingElse')
+        );
+
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(EnhancedUnitEnum::ENUM, 'somethingElse')
+        );
+
+        $this->assertTrue(
+            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 2)
+        );
+
+        $this->assertFalse(
+            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 1)
+        );
     }
 }

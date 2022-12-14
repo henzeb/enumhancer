@@ -6,6 +6,13 @@ use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Concerns\Properties;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 
+/**
+ * @method tryToClose()
+ * @method tryToMove()
+ * @method toClose()
+ * @method toMove()
+ * @method doesNotExist()
+ */
 enum StateElevatorEnum
 {
     use State, Properties;

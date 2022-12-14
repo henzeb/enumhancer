@@ -29,6 +29,13 @@ class StateTest extends MockeryTestCase
                 ->transitionTo('Move')
                 ->transitionTo(StateElevatorEnum::Stop)
         );
+
+        $this->assertEquals(
+            StateElevatorEnum::Stop,
+            StateElevatorEnum::Open->to('close')
+                ->to('Move')
+                ->to(StateElevatorEnum::Stop)
+        );
     }
 
     public function testComplexTransition(): void
@@ -89,6 +96,20 @@ class StateTest extends MockeryTestCase
         $from->transitionTo($to);
     }
 
+    /**
+     * @param StateElevatorEnum|StateElevatorComplexEnum|UnitEnum|string|int $from
+     * @param StateElevatorEnum|StateElevatorComplexEnum|string|int $to
+     * @return void
+     *
+     * @dataProvider providesNotAllowedTransitionTestcases
+     */
+    public function testIllegalTransitionsToThrowException(mixed $from, mixed $to): void
+    {
+        $this->expectException(IllegalEnumTransitionException::class);
+
+        $from->to($to);
+    }
+
     public function testNullParameterDisablesTransition(): void
     {
         $this->assertFalse(StateElevatorDisableTransitionEnum::Open->isTransitionAllowed('close'));
@@ -96,6 +117,15 @@ class StateTest extends MockeryTestCase
         $this->expectException(IllegalEnumTransitionException::class);
 
         StateElevatorDisableTransitionEnum::Open->transitionTo('close');
+    }
+
+    public function testNullParameterDisablesTransitionWithTo(): void
+    {
+        $this->assertFalse(StateElevatorDisableTransitionEnum::Open->isTransitionAllowed('close'));
+
+        $this->expectException(IllegalEnumTransitionException::class);
+
+        StateElevatorDisableTransitionEnum::Open->to('close');
     }
 
     public function testCloseToMoveStillWorksWhenCustomTransitions(): void
@@ -244,5 +274,43 @@ class StateTest extends MockeryTestCase
 
         StateElevatorEnum::setTransitionHook($hookSuccess);
         $this->assertTrue(StateElevatorEnum::Open->isTransitionAllowed('close', $hookSuccess));
+    }
+
+    public function testTryTo(): void
+    {
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->tryTo('close'));
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->tryTo(StateElevatorEnum::Close));
+
+        $this->assertEquals(StateElevatorEnum::Open, StateElevatorEnum::Open->tryTo('up'));
+
+        $this->assertEquals(StateElevatorEnum::Open, StateElevatorEnum::Open->tryTo('move'));
+
+        $this->assertEquals(StateElevatorEnum::Open, StateElevatorEnum::Open->tryTo(StateElevatorEnum::Move));
+    }
+
+    public function testMagicCalls(): void
+    {
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->tryToClose());
+
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->toClose());
+
+        $this->assertEquals(StateElevatorEnum::Open, StateElevatorEnum::Open->tryToMove());
+
+        $this->expectException(IllegalEnumTransitionException::class);
+
+        StateElevatorEnum::Open->toMove();
+    }
+
+    public function testMagicCallsWithHooks(): void
+    {
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->tryToClose());
+
+        $this->assertEquals(StateElevatorEnum::Close, StateElevatorEnum::Open->toClose());
+
+        $this->assertEquals(StateElevatorEnum::Open, StateElevatorEnum::Open->tryToMove());
+
+        $this->expectException(IllegalEnumTransitionException::class);
+
+        StateElevatorEnum::Open->toMove();
     }
 }

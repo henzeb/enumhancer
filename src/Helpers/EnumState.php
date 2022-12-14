@@ -2,8 +2,9 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use UnitEnum;
+use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
+use UnitEnum;
 
 abstract class EnumState
 {
@@ -85,5 +86,27 @@ abstract class EnumState
                 return true;
             }
         );
+    }
+
+    public static function isValidCall(string $class, string $name): bool
+    {
+        EnumCheck::check($class);
+
+        return str_starts_with($name, 'to') || str_starts_with($name, 'tryTo');
+    }
+
+    public static function call(UnitEnum|State $currentState, string $name, array $arguments): mixed
+    {
+        $toState = EnumGetters::tryGet(
+            $currentState::class,
+            substr($name, str_starts_with($name, 'tryTo') ? 5 : 2),
+            true
+        );
+
+        if (str_starts_with($name, 'tryTo')) {
+            return $currentState->tryTo($toState, ...$arguments);
+        }
+
+        return $currentState->to($toState, ...$arguments);
     }
 }

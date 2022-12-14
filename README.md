@@ -53,7 +53,7 @@ You can also just use one of the features by using the specific trait for that
 feature.
 
 Note: all traits can be used next to each other, except for `Mappers`, which has
-implemented the methods of `Makers`, `Extractor` and `Reporters`.
+implemented the methods of `Getters`, `Extractor` and `Reporters`.
 
 ### Features
 

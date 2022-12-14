@@ -67,6 +67,13 @@ YourThirdEnum::ENUM->equals('enum', 'enum2'); //returns true
 Next to `equals`, you can also handle assertions with `is` and `isNot`.
 
 ```php
+YourEnum::Enum->is('enum'); // returns true
+YourEnum::Enum->isNot('enum'); // returns false
+
+YourEnum::Enum->is('enum2'); // returns false
+YourEnum::Enum->isNot('enum2'); // returns true
+
+/** magical methods */
 YourEnum::ENUM->isEnum(); // returns true
 YourEnum::ENUM->isNotEnum(); // returns false
 YourEnum::ENUM->isEnum2(); // returns false
@@ -85,6 +92,21 @@ Note: When a case name or value contains an underscore, your method has to
 contain that underscore. You also cannot use values with spaces.
 
 Tip: Use the @method tag in your docblock to typehint the methods if you like.
+
+### isIn and isNotIn
+
+`Equals` already can do this, but this might be easier to the eye.
+
+````php
+YourEnum::ENUM->isIn(YourEnum::ENUM, 'your_other_value'); // returns true
+YourEnum::ENUM->isIn('ENUM', YourEnum::ENUM2); // returns true
+YourEnum::ENUM->isIn('your_value', 'your_other_value'); //returns true
+YourEnum::ENUM->isIn('ENUM2', YourEnum::ENUM2); // returns false
+
+
+YourEnum::ENUM->isNotIn('random', 'something_else'); //returns true
+YourEnum::ENUM->isNotIn('enum', 'something_else'); //returns false
+````
 
 ## Comparing and mapping
 
@@ -125,6 +147,12 @@ object, but do match by name or are mapped using a mapper.
 ````php
 Animal::Dog->equals(LatinAnimalName::Canine); // returns true;
 Animal::Dog->equals(LatinAnimalName::Feline); // returns false;
+
+Animal::Dog->is(LatinAnimalName::Canine); // returns true;
+Animal::Dog->is(LatinAnimalName::Feline); // returns false;
+
+Animal::Dog->isNot(LatinAnimalName::Canine); // returns false;
+Animal::Dog->isNot(LatinAnimalName::Feline); // returns true;
 
 Animal::Dog->equals(SomeOtherEnum::Canine); // return true
 Animal::Dog->equals(SomeOtherEnum::Dog); // return true

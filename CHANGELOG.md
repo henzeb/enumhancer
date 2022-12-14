@@ -2,6 +2,13 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.18.0 - 2022-12-14
+
+- Added Magic method functionality to [State](docs/state.md)
+- Added `to` and `tryTo` methods to `State`
+- Added `is`, `isNot`, `isIn` and `isNotIn`
+ to [Comparison](docs/comparison.md)
+
 ## 1.17.0 - 2022-12-13
 
 - Added [Flip](docs/mappers.md#flip), allowing to use

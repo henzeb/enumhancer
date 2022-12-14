@@ -30,7 +30,16 @@ elevator::Open->allowsTransition(elevator::Move); // returns false
 
 elevator::Open->transitionTo('Close'); // returns elevator::Close
 elevator::Move->transitionTo(elevator::Close); // throws exception
-elevator::Close->transitionTo('Open'); // throws exception
+elevator::Close->transitionTo('Open'); // throws IllegalEnumTransitionException
+
+elevator::Open->to(elevator::Move) // throws IllegalEnumTransitionException
+elevator::Open->tryTo(elevator::Move) // returns elevator::Open
+elevator::Open->tryTo(elevator::Close) // returns elevator::Close
+
+/** using magic */
+elevator::Open->toMove() // throws IllegalEnumTransitionException
+elevator::Open->tryToMove() // returns elevator::Open
+elevator::Open->tryToClose() // returns elevator::Close
 ```
 
 #### Complex Usage
@@ -69,7 +78,7 @@ elevator::Open->transitionTo(elevator::Close)
     ->transitionTo('Open')
     ->transitionTo('Close'); //eventually returns elevator::Close
 
-elevator::Move->transitionTo('Open'); //throws exception
+elevator::Move->transitionTo('Open'); //throws IllegalEnumTransitionException
 ```
 
 The array returned by the `customTransitions` method can return an array containing
@@ -132,9 +141,20 @@ elevator::Move->allowedTransitions($hook); // returns []
 elevator::Move->transitionTo('stop', $hook); // throws IllegalEnumTransitionException
 elevator::Close->allowTransition('move', $hook); // returns true
 elevator::Close->transitionTo('move', $hook); // returns increases $floor to 2
+
+elevator::Move->tryTo('stop', $hook); // returns elevator::Move
+elevator::Move->to('stop', $hook); // throws IllegalEnumTransitionException
+elevator::Close->tryTo('move', $hook); // returns elevator::Close
+elevator::Close->to('move', $hook); // returns increases $floor to 2
+
+/** using magic calls */
+elevator::Move->tryToStop($hook); // returns elevator::Move
+elevator::Move->toStop($hook); // throws IllegalEnumTransitionException
+elevator::Close->tryToMove($hook); // returns elevator::Close
+elevator::Close->toMove($hook); // returns increases $floor to 2
 ```
 
-You can also add a `TransitionHook` directly on to your enum class.
+You can also add a `TransitionHook` directly on to your enum object.
 
 ```php
 enum elevator {

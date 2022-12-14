@@ -20,7 +20,7 @@ class ConstructorTest extends TestCase
 
     public function testShouldFailUsingStaticCallToUnknownEnum(): void
     {
-        $this->expectError();
+        $this->expectException(\BadMethodCallException::class);
         ConstructableUnitEnum::CANNOT_CALL();
     }
 

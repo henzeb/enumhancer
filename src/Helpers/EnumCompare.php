@@ -14,9 +14,24 @@ abstract class EnumCompare
 
     public static function isValidCall(string $class, $name, array $arguments): bool
     {
-        $nameIsEnum = !EnumGetters::tryGet($class, $name, true);
-        return ((!str_starts_with($name, 'is') && !str_starts_with($name, 'isNot'))
-                || count($arguments))
-            && $nameIsEnum;
+        EnumCheck::check($class);
+
+        return EnumImplements::comparison($class)
+            && !count($arguments) && str_starts_with($name, 'is');
+    }
+
+    public static function call(UnitEnum $enum, string $name): bool
+    {
+        $value = EnumGetters::tryGet(
+            $enum::class,
+            substr($name, str_starts_with($name, 'isNot') ? 5 : 2),
+            true
+        );
+
+        if (!$value) {
+            EnumMagicCalls::throwException($enum::class, $name);
+        }
+
+        return str_starts_with($name, 'isNot') !== self::equals($enum, $value);
     }
 }
