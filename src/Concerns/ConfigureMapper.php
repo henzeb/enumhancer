@@ -12,7 +12,7 @@ trait ConfigureMapper
     /**
      * @throws ReservedPropertyNameException|PropertyAlreadyStoredException
      */
-    public static function setMapper(?Mapper $mapper): void
+    public static function setMapper(Mapper|array|null $mapper): void
     {
         EnumProperties::store(
             self::class,
@@ -25,7 +25,7 @@ trait ConfigureMapper
     /**
      * @throws ReservedPropertyNameException|PropertyAlreadyStoredException
      */
-    public static function setMapperOnce(Mapper $mapper): void
+    public static function setMapperOnce(Mapper|array $mapper): void
     {
         EnumProperties::storeOnce(
             self::class,

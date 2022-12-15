@@ -2,23 +2,23 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
-use Henzeb\Enumhancer\Concerns\Getters;
-use UnitEnum;
-use PHPUnit\Framework\TestCase;
-use Henzeb\Enumhancer\Concerns\Makers;
 use Henzeb\Enumhancer\Concerns\Defaults;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsNullEnum;
+use Henzeb\Enumhancer\Concerns\Getters;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsMappedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsStringEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsOverriddenEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsMappedIntEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullStringEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsMappedStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsNullStringEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsOverriddenIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsOverriddenStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Defaults\DefaultsStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsConstantEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsMappedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsNullEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsOverriddenEnum;
+use PHPUnit\Framework\TestCase;
+use UnitEnum;
 
 class DefaultsTest extends TestCase
 {
@@ -26,8 +26,10 @@ class DefaultsTest extends TestCase
     {
         return [
             [DefaultsEnum::class, DefaultsEnum::Default],
+
             [DefaultsIntEnum::class, DefaultsIntEnum::Default],
             [DefaultsStringEnum::class, DefaultsStringEnum::Default],
+            [DefaultsConstantEnum::class, DefaultsConstantEnum::DefaultEnum],
 
             [DefaultsNullEnum::class, null],
             [DefaultsNullIntEnum::class, null],

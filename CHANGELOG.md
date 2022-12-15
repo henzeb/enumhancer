@@ -2,6 +2,13 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.19.0 - 2022-12-15
+
+- You can now use constants for [Mappers](docs/mappers)
+ and [Defaults](docs/defaults.md)
+- you can now flag a unit enum as `strict`, so you don't
+ have to worry about casing in [Values](docs/value.md).
+
 ## 1.18.0 - 2022-12-14
 
 - Added Magic method functionality to [State](docs/state.md)

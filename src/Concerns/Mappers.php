@@ -19,7 +19,7 @@ trait Mappers
         return EnumReporter::get();
     }
 
-    protected static function mapper(): ?Mapper
+    protected static function mapper(): Mapper|array|null
     {
         return EnumProperties::get(
             self::class,
@@ -38,7 +38,7 @@ trait Mappers
         );
     }
 
-    public static function get(string|int|UnitEnum|null $value, Mapper|string $mapper = null): self
+    public static function get(string|int|UnitEnum|null $value, Mapper|string|array $mapper = null): self
     {
         return EnumGetters::get(
             self::class,
@@ -57,7 +57,7 @@ trait Mappers
         );
     }
 
-    public static function tryGet(string|int|UnitEnum|null $value, Mapper|string $mapper = null): ?self
+    public static function tryGet(string|int|UnitEnum|null $value, Mapper|string|array $mapper = null): ?self
     {
         return EnumGetters::tryGet(
             self::class,
@@ -77,7 +77,7 @@ trait Mappers
         );
     }
 
-    public static function getArray(iterable $values, Mapper|string $mapper = null): array
+    public static function getArray(iterable $values, Mapper|string|array $mapper = null): array
     {
         return EnumGetters::getArray(
             self::class,
@@ -96,7 +96,7 @@ trait Mappers
         );
     }
 
-    public static function tryArray(iterable $values, Mapper|string $mapper = null): array
+    public static function tryArray(iterable $values, Mapper|string|array $mapper = null): array
     {
         return EnumGetters::tryArray(
             self::class,
@@ -122,7 +122,7 @@ trait Mappers
     public static function getOrReport(
         int|string|UnitEnum|null $value,
         BackedEnum $context = null,
-        Mapper|string $mapper = null
+        Mapper|string|array $mapper = null
     ): ?self {
         return EnumReporter::getOrReport(
             self::class,
@@ -150,7 +150,7 @@ trait Mappers
     public static function getOrReportArray(
         iterable $values,
         BackedEnum $context = null,
-        Mapper|string $mapper = null
+        Mapper|string|array $mapper = null
     ): array {
         return EnumReporter::getOrReportArray(
             self::class,
@@ -160,7 +160,7 @@ trait Mappers
         );
     }
 
-    public static function extract(string $text, Mapper|string $mapper = null): array
+    public static function extract(string $text, Mapper|string|array $mapper = null): array
     {
         return EnumExtractor::extract(self::class, $text, $mapper, self::mapper());
     }

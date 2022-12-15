@@ -6,6 +6,7 @@ trait Enhancers
 {
     use Comparison,
         Defaults,
+        Dropdown,
         From,
         Labels,
         Mappers,

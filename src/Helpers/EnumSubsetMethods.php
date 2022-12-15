@@ -6,6 +6,7 @@ use BackedEnum;
 use Closure;
 use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Contracts\EnumSubset;
+use ReflectionClass;
 use UnitEnum;
 
 class EnumSubsetMethods implements EnumSubset
@@ -78,7 +79,7 @@ class EnumSubsetMethods implements EnumSubset
         );
     }
 
-    public function dropdown(bool $keepEnumCase = false): array
+    public function dropdown(bool $keepEnumCase = null): array
     {
         return array_replace(
             [],

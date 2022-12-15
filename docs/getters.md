@@ -15,6 +15,8 @@ enum YourEnum: string {
 
     case ENUM = 'your_enum';
     case ENUM2 = 'your_other_enum';
+
+    const ConstantEnum = self::ENUM;
 }
 ```
 
@@ -23,6 +25,7 @@ enum YourEnum: string {
 ```php
 /** get */
 YourEnum::get('ENUM'); // returns YourEnum::ENUM
+YourEnum::get('ConstantEnum'); // returns YourEnum::ENUM
 YourEnum::get('0'); // returns YourEnum::ENUM
 YourEnum::get(0); // returns YourEnum::ENUM
 YourEnum::get('ENUM2'); // returns YourEnum::ENUM2
@@ -34,6 +37,7 @@ YourEnum::get('ENUM3'); // throws exception
 
 /** tryGet */
 YourEnum::tryGet('ENUM'); // returns YourEnum::ENUM
+YourEnum::tryGet('ConstantEnum'); // returns YourEnum::ENUM
 YourEnum::tryGet('0'); // returns YourEnum::ENUM
 YourEnum::tryGet(1); // returns YourEnum::ENUM
 YourEnum::tryGet('ENUM2'); // returns YourEnum::ENUM2

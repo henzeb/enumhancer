@@ -15,7 +15,6 @@ class MappersTest extends TestCase
     {
         return new class extends Mapper {
 
-
             public function mappable(): array
             {
                 return [
@@ -57,8 +56,8 @@ class MappersTest extends TestCase
 
     public function testMakeShouldThrowExceptionForNonMap()
     {
-            $this->expectException(\RuntimeException::class);
-            EnhancedBackedEnum::get('mappedEnum', self::class);
+        $this->expectException(\RuntimeException::class);
+        EnhancedBackedEnum::get('mappedEnum', self::class);
     }
 
     public function testMakeShouldNotMapWhenNull()
@@ -312,5 +311,54 @@ class MappersTest extends TestCase
 
         $this->expectException(ValueError::class);
         EnhancedBackedEnum::getArray([EnhancedUnitEnum::Unique]);
+    }
+
+    public function testMapWithPassedArray(): void
+    {
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM,
+            EnhancedBackedEnum::get('passedByArray', ['passedByArray' => EnhancedBackedEnum::ENUM])
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM],
+            EnhancedBackedEnum::getArray(['passedByArray'], ['passedByArray' => EnhancedBackedEnum::ENUM])
+        );
+    }
+
+    public function testMapWithConstants(): void
+    {
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM_3,
+            EnhancedBackedEnum::get('ConstantEnum')
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM_3],
+            EnhancedBackedEnum::getArray(['ConstantEnum'])
+        );
+    }
+
+    public function testMapWithConstantsAsArray(): void
+    {
+        $this->assertEquals(
+            EnhancedBackedEnum::WITH_CAPITALS,
+            EnhancedBackedEnum::get('expected')
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::WITH_CAPITALS],
+            EnhancedBackedEnum::getArray(['expected'])
+        );
+
+        $this->assertEquals(
+            EnhancedBackedEnum::ENUM_3,
+            EnhancedBackedEnum::get('expected2')
+        );
+
+        $this->assertEquals(
+            [EnhancedBackedEnum::ENUM_3],
+            EnhancedBackedEnum::getArray(['expected2'])
+        );
     }
 }

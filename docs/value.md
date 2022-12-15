@@ -32,3 +32,27 @@ Note: When used with a string or int backed enum, `value` will return it's
 actual value.
 
 Note: When used with an int backed enum, `key` will return the value.
+
+## Strict values
+
+By default, the value of a UnitEnum will be the lower cased value of the
+enum case. With strict, you can modify this behavior so it returns uppercase.
+
+### Strict example
+
+```php
+use Henzeb\Enumhancer\Concerns\Value;
+
+enum yourEnum {
+    use Value;
+
+    const STRICT = true;
+
+    case MY_ENUM;
+    case Other;
+
+}
+
+yourEnum::Other->value(); // returns Other
+yourEnum::MY_ENUM->value(); // returns MY_ENUM
+```

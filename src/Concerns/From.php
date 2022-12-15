@@ -9,11 +9,11 @@ trait From
 {
     public static function from(UnitEnum|string $key): self
     {
-        return EnumGetters::get(static::class, $key, $key instanceof UnitEnum, true);
+        return EnumGetters::get(static::class, $key, true, true);
     }
 
     public static function tryFrom(UnitEnum|string $key): ?self
     {
-        return EnumGetters::tryGet(static::class, $key, $key instanceof UnitEnum);
+        return EnumGetters::tryGet(static::class, $key, true);
     }
 }

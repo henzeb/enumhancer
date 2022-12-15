@@ -3,6 +3,8 @@
 namespace Henzeb\Enumhancer\Helpers;
 
 use Henzeb\Enumhancer\Concerns\Getters;
+use Henzeb\Enumhancer\Concerns\Mappers;
+use ReflectionClass;
 use UnitEnum;
 use ValueError;
 use function Henzeb\Enumhancer\Functions\backingLowercase;
@@ -19,7 +21,7 @@ abstract class EnumGetters
 
         if ($useMapper && EnumImplements::mappers($class)) {
             /**
-             * @var $class Getters;
+             * @var $class Mappers;
              */
             return $class::get($value);
         }
@@ -129,7 +131,11 @@ abstract class EnumGetters
             return $class::cases()[$value];
         }
 
-        return self::findInCases($class, $value);
+        if (defined($class . '::' . $value) && constant($class . '::' . $value) instanceof $class) {
+            return constant($class . '::' . $value);
+        }
+
+        return self::findInCases($class, $value) ?? self::findInConstants($class, $value);
     }
 
     private static function findInCases(string $class, int|string $value): ?UnitEnum
@@ -162,6 +168,19 @@ abstract class EnumGetters
         if ($useDefault && is_string($value) && strtolower($value) === 'default') {
             return self::default($class);
         }
+        return null;
+    }
+
+    private static function findInConstants(UnitEnum|string $class, int|string $value): ?UnitEnum
+    {
+        $constants = (new ReflectionClass($class))->getConstants();
+
+        foreach ($constants as $name => $constant) {
+            if ($constant instanceof $class && strtolower($name) === strtolower($value)) {
+                return $constant;
+            }
+        }
+
         return null;
     }
 }

@@ -39,11 +39,8 @@ YourEnum::tryFrom(YourOtherEnum::MyOtherEnum); // will return null;
 
 Note: Under the hood it uses the Getters functionality, so you can use lower- and
 uppercase names, and you can also use [Mappers](mappers.md) that you have
-defined using the `mappers` method and the [Defaults](mappers.md).
-
-By default, from and tryFrom do not use [Mappers](mappers.md). But when
-an UnitEnum object is passed, it will try to map the value first. If
-no match is found, it will use the `name`.
+defined as described in [Defaults](mappers.md).
 
 Warning: Be aware that this feature will not work if you have a backed enum.
 Even when you use this trait, currently, the original methods take precedence.
+For those situations use [Getters](getters.md)

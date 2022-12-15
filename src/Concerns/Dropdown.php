@@ -4,6 +4,8 @@ namespace Henzeb\Enumhancer\Concerns;
 
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
+use ReflectionClass;
+use ReflectionClassConstant;
 
 /**
  * @method static array cases()

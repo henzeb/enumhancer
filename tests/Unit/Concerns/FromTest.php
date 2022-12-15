@@ -65,18 +65,9 @@ class FromTest extends TestCase
             FromWithMappersEnum::tryFrom(StringBackedGetEnum::TEST)
         );
 
-        $this->assertNull(
-            FromWithMappersEnum::tryFrom('Translated')
-        );
-
         $this->assertEquals(
             FromWithMappersEnum::NotTranslated,
             FromWithMappersEnum::from(StringBackedGetEnum::Translated)
         );
-
-        $this->expectException(ValueError::class);
-
-        FromWithMappersEnum::from('Translated');
-
     }
 }

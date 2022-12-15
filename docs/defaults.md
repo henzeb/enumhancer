@@ -23,6 +23,15 @@ enum YourDefaultEnum {
     case Default;
 }
 
+enum MyDefaultConstEnum {
+    use Defaults, Makers;
+
+    case MyEnum;
+    case MyDefaultEnum;
+
+    const Default = MyDefaultEnum::MyDefaultEnum;
+}
+
 enum MyDefaultEnum {
     use Defaults, Makers;
 
@@ -53,6 +62,14 @@ YourDefaultEnum::get('default'); // YourDefaultEnum::Default
 YourDefaultEnum::get('unknown'); // crashes
 YourDefaultEnum::tryGet('default'); // returns YourDefaultEnum::Default
 YourDefaultEnum::tryGet('unknown'); // returns YourDefaultEnum::Default
+
+MyDefaultConstEnum::default(); //returns MyDefaultEnum::MyDefaultEnum
+MyDefaultConstEnum::MyDefaultEnum->isDefault(); // returns true
+MyDefaultConstEnum::MyDefaultEnum->isNotDefault(); // returns false
+MyDefaultConstEnum::get('default'); // MyDefaultEnum::MyDefaultEnum
+MyDefaultConstEnum::get('unknown'); // crashes
+MyDefaultConstEnum::tryGet('default'); // returns MyDefaultEnum::MyDefaultEnum
+MyDefaultConstEnum::tryGet('unknown'); // returns MyDefaultEnum::MyDefaultEnum
 
 MyDefaultEnum::default(); //returns MyDefaultEnum::MyDefaultEnum
 MyDefaultEnum::MyDefaultEnum->isDefault(); // returns true

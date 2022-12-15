@@ -2,9 +2,9 @@
 
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
-use Henzeb\Enumhancer\Contracts\Mapper;
-use Henzeb\Enumhancer\Concerns\Enhancers;
 use Henzeb\Enumhancer\Concerns\Constructor;
+use Henzeb\Enumhancer\Concerns\Enhancers;
+use Henzeb\Enumhancer\Contracts\Mapper;
 use function Henzeb\Enumhancer\Functions\n;
 
 
@@ -20,6 +20,16 @@ enum EnhancedBackedEnum: string
     case ANOTHER_ENUM = 'another enum';
     case ENUM_3 = 'third_enum';
     case WITH_CAPITALS = 'THIRD enum';
+
+    const ConstantEnum = self::ENUM_3;
+
+    private const MAP_CONSTANT = [
+        'expected' => self::WITH_CAPITALS
+    ];
+
+    public const MAP_CONSTANT_2 = [
+        'expected2' => self::ConstantEnum
+    ];
 
 
     protected function labels(): array

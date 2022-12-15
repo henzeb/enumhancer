@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Value\ValueStrictEnum;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
@@ -17,6 +18,7 @@ class ValueTest extends TestCase
             'backed-2' => [EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ANOTHER_ENUM->value],
             'unit-1' => [EnhancedUnitEnum::ENUM, strtolower(EnhancedUnitEnum::ENUM->name)],
             'unit-2' => [EnhancedUnitEnum::ANOTHER_ENUM, strtolower(EnhancedUnitEnum::ANOTHER_ENUM->name)],
+            'unit-3' => [ValueStrictEnum::Strict, 'Strict']
         ];
     }
 

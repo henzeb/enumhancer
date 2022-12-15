@@ -150,6 +150,61 @@ enum YourEnum {
 }
 ```
 
+## Mapping with arrays
+
+You can specify a map just by passing an array. This way you don't
+have to create a `Mapper` class.
+
+```php
+use Henzeb\Enumhancer\Concerns\Mappers;
+
+enum Suit {
+use Mappers, Getters;
+
+    case Spades;
+    case Diamonds;
+
+    public static function mapper() : array
+    {
+        return [
+            'schoppen' => self::Spades,
+            'ruiten' => self::Diamonds
+        ];
+    }
+}
+
+Suit::get('schoppen'); // returns self::Spades
+Suit::get('ruiten'); // returns self::Diamonds
+```
+
+## Mapping with a constant
+
+You can also specify a map inside a constant. This way you don't
+need to add a static `mapper` method and this allows you to use
+[Configurable](configure.md#configuremapper) for mappers.
+
+```php
+use Henzeb\Enumhancer\Concerns\Mappers;
+
+enum Suit {
+    use Mappers, Getters;
+
+    case Spades;
+    case Diamonds;
+
+    private const MAP_SPADES = [
+        'schoppen' => self::Spades
+    ];
+
+    private const map_diamonds = [
+        'ruiten' => self::Diamonds
+    ];
+}
+
+Suit::get('schoppen'); // returns self::Spades
+Suit::get('ruiten'); // returns self::Diamonds
+```
+
 ## Flip
 
 In some cases you might want to map two enums to each other. This is already
@@ -177,7 +232,7 @@ enum Animal
     case Dog;
     case Cat;
 
-    protected static function mapper(): ?Mapper
+    protected static function mapper(): Mapper
     {
         return new AnimalMapper();
     }
@@ -190,7 +245,7 @@ enum LatinAnimalName
     case Canine;
     case Feline;
 
-    public static function mapper(): ?Mapper
+    public static function mapper(): Mapper
     {
         return AnimalMapper::flip();
     }

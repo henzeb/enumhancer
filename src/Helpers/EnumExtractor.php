@@ -10,7 +10,7 @@ abstract class EnumExtractor
 {
     use Mappers;
 
-    public static function extract(string $class, string $text, Mapper|string|null ...$mappers): array
+    public static function extract(string $class, string $text, Mapper|string|array|null ...$mappers): array
     {
         EnumCheck::check($class);
 
