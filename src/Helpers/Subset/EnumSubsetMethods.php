@@ -1,12 +1,15 @@
 <?php
 
-namespace Henzeb\Enumhancer\Helpers;
+namespace Henzeb\Enumhancer\Helpers\Subset;
 
 use BackedEnum;
 use Closure;
 use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Contracts\EnumSubset;
-use ReflectionClass;
+use Henzeb\Enumhancer\Helpers\EnumCheck;
+use Henzeb\Enumhancer\Helpers\EnumGetters;
+use Henzeb\Enumhancer\Helpers\EnumImplements;
+use Henzeb\Enumhancer\Helpers\EnumValue;
 use UnitEnum;
 
 class EnumSubsetMethods implements EnumSubset

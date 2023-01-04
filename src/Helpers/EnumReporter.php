@@ -9,7 +9,10 @@ use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use RuntimeException;
 use UnitEnum;
 
-abstract class EnumReporter
+/**
+ * @internal
+ */
+final class EnumReporter
 {
     private static Reporter|string|null $reporter = null;
 

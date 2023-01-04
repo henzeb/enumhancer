@@ -11,265 +11,259 @@ functionality, so the methods will work just the same.
 
 ## Usage
 
-```php
-use Henzeb\Enumhancer\Concerns\Mappers;
+### simple constant definition
 
+Just like with [Defaults](defaults.md), constants can be used to map a reference
+to an existing enum key. When such a constant exists, Enumhancer treats it like any
+other case.
 
-enum YourEnum {
-    use Mappers;
+````php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Mappers;
 
-    case ENUM;
-    case NO_LABEL;
-    case NOT_MAPPED;
-}
-```
-
-```php
-use Henzeb\Enumhancer\Contracts\Mapper;
-
-class YourMapper extends Mapper {
-
-    public function mappable() : array
-    {
-         return [
-            'Mapped' => YourEnum::ENUM,
-            'LABEL_MISSING' => 'NO_LABEL'
-         ];
-    }
-}
-```
-
-### Examples
-
-You can either use your instantiated `YourMapper` or just the
-FQCN `YourMapper::class`.
-
-```php
-/** get */
-YourEnum::get('Mapped', YourMapper::class); // will return YourEnum::ENUM
-YourEnum::get('NOT_MAPPED', new YourMapper()); // will return YourEnum::NOT_MAPPED
-YourEnum::get('unknown', YourMapper::class); // will throw exception
-
-/** tryGet */
-YourEnum::tryGet('Mapped', YourMapper::class); // will return YourEnum::ENUM
-YourEnum::tryGet('NOT_MAPPED', new YourMapper()); // will return YourEnum::NOT_MAPPED
-YourEnum::tryGet('unknown', YourMapper::class); // will return null
-/** getArray */
-YourEnum::getArray(
-    ['Mapped', 'NOT_MAPPED'],
-    YourMapper::class
-); // will return [YourEnum::ENUM, YourEnum::NOT_MAPPED]
-
-YourEnum::getArray(
-    ['unknown', 'NOT_MAPPED'],
-    new YourMapper()
-); // will throw exception
-
-/** tryArray */
-YourEnum::tryArray(
-    ['Mapped', 'NOT_MAPPED'],
-    YourMapper::class
-); // will return [YourEnum::ENUM, YourEnum::NOT_MAPPED]
-
-YourEnum::tryArray(
-    ['unknown', 'NOT_MAPPED'],
-    new YourMapper()
-); // will return [YourEnum::NOT_MAPPED]
-
-/** getOrReport */
-YourEnum::getOrReport(
-    ['Mapped', 'NOT_MAPPED'],
-    YourMapper::class
-); // will return [YourEnum::ENUM, YourEnum::NOT_MAPPED]
-
-YourEnum::getOrReport(
-    ['unknown', 'NOT_MAPPED'],
-    new YourMapper()
-); // will return [YourEnum::NOT_MAPPED]
-
-
-/** extract */
-YourEnum::extract(
-'a sentence with Mapped in it',
-    YourMapper::class
-); // will return [YourEnum::ENUM]
-
-YourEnum::extract(
-'a sentence with Mapped in it',
-    new YourMapper()
-); // will return [YourEnum::ENUM]
-```
-
-Note: See for the `getOrReport` method: [Reporters](reporters.md)
-Note: See for the `extract` method: [Extractor](extractor.md)
-
-### Shared Mapper
-
-You can also use one `Mapper` for multiple enums. Just use the FQCN of the enum
-as a key in your array, like below:
-
-```php
-use Henzeb\Enumhancer\Contracts\Mapper;
-
-class YourMapper extends Mapper {
-
-    public function mappable() : array
-    {
-         return [
-            YourEnum::class => [
-                'Mapped' => YourEnum::ENUM,
-                'LABEL_MISSING' => 'NO_LABEL'
-            ]
-         ];
-    }
-}
-```
-
-And then use the commands as shown in the `example` section.
-
-## The mapper method
-
-In case you don't want to add the mapper all the time, you can also specify
-a `mapper` method that returns your mapper.
-
-```php
-use Henzeb\Enumhancer\Concerns\Mappers;
-use Henzeb\Enumhancer\Contracts\Mapper;
-
-enum YourEnum {
-    use Mappers;
-
-    case ENUM;
-    case NO_LABEL;
-    case NOT_MAPPED;
-
-    protected static mapper(): ?Mapper
-    {
-        return new YourMapper();
-    }
-}
-```
-
-## Mapping with arrays
-
-You can specify a map just by passing an array. This way you don't
-have to create a `Mapper` class.
-
-```php
-use Henzeb\Enumhancer\Concerns\Mappers;
-
-enum Suit {
-use Mappers, Getters;
-
+    case Hearts;
+    case Clubs;
     case Spades;
     case Diamonds;
 
-    public static function mapper() : array
+    const AceOfClubs = Suit::Clubs;
+}
+
+Suit::get('AceOfClubs'); //returns Suit::Clubs
+
+````
+
+Note: constants containing a reference to existing cases can also be set to `private`
+to prevent direct reference.
+
+### constant definitions
+
+You can also add a constant definition with an array inside. The name
+should be starting with `map`, either lower or uppercase.
+
+````php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Mappers;
+
+    private const MAP_SUIT = [
+        'AceOfSpades' => Suit::Spades
+    ];
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+}
+Suit::get('AceOfSpades'); //returns Suit::Spades
+````
+
+You can also have multiple `mappers` specified that way. Just add another constant.
+
+### The Mapper object
+
+When you plan to use a different mapper for different situations, like languages,
+You can create an object that extends `Henzeb\Enumhancer\Contracts\Mapper`.
+
+````php
+class SuitMapper extends Henzeb\Enumhancer\Contracts\Mapper
+{
+    protected function mappable(): array
     {
         return [
-            'schoppen' => self::Spades,
-            'ruiten' => self::Diamonds
+            'AceOfHearts' => 'hearts',
+            'AceOfClubs' => 'Clubs',
+            'AceOfSpades' => 2,
+            'AceOfDiamonds' => Suit::Diamonds
         ];
     }
 }
+````
 
-Suit::get('schoppen'); // returns self::Spades
-Suit::get('ruiten'); // returns self::Diamonds
-```
+Just like cases, keys and values don't have to be in the correct case.
 
-## Mapping with a constant
+#### Using constants
 
-You can also specify a map inside a constant. This way you don't
-need to add a static `mapper` method and this allows you to use
-[Configurable](configure.md#configuremapper) for mappers.
+Just like arrays, when a constant has a string that points to an actual
+`Mapper`, Enumhancer will transform it into a Mapper object and use this.
 
-```php
-use Henzeb\Enumhancer\Concerns\Mappers;
+````php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Mappers;
 
-enum Suit {
-    use Mappers, Getters;
+    private const MAP_SUIT = SuitMapper::class;
 
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+}
+
+Suit::get('AceOfDiamonds'); //returns Suit::Diamonds
+````
+
+#### Using a static method
+
+In some cases you might want to apply the mapper through a method.
+
+````php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Mappers;
+
+    case Hearts;
+    case Clubs;
     case Spades;
     case Diamonds;
 
-    private const MAP_SPADES = [
-        'schoppen' => self::Spades
-    ];
-
-    private const map_diamonds = [
-        'ruiten' => self::Diamonds
-    ];
+    protected static function mapper(): Henzeb\Enumhancer\Contracts\Mapper|array|string|null
+    {
+        return SuitMapper::class;
+    }
 }
 
-Suit::get('schoppen'); // returns self::Spades
-Suit::get('ruiten'); // returns self::Diamonds
-```
+Suit::get('AceOfHearts'); // returns Suit::Hearts
+````
 
-## Flip
+#### add as parameter
 
-In some cases you might want to map two enums to each other. This is already
-possible by making a shared mapper with prefix, but this makes it a lot simpler.
+If you wish, you can add as many mappers as you like to any of the
+[Getters](getters.md) methods.
 
 ````php
-use Henzeb\Enumhancer\Concerns\Mappers;
-use Henzeb\Enumhancer\Contracts\Mapper;
+Suit::get('AceOfHearts', SuitMapper::class, SuitMapperFrench::class);
+Suit::get('AceOfHearts', SuitMapper::getNewInstance());
+Suit::tryGet('AceOfHearts', ['AceOfClubs'=>'AceOfHearts']);
+````
 
-class AnimalMapper extends Mapper
+#### using Configure
+
+See [Configure](configure.md#configuremapper)
+
+#### Combining the different ways
+
+It's possible to combine the different methods. Mapping values is done waterfall.
+This means a mapper can map to a value that does not necessarily exist in the `enum`
+object, so another mapper can map that value to the final case.
+
+````php
+enum Suit
 {
-    public function mappable(): array
+    use Henzeb\Enumhancer\Concerns\Mappers;
+
+    private const MAP_SUIT = [
+        'AceOfHearts' => 'AceOfClubs'
+    ];
+
+    private const MAP_FINAL = [
+        'AceOfClubs' => Suit::Spades
+    ];
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+}
+
+Suit::get('AceOfHearts'); //returns Suit::Spades
+````
+
+The order of precedence is as follows:
+
+- Any mappers passed by argument in order of appearance
+- Mapper returned by [static method](#using-a-static-method)
+- Mappers set by [Configure](configure.md#configuremapper)
+- Mappers (array or class name) defined in constants in order
+ of appearance
+
+#### Shared mappers
+
+The mapper object allows you to share one single object for multiple
+enums. For that to work, you have to return a multidimensional array
+that has a key pointing at your enum containing an array of what you
+want to map for this particular enum.
+
+````php
+class SuitMapper extends Henzeb\Enumhancer\Contracts\Mapper
+{
+    protected function mappable(): array
     {
         return [
-            AnimalLatin::Canine->name => Animal::Dog,
-            AnimalLatin::Feline->name => Animal::Cat,
+            Suit::class => [
+                'AceOfHearts' => 'hearts',
+                'AceOfClubs' => 1,
+                'AceOfSpades' => 'Spades',
+            ],
+            'AceOfDiamonds' => Suit::Diamonds
         ];
     }
 }
-
-enum Animal
-{
-    use Mappers;
-
-    case Dog;
-    case Cat;
-
-    protected static function mapper(): Mapper
-    {
-        return new AnimalMapper();
-    }
-}
-
-enum LatinAnimalName
-{
-    use Mappers, From, Comparison;
-
-    case Canine;
-    case Feline;
-
-    public static function mapper(): Mapper
-    {
-        return AnimalMapper::flip();
-    }
-}
-
-Animal::get('Canine'); // Animal::Dog
-LatinAnimalName::get('Dog') // Animal::Canine
-
-Animal::get(LatinAnimalName::Feline); // Animal::Cat
-LatinAnimalName::get(Animal::Cat) // LatinAnimalName::Feline
-
-/** with From */
-Animal::from(LatinAnimalName::Feline); // Animal::Cat
-LatinAnimalName::from(Animal::Cat) // LatinAnimalName::Feline
-
-Animal::from('Feline'); // throws ValueError
 ````
 
-### Flip with shared mappers
+#### Defined
 
-When you use shared mappers, you can specify the prefix, which is generally
-the FQCN of the enum you want to use it with.
+If, for some reason, you want to know if a value is defined,
+you can check that with this method.
 
 ````php
-AnimalMapper::flip(LatinAnimalName::class);
+$suitMapper->defined('AceOfDiamonds'); // returns true
+$suitMapper->defined('AceOfDiamonds', Suit::class); // returns true
+
+$suitMapper->defined('AceOfHearts'); // returns false
+$suitMapper->defined('AceOfHearts', Suit::class); // returns true
+
+SuitMapper::defined('AceOfDiamonds'); // returns true
+SuitMapper::defined('AceOfDiamonds', Suit::class); // returns true
+
+SuitMapper::defined('AceOfHearts'); // returns false
+SuitMapper::defined('AceOfHearts', Suit::class); // returns true
 ````
 
+#### Keys
+
+The `keys` method shows you a list of defined keys.
+
+In case of a shared mapper, without the enum class name, `keys`
+will only return global map keys.
+
+````php
+$suitMapper->keys();
+$suitMapper->keys(Suit::class);
+SuitMapper::keys();
+SuitMapper::keys(Suit::class);
+````
+
+#### Flip
+
+In some cases, you might want to flip your map. Instead of
+creating a second mapper, you can just call flip on your existing
+mapper.
+
+In case of a shared mapper, without the enum class name, only
+global map keys will be flipped and used for mapping.
+
+````php
+$suitMapper->flip();
+$suitMapper->flip(Suit::class);
+SuitMapper::flip();
+SuitMapper::flip(Suit::class);
+````
+
+Just like with `MAP`, you can add constants starting with
+`MAP_FLIP` (again, uppercased or lowercased) to point at your mapper.
+
+````php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Mappers;
+
+    private const MAP_FLIP_SUIT = SuitMapper::class;
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+}
+````

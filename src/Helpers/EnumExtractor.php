@@ -2,11 +2,15 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use UnitEnum;
-use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Concerns\Mappers;
+use Henzeb\Enumhancer\Contracts\Mapper;
+use Henzeb\Enumhancer\Helpers\Mappers\EnumMapper;
+use UnitEnum;
 
-abstract class EnumExtractor
+/**
+ * @internal
+ */
+final class EnumExtractor
 {
     use Mappers;
 
@@ -14,7 +18,7 @@ abstract class EnumExtractor
     {
         EnumCheck::check($class);
 
-        $mappers = EnumMapper::sanitizeMapperArray(...$mappers);
+        $mappers = EnumMapper::getMappers($class, ...$mappers);
         /**
          * @var $class UnitEnum|string
          */

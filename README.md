@@ -57,6 +57,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 
 ### Features
 
+- [Bitmasks](docs/bitmasks.md)
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
 - [Configure](docs/configure.md)
@@ -67,6 +68,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 - [Getters](docs/getters.md)
 - [Labels](docs/labels.md)
 - ~~[Makers](docs/makers.md)~~ (deprecated)
+- [Macros](docs/macros.md)
 - [Mappers](docs/mappers.md)
 - [Properties](docs/properties.md)
 - [Reporters](docs/reporters.md)
@@ -89,8 +91,9 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 ### Laravel's auto-discovery
 
 When you are installing this package into a laravel project, Enumhancer will
-automatically set the global `Reporter` for the `makeOrReport` methods, so that
-it will use Laravel's `Log` facade.
+automatically set macro's for the `validation rules` and sets the global
+`Reporter` for the `makeOrReport` methods, so that it will use Laravel's
+`Log` facade.
 
 If you don't want that to happen, you can tell Laravel not to discover the
 package.

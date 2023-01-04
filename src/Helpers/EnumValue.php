@@ -5,7 +5,10 @@ namespace Henzeb\Enumhancer\Helpers;
 use ReflectionClass;
 use UnitEnum;
 
-abstract class EnumValue
+/**
+ * @internal
+ */
+final class EnumValue
 {
     public static function value(UnitEnum $enum, bool $keepCase = null): string|int
     {
@@ -14,6 +17,15 @@ abstract class EnumValue
         }
 
         return $enum->value ?? ($keepCase ? $enum->name : strtolower($enum->name));
+    }
+
+    public static function key(UnitEnum $enum): int
+    {
+        if (property_exists($enum, 'value') && is_numeric($enum->value)) {
+            return (int)$enum->value;
+        }
+
+        return array_search($enum, $enum::cases());
     }
 
     private static function isStrict(UnitEnum $enum): bool

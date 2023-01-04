@@ -5,6 +5,9 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantInvalidMapperEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantMapperClassEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantMapperClassFlippedEnum;
 use PHPUnit\Framework\TestCase;
 use ValueError;
 
@@ -24,7 +27,7 @@ class MappersTest extends TestCase
         };
     }
 
-    public function testMakeShouldWorkWithoutMapper()
+    public function testGetShouldWorkWithoutMapper()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
@@ -32,13 +35,13 @@ class MappersTest extends TestCase
         );
     }
 
-    public function testMakeShouldErrorWithoutMapper()
+    public function testGetShouldErrorWithoutMapper()
     {
         $this->expectError();
         EnhancedBackedEnum::get('mappedEnum');
     }
 
-    public function testMakeShouldMap()
+    public function testGetShouldMap()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
@@ -46,7 +49,7 @@ class MappersTest extends TestCase
         );
     }
 
-    public function testMakeShouldMapWithStringMap()
+    public function testGetShouldMapWithStringMap()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
@@ -54,19 +57,19 @@ class MappersTest extends TestCase
         );
     }
 
-    public function testMakeShouldThrowExceptionForNonMap()
+    public function testGetShouldThrowExceptionForNonMap()
     {
         $this->expectException(\RuntimeException::class);
         EnhancedBackedEnum::get('mappedEnum', self::class);
     }
 
-    public function testMakeShouldNotMapWhenNull()
+    public function testGetShouldNotMapWhenNull()
     {
         $this->expectError();
         EnhancedBackedEnum::get(null, $this->getMapper());
     }
 
-    public function testMakeShouldMapWithoutMapperGiven()
+    public function testGetShouldMapWithoutMapperGiven()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
@@ -74,13 +77,13 @@ class MappersTest extends TestCase
         );
     }
 
-    public function testMakeShouldErrorWithMap()
+    public function testGetShouldErrorWithMap()
     {
         $this->expectError();
         EnhancedBackedEnum::get('not existing', $this->getMapper());
     }
 
-    public function testTryMakeShouldWorkWithoutMapper()
+    public function testTryGetShouldWorkWithoutMapper()
     {
         $this->assertEquals(
             EnhancedBackedEnum::ENUM,
@@ -360,5 +363,18 @@ class MappersTest extends TestCase
             [EnhancedBackedEnum::ENUM_3],
             EnhancedBackedEnum::getArray(['expected2'])
         );
+    }
+
+    public function testShouldMapWithFCQN()
+    {
+        $this->assertEquals(ConstantMapperClassEnum::Beta, ConstantMapperClassEnum::get('alpha'));
+
+        $this->assertEquals(ConstantMapperClassFlippedEnum::Alpha, ConstantMapperClassFlippedEnum::get('beta'));
+    }
+
+    public function testShouldBeInvalidWhenStringIsClass() {
+
+        $this->expectException(ValueError::class);
+        ConstantInvalidMapperEnum::get('Alpha');
     }
 }

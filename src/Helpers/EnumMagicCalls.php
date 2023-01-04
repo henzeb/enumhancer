@@ -5,11 +5,18 @@ namespace Henzeb\Enumhancer\Helpers;
 use BadMethodCallException;
 use UnitEnum;
 
-abstract class EnumMagicCalls
+/**
+ * @internal
+ */
+final class EnumMagicCalls
 {
     public static function call(UnitEnum $enum, string $name, array $arguments): mixed
     {
         EnumCheck::check($enum::class);
+
+        if (EnumMacros::hasMacro($enum::class, $name)) {
+            return EnumMacros::call($enum, $name, $arguments);
+        }
 
         if (EnumCompare::isValidCall($enum::class, $name, $arguments)) {
             return EnumCompare::call($enum, $name);
@@ -19,18 +26,22 @@ abstract class EnumMagicCalls
             return EnumState::call($enum, $name, $arguments);
         }
 
-        return self::static($enum::class, $name);
+        return self::static($enum::class, $name, $arguments);
     }
 
-    public static function static(string $class, string $name): mixed
+    public static function static(string $enum, string $name, array $arguments): mixed
     {
-        EnumCheck::check($class);
+        EnumCheck::check($enum);
 
-        if (EnumImplements::constructor($class)) {
-            return EnumGetters::tryGet($class, $name, true) ?? self::throwException($class, $name);
+        if (EnumMacros::hasMacro($enum, $name)) {
+            return EnumMacros::callStatic($enum, $name, $arguments);
         }
 
-        self::throwException($class, $name);
+        if (EnumImplements::constructor($enum)) {
+            return EnumGetters::tryGet($enum, $name, true) ?? self::throwException($enum, $name);
+        }
+
+        self::throwException($enum, $name);
     }
 
     public static function throwException($class, $name): never

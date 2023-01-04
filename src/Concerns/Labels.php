@@ -2,24 +2,17 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Helpers\EnumProperties;
+use Henzeb\Enumhancer\Helpers\EnumLabels;
 
 trait Labels
 {
     public static function labels(): array
     {
-        return
-            EnumProperties::get(
-                self::class,
-                EnumProperties::reservedWord('labels')
-            ) ?? [];
+        return EnumLabels::getConfiguredLabels(self::class);
     }
 
     public function label(): ?string
     {
-        return self::labels()[$this->name]
-            ?? (method_exists($this, 'value') ? $this->value() : null)
-            ?? $this->value
-            ?? $this->name;
+        return EnumLabels::getLabel($this);
     }
 }

@@ -7,9 +7,8 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Helpers\EnumExtractor;
 use Henzeb\Enumhancer\Helpers\EnumGetters;
-use Henzeb\Enumhancer\Helpers\EnumMapper;
-use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
+use Henzeb\Enumhancer\Helpers\Mappers\EnumMapper;
 use UnitEnum;
 
 trait Mappers
@@ -19,12 +18,9 @@ trait Mappers
         return EnumReporter::get();
     }
 
-    protected static function mapper(): Mapper|array|null
+    protected static function mapper(): Mapper|array|string|null
     {
-        return EnumProperties::get(
-            self::class,
-            EnumProperties::reservedWord('mapper')
-        );
+        return null;
     }
 
     /**
@@ -38,11 +34,11 @@ trait Mappers
         );
     }
 
-    public static function get(string|int|UnitEnum|null $value, Mapper|string|array $mapper = null): self
+    public static function get(string|int|UnitEnum|null $value, Mapper|string|array|null ...$mapper): self
     {
         return EnumGetters::get(
             self::class,
-            EnumMapper::map(self::class, $value, $mapper, self::mapper())
+            EnumMapper::map(self::class, $value, ...[...$mapper, self::mapper()]),
         );
     }
 
@@ -57,11 +53,11 @@ trait Mappers
         );
     }
 
-    public static function tryGet(string|int|UnitEnum|null $value, Mapper|string|array $mapper = null): ?self
+    public static function tryGet(string|int|UnitEnum|null $value, Mapper|string|array|null ...$mapper): ?self
     {
         return EnumGetters::tryGet(
             self::class,
-            EnumMapper::map(self::class, $value, $mapper, self::mapper())
+            EnumMapper::map(self::class, $value, ...[...$mapper, self::mapper()])
         );
     }
 
@@ -77,11 +73,11 @@ trait Mappers
         );
     }
 
-    public static function getArray(iterable $values, Mapper|string|array $mapper = null): array
+    public static function getArray(iterable $values, Mapper|string|array|null ...$mapper): array
     {
         return EnumGetters::getArray(
             self::class,
-            EnumMapper::mapArray(self::class, $values, $mapper, self::mapper())
+            EnumMapper::mapArray(self::class, $values, ...[...$mapper, self::mapper()])
         );
     }
 
@@ -96,11 +92,11 @@ trait Mappers
         );
     }
 
-    public static function tryArray(iterable $values, Mapper|string|array $mapper = null): array
+    public static function tryArray(iterable $values, Mapper|string|array|null ...$mapper): array
     {
         return EnumGetters::tryArray(
             self::class,
-            EnumMapper::mapArray(self::class, $values, $mapper, self::mapper())
+            EnumMapper::mapArray(self::class, $values, ...[...$mapper, self::mapper()])
         );
     }
 
@@ -122,11 +118,11 @@ trait Mappers
     public static function getOrReport(
         int|string|UnitEnum|null $value,
         BackedEnum $context = null,
-        Mapper|string|array $mapper = null
+        Mapper|string|array|null ...$mapper
     ): ?self {
         return EnumReporter::getOrReport(
             self::class,
-            EnumMapper::map(self::class, $value, $mapper, self::mapper()),
+            EnumMapper::map(self::class, $value, ...[...$mapper, self::mapper()]),
             $context,
             self::reporter()
         );
@@ -150,7 +146,7 @@ trait Mappers
     public static function getOrReportArray(
         iterable $values,
         BackedEnum $context = null,
-        Mapper|string|array $mapper = null
+        Mapper|string|array|null $mapper = null
     ): array {
         return EnumReporter::getOrReportArray(
             self::class,
@@ -160,8 +156,8 @@ trait Mappers
         );
     }
 
-    public static function extract(string $text, Mapper|string|array $mapper = null): array
+    public static function extract(string $text, Mapper|string|array|null ...$mapper): array
     {
-        return EnumExtractor::extract(self::class, $text, $mapper, self::mapper());
+        return EnumExtractor::extract(self::class, $text, ...[...$mapper, self::mapper()]);
     }
 }

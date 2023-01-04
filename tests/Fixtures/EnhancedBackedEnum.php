@@ -32,7 +32,7 @@ enum EnhancedBackedEnum: string
     ];
 
 
-    protected function labels(): array
+    public static function labels(): array
     {
         return [
             n(self::ENUM) => 'My label'

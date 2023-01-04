@@ -60,7 +60,7 @@ class MappersMakersTest extends TestCase
     public function testMakeShouldThrowExceptionForNonMap()
     {
             $this->expectException(\RuntimeException::class);
-            EnhancedBackedEnum::make('mappedEnum', self::class);
+            EnhancedBackedEnum::make('mappedEnum', $this::class);
     }
 
     public function testMakeShouldNotMapWhenNull()

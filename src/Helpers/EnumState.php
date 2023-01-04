@@ -6,7 +6,10 @@ use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use UnitEnum;
 
-abstract class EnumState
+/**
+ * @internal
+ */
+final class EnumState
 {
     public static function transitions(string $class, array $userTransitions): array
     {

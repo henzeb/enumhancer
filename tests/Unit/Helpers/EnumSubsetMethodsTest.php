@@ -3,13 +3,13 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use Henzeb\Enumhancer\Concerns\Dropdown;
-use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
-use PHPUnit\Framework\TestCase;
-use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
-use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
+use PHPUnit\Framework\TestCase;
 
 class EnumSubsetMethodsTest extends TestCase
 {
@@ -17,7 +17,7 @@ class EnumSubsetMethodsTest extends TestCase
     public function testShouldThrowErrorWithWrongEnumType(): void
     {
         $this->expectError();
-        (new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
+        (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
     }
 
 
@@ -48,7 +48,7 @@ class EnumSubsetMethodsTest extends TestCase
     public function testEqualsMultiShouldReturnTrue()
     {
         $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->equals(IntBackedEnum::TEST)
         );
     }
@@ -65,7 +65,7 @@ class EnumSubsetMethodsTest extends TestCase
     {
         $this->assertEquals(
             $this->getNames(IntBackedEnum::cases()),
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->names()
         );
     }
@@ -92,7 +92,7 @@ class EnumSubsetMethodsTest extends TestCase
     {
         $this->assertEquals(
             $this->getValues(EnhancedUnitEnum::cases()),
-            (new EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
+            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
                 ->values()
         );
     }

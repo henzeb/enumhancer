@@ -4,7 +4,8 @@ namespace Henzeb\Enumhancer\Concerns;
 
 trait Enhancers
 {
-    use Comparison,
+    use Bitmasks,
+        Comparison,
         Defaults,
         Dropdown,
         From,

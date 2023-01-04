@@ -27,9 +27,9 @@ class ConfigureMapperTest extends TestCase
 
         ConfigureEnum::setMapper($mapper);
 
-        $this->assertSame($mapper, ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
+        $this->assertSame([$mapper], ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
 
-        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::make('set'));
+        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::get('set'));
     }
 
     public function testSetMapperOnce()
@@ -46,9 +46,9 @@ class ConfigureMapperTest extends TestCase
 
         ConfigureEnum::setMapperOnce($mapper);
 
-        $this->assertSame($mapper, ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
+        $this->assertSame([$mapper], ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
 
-        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::make('set'));
+        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::get('set'));
 
         $this->expectException(PropertyAlreadyStoredException::class);
 

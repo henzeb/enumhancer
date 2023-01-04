@@ -2,10 +2,13 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use Henzeb\Enumhancer\Exceptions\ReservedPropertyNameException;
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
+use Henzeb\Enumhancer\Exceptions\ReservedPropertyNameException;
 
-abstract class EnumProperties
+/**
+ * @internal
+ */
+final class EnumProperties
 {
     private static array $reserved = [
         'defaults' => '@default_configure',

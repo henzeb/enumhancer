@@ -2,9 +2,13 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
 use UnitEnum;
 
-abstract class EnumCompare
+/**
+ * @internal
+ */
+final class EnumCompare
 {
     public static function equals(UnitEnum $compare, UnitEnum|int|string|null ...$with): bool
     {

@@ -4,6 +4,12 @@ namespace Henzeb\Enumhancer\Contracts;
 
 use UnitEnum;
 
+/**
+ * @method static string|null map(string|UnitEnum $key, string $prefix = null)
+ * @method static string|null defined(string|UnitEnum $key, string $prefix = null)
+ * @method static static flip(string $prefix = null)
+ * @method static array keys(string $prefix = null)
+ */
 abstract class Mapper
 {
     private bool $flip = false;
@@ -22,9 +28,9 @@ abstract class Mapper
         return $this;
     }
 
-    public static function flip(string $prefix = null): self
+    private function flipMethod(string $prefix = null): self
     {
-        return (new static())->makeFlipped($prefix);
+        return (clone $this)->makeFlipped($prefix);
     }
 
     private function parseValue(mixed $value): ?string
@@ -41,7 +47,7 @@ abstract class Mapper
             $value = $value->name;
         }
 
-        if (!is_string($value)) {
+        if (!is_string($value) && !is_int($value)) {
             $value = null;
         }
 
@@ -62,37 +68,45 @@ abstract class Mapper
         return array_change_key_case($this->mappable());
     }
 
-    public function map(string|UnitEnum $key, string $prefix = null): ?string
+    private function mapMethod(string|UnitEnum $key, string $prefix = null): ?string
     {
         $key = strtolower($this->parseValue($key));
 
         return $this->parseValue(
-            $this->getMapWithPrefix($prefix)[$key]
+            ($this->flip ? null : $this->getMapWithPrefix($prefix)[$key] ?? null)
             ??
-            $this->getMap()[$key]
+            $this->getMap($prefix)[$key]
             ?? null
         );
     }
 
-    public function defined(string|UnitEnum $key, string $prefix = null): bool
+    private function definedMethod(string|UnitEnum $key, string $prefix = null): bool
     {
         return (bool)$this->map($key, $prefix);
     }
 
-    public function keys(string $prefix = null): array
+    private function keysMethod(string $prefix = null): array
     {
-        $mappable = $this->getMap($prefix);
+        if (!$prefix || $this->flip) {
+            $mappable = $this->getMap($prefix);
+        }
 
-        return array_merge(
-            array_keys(
-                array_filter(
-                    $mappable,
-                    function ($value) {
-                        return !is_array($value);
-                    }
+        if (!isset($mappable)) {
+            $mappable = [...$this->getMap(), ...$this->getMapWithPrefix($prefix)];
+        }
+
+        return array_unique(
+            array_merge(
+                array_keys(
+                    array_filter(
+                        $mappable,
+                        function ($value) {
+                            return !is_array($value);
+                        }
+                    ),
                 ),
-            ),
-            is_array($mappable[$prefix] ?? null) ? array_keys($mappable[$prefix]) : []
+                is_array($mappable[$prefix] ?? null) ? array_keys($mappable[$prefix]) : []
+            )
         );
     }
 
@@ -108,5 +122,45 @@ abstract class Mapper
                 )
             )
         );
+    }
+
+    public function __call(string $name, array $arguments)
+    {
+        /**
+         * phpcodesniffer doesn't seem to like the way it should be formatted
+         * @formatter:off
+         */
+        return match($name) {
+            'map' => $this->mapMethod(...$arguments),
+            'defined' => $this->definedMethod(...$arguments),
+            'keys' => $this->keysMethod(...$arguments),
+            'flip' => $this->flipMethod(...$arguments),
+        default => $this->triggerError($name)
+        };
+        /**
+         * @formatter:on
+         */
+    }
+
+    public static function __callStatic(string $name, array $arguments)
+    {
+        return self::newInstance()->$name(...$arguments);
+    }
+
+    private function triggerError(string $name): bool
+    {
+        return \trigger_error(
+            sprintf(
+                'Uncaught Error: Call to undefined method %s::%s()',
+                static::class,
+                $name
+            ),
+            E_USER_ERROR
+        );
+    }
+
+    public static function newInstance(mixed ...$parameters): self
+    {
+        return new static(...$parameters);
     }
 }

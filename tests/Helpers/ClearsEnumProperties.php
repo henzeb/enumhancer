@@ -6,6 +6,7 @@ namespace Henzeb\Enumhancer\Tests\Helpers;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 
+
 trait ClearsEnumProperties
 {
     public function tearDown(): void
@@ -14,14 +15,12 @@ trait ClearsEnumProperties
             throw new \RuntimeException('not allowed!');
         }
 
-        $class = new class extends EnumProperties {
-            public function clearOnce() {
-                self::clearGlobal();
-                self::$properties = [];
-                self::$once = [];
-            }
-        };
-
-        $class->clearOnce();
+        \Closure::bind(function(){
+            EnumProperties::clearGlobal();
+            EnumProperties::$properties = [];
+            EnumProperties::$once = [];
+        }, null,
+            EnumProperties::class
+        )();
     }
 }

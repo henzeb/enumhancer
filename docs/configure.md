@@ -99,14 +99,19 @@ use Henzeb\Enumhancer\Concerns\ConfigureMapper;
 
 use Henzeb\Enumhancer\Concerns\Enhancers;
 
-enum YourEnum {
+enum Suit {
     use Enhancers, ConfigureMapper;
 
     // ...
 }
 
-yourEnum::setMapper(new YourMapper());
+yourEnum::setMapper(new SuitMapper());
+yourEnum::setMapper(['H'=>'Hearts']);
+yourEnum::setMapper(SuitMapper::class, ['H'=>'Hearts']);
+
 yourEnum::setMapperOnce(new YourMapper());
+yourEnum::setMapperOnce(['H'=>'Hearts']);
+yourEnum::setMapperOnce(SuitMapper::class, ['H'=>'Hearts']);
 ```
 
 ### ConfigureState

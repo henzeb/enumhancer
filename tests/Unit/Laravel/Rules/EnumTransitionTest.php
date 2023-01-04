@@ -2,16 +2,27 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Rules;
 
-use UnitEnum;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Validator;
+use ErrorException;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
+use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 use Henzeb\Enumhancer\Laravel\Rules\EnumTransition;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
+use Orchestra\Testbench\TestCase;
+use UnitEnum;
 
 class EnumTransitionTest extends TestCase
 {
+    protected function getPackageProviders($app)
+    {
+        return [
+            EnumhancerServiceProvider::class
+        ];
+    }
+
     protected function providesFailingValidationTestCases(): array
     {
         return [
@@ -74,11 +85,26 @@ class EnumTransitionTest extends TestCase
                     'state' => $to
                 ],
                 [
-                    'state' => [new EnumTransition($from)]
+                    'state' => [Rule::enumTransition($from)]
                 ]
             )->fails()
         );
     }
+
+    public function testRuleMacroReturnsCorrectRule(): void
+    {
+        $this->assertInstanceOf(
+            EnumTransition::class,
+            Rule::enumTransition(StateElevatorComplexEnum::Open)
+        );
+    }
+
+    public function testRuleThrowsErrorWhenNotImplementingState(): void
+    {
+        $this->expectException(ErrorException::class);
+        Rule::enumTransition(SimpleEnum::Open);
+    }
+
 
     public function testValidateTransitionFailsWithHook()
     {
@@ -95,7 +121,7 @@ class EnumTransitionTest extends TestCase
                     'state' => StateElevatorEnum::Close->name
                 ],
                 [
-                    'state' => [new EnumTransition(StateElevatorEnum::Open, $hook)]
+                    'state' => [Rule::enumTransition(StateElevatorEnum::Open, $hook)]
                 ]
             )->fails()
         );
@@ -116,7 +142,7 @@ class EnumTransitionTest extends TestCase
                     'state' => StateElevatorEnum::Close->name
                 ],
                 [
-                    'state' => [new EnumTransition(StateElevatorEnum::Open, $hook)]
+                    'state' => [Rule::enumTransition(StateElevatorEnum::Open, $hook)]
                 ]
             )->fails()
         );
@@ -132,7 +158,7 @@ class EnumTransitionTest extends TestCase
                     'state' => 'Open'
                 ],
                 [
-                    'state' => [new EnumTransition(StateElevatorEnum::Move)]
+                    'state' => [Rule::enumTransition(StateElevatorEnum::Move)]
                 ]
             )->errors()->get('state')[0]);
     }
@@ -166,7 +192,7 @@ class EnumTransitionTest extends TestCase
                     'state' => 'Open'
                 ],
                 [
-                    'state' => [new EnumTransition(StateElevatorEnum::Move)]
+                    'state' => [Rule::enumTransition(StateElevatorEnum::Move)]
                 ]
             )->errors()->get('state')[0]);
     }

@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Concerns;
 
 use Henzeb\Enumhancer\Contracts\EnumSubset;
-use Henzeb\Enumhancer\Helpers\EnumSubsetMethods;
+use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
 use UnitEnum;
 
 trait Subset

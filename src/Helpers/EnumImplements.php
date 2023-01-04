@@ -2,14 +2,19 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use Henzeb\Enumhancer\Concerns\Bitmasks;
 use Henzeb\Enumhancer\Concerns\Comparison;
 use Henzeb\Enumhancer\Concerns\Constructor;
-use Henzeb\Enumhancer\Concerns\Labels;
-use Henzeb\Enumhancer\Concerns\State;
-use Henzeb\Enumhancer\Concerns\Mappers;
 use Henzeb\Enumhancer\Concerns\Defaults;
+use Henzeb\Enumhancer\Concerns\Labels;
+use Henzeb\Enumhancer\Concerns\Macros;
+use Henzeb\Enumhancer\Concerns\Mappers;
+use Henzeb\Enumhancer\Concerns\State;
 
-abstract class EnumImplements
+/**
+ * @internal
+ */
+final class EnumImplements
 {
     public static function traitOn(string $class, string $implements): bool
     {
@@ -38,6 +43,11 @@ abstract class EnumImplements
         return self::traitOn($class, Labels::class);
     }
 
+    public static function macros(string $class): bool
+    {
+        return self::traitOn($class, Macros::class);
+    }
+
     public static function constructor(string $class): bool
     {
         return self::traitOn($class, Constructor::class);
@@ -46,6 +56,11 @@ abstract class EnumImplements
     public static function comparison(string $class): bool
     {
         return self::traitOn($class, Comparison::class);
+    }
+
+    public static function bitmasks(string $class): bool
+    {
+        return self::traitOn($class, Bitmasks::class);
     }
 
     private static function classUsesTrait(string $class): array

@@ -13,10 +13,6 @@ trait Value
 
     public function key(): int
     {
-        if (property_exists($this, 'value') && is_numeric($this->value)) {
-            return (int)$this->value;
-        }
-
-        return array_search($this, $this::cases());
+        return EnumValue::key($this);
     }
 }

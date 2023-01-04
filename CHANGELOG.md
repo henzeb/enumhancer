@@ -2,9 +2,29 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.20.0 - 2023-01-04
+
+- bugfix in [Default](docs/defaults.md) where configured defaults would
+  not override the by const defined value
+- bugfix in [Mappers](docs/mappers.md) where mapping to integers was
+  not allowed
+
+### Extended features
+
+- You can now set Mapper FQCN in constants starting with
+ `map` and `map_flip`
+- [Mappers](docs/mappers.md) methods now are usable statically
+- All Laravel rules have now macro's set on `Rule`
+
+### New features
+
+- added [Bitmask](docs/bitmasks.md)
+- added [Macros](docs/macros.md)
+- added `isEnum` and `enumBitmask` rules
+
 ## 1.19.0 - 2022-12-15
 
-- You can now use constants for [Mappers](docs/mappers)
+- You can now use constants for [Mappers](docs/mappers.md)
  and [Defaults](docs/defaults.md)
 - you can now flag a unit enum as `strict`, so you don't
  have to worry about casing in [Values](docs/value.md).

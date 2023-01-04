@@ -2,37 +2,40 @@
 
 namespace Henzeb\Enumhancer\Laravel\Rules;
 
-use UnitEnum;
 use Henzeb\Enumhancer\Concerns\State;
-use Illuminate\Contracts\Validation\Rule;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
+use Henzeb\Enumhancer\Helpers\EnumImplements;
+use Illuminate\Contracts\Validation\Rule;
+use UnitEnum;
 
 class EnumTransition implements Rule
 {
-    /**
-     * @var UnitEnum|State
-     */
-    private UnitEnum $currentState;
-    private ?string $transitionTo = null;
-    private ?TransitionHook $hook;
 
-    public function __construct(UnitEnum $currentState, TransitionHook $hook = null)
+    private mixed $transitionTo = null;
+
+    public function __construct(private readonly UnitEnum $currentState, private readonly ?TransitionHook $hook = null)
     {
-        $this->currentState = $currentState;
-        $this->hook = $hook;
+        if (!EnumImplements::state($this->currentState::class)) {
+            \trigger_error(
+                sprintf('%s does not implement `State`', $this->currentState::class),
+                \E_USER_ERROR
+            );
+        }
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @return bool
-     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value)
     {
         $this->transitionTo = $value;
-        return $this->currentState->isTransitionAllowed($value, $this->hook);
+
+        /**
+         * @var $currentState IsEnum|State
+         */
+        $currentState = $this->currentState;
+
+        return $currentState->isTransitionAllowed($value, $this->hook);
     }
 
     /**

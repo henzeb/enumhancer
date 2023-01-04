@@ -1,88 +1,144 @@
 # Defaults
 
-[Mappers](mappers.md) already allow you to define a 'default' value. This
-however require you to create a mapper object. If you don't need mappers, or
-want a convenient `default` method, `Defaults` is your poison.
+Defaults give you some control over the configuration of
+the default value.
 
 ## Usage
 
+The basic way to specify a `Default` is by adding a case.
+
 ```php
-use Henzeb\Enumhancer\Concerns\Defaults;
-use Henzeb\Enumhancer\Concerns\Makers;
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Defaults;
 
-enum YourEnum {
-    use Defaults;
-
-    case MyEnum;
-}
-
-enum YourDefaultEnum {
-    use Defaults;
-
-    case MyEnum;
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
     case Default;
 }
 
-enum MyDefaultConstEnum {
-    use Defaults, Makers;
+Suit::default(); // returns Suit::Default
+Suit::Default->isDefault(); // returns true
+Suit::Default->isNotDefault(); // returns false
+Suit::Spades->isDefault(); // returns true
+Suit::Spades->isNotDefault(); // returns true
+````
 
-    case MyEnum;
-    case MyDefaultEnum;
+NOTE: the default method returns a `null` when no default is set.
 
-    const Default = MyDefaultEnum::MyDefaultEnum;
+When using [From](from.md) or [Getters](getters.md)
+
+````php
+Suit::from('default'); // returns Suit::Default
+Suit::from('circles'); // throws ValueError
+Suit::tryFrom('circles'); // returns Suit::Default
+
+Suit::get('default'); // returns Suit::Default
+Suit::get('circles'); // throws ValueError
+Suit::tryGet('circles'); // returns Suit::Default
+````
+
+## The default keyword
+
+Everywhere you use the string `default`, Enumhancer uses what
+ever default you have configured.
+
+## Configuring using constant
+
+Defaults are primarily configured using a constant named
+`Default`.
+
+```php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Defaults;
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+
+    const Default = Suit::Hearts;
 }
 
-enum MyDefaultEnum {
-    use Defaults, Makers;
+Suit::default(); // returns Suit::Hearts
+Suit::Default->isDefault(); // returns true
+Suit::Default->isNotDefault(); // returns false
+Suit::Hearts->isDefault(); // returns true
+Suit::Hearts->isNotDefault(); // returns false
+Suit::Spades->isDefault(); // returns true
+Suit::Spades->isNotDefault(); // returns true
+````
 
-    case MyEnum;
-    case Default;
-    case MyDefaultEnum;
+When using [From](from.md) or [Getters](getters.md)
 
-    public static function default() : ?self
+````php
+Suit::from('default'); // returns Suit::Hearts
+Suit::from('circles'); // throws ValueError
+Suit::tryFrom('circles'); // returns Suit::Hearts
+
+Suit::get('default'); // returns Suit::Hearts
+Suit::get('circles'); // throws ValueError
+Suit::tryGet('circles'); // returns Suit::Hearts
+````
+
+NOTE: Be aware that a constant `Default` always has to be an
+instance of the enum they are in.
+
+### Private constant
+
+When you don't want developers to use the constant
+directly, you can make the constant private.
+
+```php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Defaults;
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+
+    private const Default = Suit::Hearts;
+}
+```
+
+## Configuring using method
+
+Another way to set a default is by overriding the default
+method.
+
+```php
+enum Suit
+{
+    use Henzeb\Enumhancer\Concerns\Defaults;
+
+    case Hearts;
+    case Clubs;
+    case Spades;
+    case Diamonds;
+
+    public static function default(): ?self
     {
-        return self::MyDefaultEnum;
+        return Suit::Spades;
     }
 }
 ```
 
-### examples
+When the method returns `null`, no default is set.
 
-```php
-YourEnum::default(); //returns null
-YourEnum::MyEnum->isDefault(); // returns false
-YourEnum::MyEnum->isNotDefault(); // returns true
-YourEnum::get('default'); // throws error
-YourEnum::tryGet('default'); // returns null
+## Configuring defaults
 
-YourDefaultEnum::default(); //returns YourDefaultEnum::Default
-YourDefaultEnum::Default->isDefault(); // returns true
-YourDefaultEnum::Default->isNotDefault(); // returns false
-YourDefaultEnum::get('default'); // YourDefaultEnum::Default
-YourDefaultEnum::get('unknown'); // crashes
-YourDefaultEnum::tryGet('default'); // returns YourDefaultEnum::Default
-YourDefaultEnum::tryGet('unknown'); // returns YourDefaultEnum::Default
+see [ConfigureDefaults](configure.md#configuredefaults)
 
-MyDefaultConstEnum::default(); //returns MyDefaultEnum::MyDefaultEnum
-MyDefaultConstEnum::MyDefaultEnum->isDefault(); // returns true
-MyDefaultConstEnum::MyDefaultEnum->isNotDefault(); // returns false
-MyDefaultConstEnum::get('default'); // MyDefaultEnum::MyDefaultEnum
-MyDefaultConstEnum::get('unknown'); // crashes
-MyDefaultConstEnum::tryGet('default'); // returns MyDefaultEnum::MyDefaultEnum
-MyDefaultConstEnum::tryGet('unknown'); // returns MyDefaultEnum::MyDefaultEnum
+## Precedence
 
-MyDefaultEnum::default(); //returns MyDefaultEnum::MyDefaultEnum
-MyDefaultEnum::MyDefaultEnum->isDefault(); // returns true
-MyDefaultEnum::MyDefaultEnum->isNotDefault(); // returns false
-MyDefaultEnum::get('default'); // MyDefaultEnum::MyDefaultEnum
-MyDefaultEnum::get('unknown'); // crashes
-MyDefaultEnum::tryGet('default'); // returns MyDefaultEnum::MyDefaultEnum
-MyDefaultEnum::tryGet('unknown'); // returns MyDefaultEnum::MyDefaultEnum
+The order of precedence is as follows:
 
-```
-
-Note: [From](from.md) will use the default value as well, but only when used
-with basic enums.
-
-Note: You can also map default using [Mappers](mappers.md). The Defaults methods
-will then use the mapped value.
+- Overridden `default` method
+- `ConfigureDefaults`
+- mapped values using [Mappers](mappers.md)
+- one of `const` or `case` in order of appearance (uppercase or lowercase)

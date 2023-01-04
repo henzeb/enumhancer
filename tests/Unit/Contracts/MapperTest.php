@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
 
 class MapperTest extends TestCase
 {
-
     public function getMapper(array $data = [])
     {
         return new class($data) extends Mapper {
@@ -55,6 +54,19 @@ class MapperTest extends TestCase
         );
     }
 
+    public function testReturnsMappedInteger()
+    {
+        $this->assertEquals(
+            0,
+            $this->getMapper(['map' => 0])->map('map')
+        );
+
+        $this->assertEquals(
+            5,
+            $this->getMapper(['map' => 5])->map('map')
+        );
+    }
+
     public function testReturnsMappedEnum()
     {
         $this->assertEquals(
@@ -83,7 +95,7 @@ class MapperTest extends TestCase
     {
         $this->assertEquals(
             'ENUM',
-            $this->getMapper(['map' => ['map' => 'ENUM']])->map('map', 'map')
+            $this->getMapper(['Map' => ['map' => 'ENUM']])->map('map', 'Map')
         );
     }
 
@@ -170,11 +182,13 @@ class MapperTest extends TestCase
     public function testReturnsKeysWithPrefix()
     {
         $this->assertEquals(
-            $this->getMapper([
-                'defined' => 'this is defined',
-                'a_prefix' => ['prefixed_key' => 'a_value']
-            ])->keys('a_prefix'),
-            ['defined', 'prefixed_key']
+            ['defined', 'prefixed_key'],
+            $this->getMapper(
+                [
+                    'defined' => 'this is defined',
+                    'A_prefix' => ['prefixed_key' => 'a_value']
+                ]
+            )->keys('A_prefix')
         );
     }
 
@@ -382,5 +396,31 @@ class MapperTest extends TestCase
         )->makeFlipped();
 
         $this->assertEquals('bulldog', $mapper->map('Canine'));
+    }
+
+    public function testShouldFailWhenMethodNotexists()
+    {
+        $this->expectError();
+        $this->getMapper([])->DoesNotExist();
+    }
+
+    public function testShouldFailWhenStaticMethodNotexists()
+    {
+        $this->expectError();
+        $this->getMapper([])::DoesAlsoNotExist();
+    }
+
+    public function testShouldMapStatically(): void
+    {
+        $map = $this->getMapper(['map' => 'mapped', 'prefixed' => ['maps' => 'mapping']]);
+        $this->assertEquals('mapped', $map::map('map'));
+        $this->assertEquals('mapping', $map::map('maps', 'prefixed'));
+        $this->assertEquals('map', $map::flip()->map('mapped'));
+
+        $this->assertEquals(true, $map::defined('map'));
+        $this->assertEquals(true, $map::defined('maps', 'prefixed'));
+
+        $this->assertEquals(['map'], $map::keys());
+        $this->assertEquals(['map', 'maps'], $map::keys('prefixed'));
     }
 }

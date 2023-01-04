@@ -2,16 +2,19 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use UnitEnum;
-use TypeError;
 use BackedEnum;
+use TypeError;
+use UnitEnum;
 
-abstract class EnumCheck
+/**
+ * @internal
+ */
+final class EnumCheck
 {
-    public static function check(UnitEnum|string $enum): void
+    public static function check(UnitEnum|string $enum, string $class = null): void
     {
         if (!$enum instanceof UnitEnum && !enum_exists($enum, true)) {
-            self::throwError();
+            self::throwError($class);
         }
     }
 
@@ -24,9 +27,20 @@ abstract class EnumCheck
         }
     }
 
-    private static function throwError(): never
+    private static function throwError(string $class = null): never
     {
-        throw new TypeError('This method can only be used with an enum');
+        $method = 'This method';
+
+        if (!\is_null($class)) {
+            $method = sprintf('class `%s`', $class);
+        }
+
+        throw new TypeError(
+            sprintf(
+                '%s can only be used with an enum',
+                $method
+            )
+        );
     }
 
     private static function throwSameError(string $class, string $enum): never

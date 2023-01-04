@@ -2,34 +2,18 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use UnitEnum;
-use ValueError;
-use Henzeb\Enumhancer\Helpers\EnumGetters;
-use Henzeb\Enumhancer\Helpers\EnumCompare;
-use Henzeb\Enumhancer\Helpers\EnumProperties;
+use Henzeb\Enumhancer\Helpers\EnumDefaults;
 
 trait Defaults
 {
-    static public function default(): ?UnitEnum
+    static public function default(): ?self
     {
-        try {
-            return
-                EnumProperties::get(self::class, EnumProperties::reservedWord('defaults'))
-                ?? EnumGetters::get(self::class, 'default', true);
-        } catch (ValueError) {
-            return null;
-        }
+        return EnumDefaults::default(self::class);
     }
 
     public function isDefault(): bool
     {
-        $default = self::default();
-
-        if ($default) {
-            return EnumCompare::equals($this, $default);
-        }
-
-        return false;
+        return EnumDefaults::isDefault($this);
     }
 
     public function isNotDefault(): bool

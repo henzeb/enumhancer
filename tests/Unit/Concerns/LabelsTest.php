@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Labels\LabelByKeyEnum;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Labels\LabelNoLabelsEnum;
@@ -28,5 +29,14 @@ class LabelsTest extends TestCase
     public function testShouldGetValueWhenLabelDoesNotExist()
     {
         $this->assertEquals('another enum', EnhancedBackedEnum::ANOTHER_ENUM->label());
+    }
+
+    public function testShouldGetLabelByKey(): void
+    {
+        $this->assertEquals('label 1', LabelByKeyEnum::LabelByKey->label());
+
+        $this->assertEquals('label 2', LabelByKeyEnum::LabelByKey2->label());
+
+        $this->assertEquals('label 2', LabelByKeyEnum::LabelByKey2->label());
     }
 }

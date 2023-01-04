@@ -2,12 +2,15 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use UnitEnum;
 use Blade;
 use Henzeb\Enumhancer\Exceptions\NotAnEnumException;
+use UnitEnum;
 use function Henzeb\Enumhancer\Functions\value as value;
 
-abstract class EnumBlade
+/**
+ * @internal
+ */
+final class EnumBlade
 {
     /**
      * @throws NotAnEnumException
