@@ -7,15 +7,15 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Laravel\Rules\EnumBitmask;
 use Henzeb\Enumhancer\Laravel\Rules\EnumTransition;
-use Henzeb\Enumhancer\Laravel\Rules\IsEnum as UnitEnumRule;
+use Henzeb\Enumhancer\Laravel\Rules\IsEnum;
 use UnitEnum;
 
 class RulesMixin
 {
     public function isEnum(): Closure
     {
-        return function (string $type, Mapper|string|array|null ...$mappers): UnitEnumRule {
-            return new UnitEnumRule($type, ...$mappers);
+        return function (string $type, Mapper|string|array|null ...$mappers): IsEnum {
+            return new IsEnum($type, ...$mappers);
         };
     }
 

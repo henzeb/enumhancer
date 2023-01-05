@@ -47,7 +47,11 @@
         "machine",
         "transition",
         "validation",
-        "rules"
+        "rules",
+        "bitmask",
+        "bitmasks",
+        "macros",
+        "macroable"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
     "license": "AGPL-3.0-only",

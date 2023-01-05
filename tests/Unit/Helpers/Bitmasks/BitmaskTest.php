@@ -7,7 +7,6 @@ use Henzeb\Enumhancer\Helpers\Bitmasks\Bitmask;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class BitmaskTest extends TestCase
@@ -100,8 +99,8 @@ class BitmaskTest extends TestCase
         $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 0)));
         $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 24)));
         $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 32)));
-        $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 40)));
-        $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 56)));
+        $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 40)));
+        $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 56)));
 
         $this->assertTrue($bitmask->any());
         $this->assertTrue($bitmask->any(8, 16));
@@ -183,6 +182,14 @@ class BitmaskTest extends TestCase
         $this->assertTrue($bitmask->none('Write'));
         $this->assertTrue($bitmask->none('Read', 'Write'));
         $this->assertFalse($bitmask->none('Execute', 'Read'));
+
+        $bitmask = new Bitmask(BitmasksIntEnum::class, 40);
+
+        $this->assertTrue(
+            $bitmask->none(
+                new Bitmask(BitmasksIntEnum::class, 24),
+            )
+        );
     }
 
     public function testCases()

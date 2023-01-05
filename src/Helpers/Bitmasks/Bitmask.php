@@ -41,7 +41,13 @@ final class Bitmask
             return true;
         }
 
-        return ($this->value() & $mask) > 0;
+        foreach ($bits as $bit) {
+            if ($this->has($bit)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function xor(self|UnitEnum|string|int ...$bits): bool
@@ -75,7 +81,7 @@ final class Bitmask
             return true;
         }
 
-        return ($this->value() & $mask) === 0;
+        return !$this->any(...$bits);
     }
 
     public function value(): int
