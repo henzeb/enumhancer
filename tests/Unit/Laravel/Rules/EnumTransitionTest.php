@@ -11,6 +11,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Mockery;
 use Orchestra\Testbench\TestCase;
 use UnitEnum;
 
@@ -146,7 +147,7 @@ class EnumTransitionTest extends TestCase
                 ]
             )->fails()
         );
-        \Mockery::close();
+        Mockery::close();
     }
 
     public function testBasicValidationMessage()

@@ -44,7 +44,7 @@ final class EnumMagicCalls
         self::throwException($enum, $name);
     }
 
-    public static function throwException($class, $name): never
+    public static function throwException(string $class, string $name): never
     {
         throw new BadMethodCallException(sprintf('Call to undefined method %s::%s(...)', $class, $name));
     }

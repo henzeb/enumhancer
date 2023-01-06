@@ -23,7 +23,7 @@ class LaravelLogReporter implements Reporter
 
     private function getLevel(): string
     {
-        return ($this->level ?? LogLevel::default())->value();
+        return (string)($this->level ?? LogLevel::default() ?? LogLevel::Notice)->value();
     }
 
     private function getChannels(): array

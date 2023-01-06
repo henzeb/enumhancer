@@ -68,9 +68,9 @@ final class EnumProperties
         }
     }
 
-    public static function reservedWord(string $name): ?string
+    public static function reservedWord(string $name): string
     {
-        return self::$reserved[$name] ?? null;
+        return self::$reserved[$name] ?? $name;
     }
 
     public static function get(string $class, string $property): mixed

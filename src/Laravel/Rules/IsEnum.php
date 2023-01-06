@@ -11,7 +11,7 @@ use Illuminate\Contracts\Validation\Rule;
 class IsEnum implements Rule
 {
     private mixed $value = null;
-    private Mapper|string|array $mappers;
+    private array $mappers;
 
     public function __construct(private readonly string $type, Mapper|string|array|null ...$mappers)
     {

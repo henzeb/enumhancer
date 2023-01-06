@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use BackedEnum;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use ReflectionClass;
 use UnitEnum;
@@ -19,13 +20,14 @@ final class EnumGetters
         int|string|UnitEnum|null $value,
         bool $useMapper = false,
         bool $useDefault = false
-    ): UnitEnum {
+    ): mixed {
         EnumCheck::check($class);
 
-        $value = $value?->name ?? $value;
+        $value = $value->name ?? $value;
 
         if (($useDefault)
-            && strtolower($value ?? '') === 'default'
+            && is_string($value)
+            && strtolower($value) === 'default'
         ) {
             return EnumDefaults::default($class) ?? self::throwError($value, $class);
         }
@@ -37,7 +39,9 @@ final class EnumGetters
             return $class::get($value);
         }
 
-        $match = $match ?? self::match($class, $value);
+        $value = \is_object($value) ? $value->name : $value;
+
+        $match = !is_null($value) ? self::match($class, $value) : null;
 
         if ($match) {
             return $match;
@@ -51,7 +55,7 @@ final class EnumGetters
         int|string|UnitEnum|null $value,
         bool $useMapper = false,
         bool $useDefault = true
-    ): ?UnitEnum {
+    ): mixed {
         EnumCheck::check($class);
 
         try {
@@ -89,7 +93,7 @@ final class EnumGetters
         return array_filter($return);
     }
 
-    public static function cast(string $class, UnitEnum|string|int $enum): UnitEnum
+    public static function cast(string|UnitEnum $class, UnitEnum|string|int $enum): mixed
     {
         EnumCheck::check($class);
 
@@ -97,10 +101,10 @@ final class EnumGetters
             return $enum;
         }
 
-        return self::get($class, $enum, true);
+        return self::get(is_object($class) ? $class::class : $class, $enum, true);
     }
 
-    public static function tryCast(string $class, UnitEnum|int|string $key): ?UnitEnum
+    public static function tryCast(string|UnitEnum $class, UnitEnum|int|string $key): mixed
     {
         try {
             return self::cast($class, $key);
@@ -109,35 +113,32 @@ final class EnumGetters
         }
     }
 
-    private static function match(UnitEnum|string $class, int|string|null $value): ?UnitEnum
+    private static function match(UnitEnum|string $class, int|string $value): ?UnitEnum
     {
-        if (null === $value) {
-            return null;
-        }
-
         $constants = self::cases($class);
-
-        $value = strtolower($value);
 
         $case = self::findCase($constants, $value);
 
-        return $case ?? $constants[array_keys($constants)[$value] ?? null] ?? null;
+        if ($case) {
+            return $case;
+        }
+
+        if (\array_key_exists($value, array_keys($constants))) {
+            return $constants[array_keys($constants)[$value]];
+        }
+
+        return null;
     }
 
-    /**
-     * @param UnitEnum|int|string|null $value
-     * @param string $class
-     * @return mixed
-     */
     protected static function throwError(
         UnitEnum|int|string|null $value,
         string $class
-    ) {
+    ): never {
         throw new ValueError(
             sprintf(
                 '"%s" is not a valid backing value for enum "%s"',
-                $value,
-                $class,
+                is_object($value) ? $value->name : $value,
+                $class
             )
         );
     }
@@ -145,24 +146,35 @@ final class EnumGetters
     public static function cases(
         UnitEnum|string $class
     ): array {
+
+        /**
+         * @var class-string $class
+         */
+
         return array_filter(
             (new ReflectionClass($class))->getConstants(),
             fn($constant) => $constant instanceof $class
         );
     }
 
-    protected static function findCase(array $constants, string $value): ?UnitEnum
+    protected static function findCase(array $constants, int|string $value): ?UnitEnum
     {
-        foreach ($constants as $name => $case) {
-            if ($value === strtolower($name)) {
-                return $case;
-            }
+        if (is_string($value)) {
+            $value = strtolower($value);
+        }
 
-            if (strtolower(backing($case)->value) === $value) {
+        foreach ($constants as $name => $case) {
+            if (self::isCase($case, $name, $value)) {
                 return $case;
             }
         }
 
         return null;
+    }
+
+    private static function isCase(mixed $case, string $name, int|string $value): bool
+    {
+        return $value === strtolower($name)
+            || strtolower(backing($case)??'') === $value;
     }
 }

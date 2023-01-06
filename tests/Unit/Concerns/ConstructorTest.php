@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use BadMethodCallException;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedStaticCallableEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedStaticCallableEnum;
@@ -20,7 +21,7 @@ class ConstructorTest extends TestCase
 
     public function testShouldFailUsingStaticCallToUnknownEnum(): void
     {
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         ConstructableUnitEnum::CANNOT_CALL();
     }
 

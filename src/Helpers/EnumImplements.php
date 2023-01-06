@@ -10,6 +10,7 @@ use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Concerns\Macros;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use Henzeb\Enumhancer\Concerns\State;
+use Henzeb\Enumhancer\Concerns\Value;
 
 /**
  * @internal
@@ -31,6 +32,11 @@ final class EnumImplements
     public static function defaults(string $class): bool
     {
         return self::traitOn($class, Defaults::class);
+    }
+
+    public static function value(string $class): bool
+    {
+        return self::traitOn($class, Value::class);
     }
 
     public static function state(string $class): bool
@@ -67,7 +73,7 @@ final class EnumImplements
     {
         $results = [];
 
-        foreach (array_reverse(class_parents($class)) + [$class => $class] as $class) {
+        foreach (array_reverse(class_parents($class) ?: []) + [$class => $class] as $class) {
             $results += self::traitUsesTrait($class);
         }
 

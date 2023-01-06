@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Contracts;
 
 use UnitEnum;
+use function trigger_error;
 
 /**
  * @method static string|null map(string|UnitEnum $key, string $prefix = null)
@@ -33,7 +34,7 @@ abstract class Mapper
         return (clone $this)->makeFlipped($prefix);
     }
 
-    private function parseValue(mixed $value): ?string
+    private function parseValue(mixed $value): string|int|null
     {
         if (null === $value) {
             $value = null;
@@ -68,9 +69,13 @@ abstract class Mapper
         return array_change_key_case($this->mappable());
     }
 
-    private function mapMethod(string|UnitEnum $key, string $prefix = null): ?string
+    private function mapMethod(string|UnitEnum $key, string $prefix = null): string|int|null
     {
-        $key = strtolower($this->parseValue($key));
+        $key = $this->parseValue($key);
+
+        if (is_string($key)) {
+            $key = \strtolower($key);
+        }
 
         return $this->parseValue(
             ($this->flip ? null : $this->getMapWithPrefix($prefix)[$key] ?? null)
@@ -124,32 +129,25 @@ abstract class Mapper
         );
     }
 
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
-        /**
-         * phpcodesniffer doesn't seem to like the way it should be formatted
-         * @formatter:off
-         */
-        return match($name) {
+        return match ($name) {
             'map' => $this->mapMethod(...$arguments),
             'defined' => $this->definedMethod(...$arguments),
             'keys' => $this->keysMethod(...$arguments),
             'flip' => $this->flipMethod(...$arguments),
-        default => $this->triggerError($name)
+            default => $this->triggerError($name)
         };
-        /**
-         * @formatter:on
-         */
     }
 
-    public static function __callStatic(string $name, array $arguments)
+    public static function __callStatic(string $name, array $arguments): mixed
     {
         return self::newInstance()->$name(...$arguments);
     }
 
     private function triggerError(string $name): bool
     {
-        return \trigger_error(
+        return trigger_error(
             sprintf(
                 'Uncaught Error: Call to undefined method %s::%s()',
                 static::class,
@@ -159,7 +157,7 @@ abstract class Mapper
         );
     }
 
-    public static function newInstance(mixed ...$parameters): self
+    public static function newInstance(mixed ...$parameters): static
     {
         return new static(...$parameters);
     }

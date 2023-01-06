@@ -6,7 +6,7 @@ use Henzeb\Enumhancer\Helpers\EnumDefaults;
 
 trait Defaults
 {
-    static public function default(): ?self
+    public static function default(): ?self
     {
         return EnumDefaults::default(self::class);
     }

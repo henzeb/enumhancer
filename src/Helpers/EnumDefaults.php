@@ -5,10 +5,11 @@ namespace Henzeb\Enumhancer\Helpers;
 use Henzeb\Enumhancer\Concerns\Defaults;
 use ReflectionMethod;
 use UnitEnum;
+use function str_ends_with;
 
 final class EnumDefaults
 {
-    public static function default(string $class): ?UnitEnum
+    public static function default(string $class): mixed
     {
         EnumCheck::check($class);
 
@@ -20,7 +21,7 @@ final class EnumDefaults
             ?? EnumGetters::tryGet($class, 'default', true, false);
     }
 
-    public static function isDefault(UnitEnum $enum)
+    public static function isDefault(UnitEnum $enum): bool
     {
         return EnumCompare::equals(
             $enum,
@@ -30,10 +31,10 @@ final class EnumDefaults
 
     public static function hasCustomDefaultMethod(string $class): bool
     {
-        $fileName = (new ReflectionMethod($class, 'default'))->getFileName();
+        $fileName = (new ReflectionMethod($class, 'default'))->getFileName() ?: '';
 
         return !str_contains($fileName, 'Henzeb/Enumhancer')
-            && !\str_ends_with($fileName, 'Defaults.php');
+            && !str_ends_with($fileName, 'Defaults.php');
     }
 
     private static function getConfiguredOrCustomDefault(string $class): ?UnitEnum

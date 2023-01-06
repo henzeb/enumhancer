@@ -9,6 +9,7 @@ plugins:
       MD029:
         enabled: false
   phpcodesniffer:
+    channel: "beta"
     config:
       standard: "PSR1,PSR2"
     exclude_patterns:

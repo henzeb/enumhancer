@@ -19,9 +19,11 @@ final class EnumState
         $transitions = [];
 
         /**
-         * @var $class UnitEnum|string
+         * @var UnitEnum|string $class
          */
-        foreach ($class::cases() as $case) {
+        $cases = $class::cases();
+
+        foreach ($cases as $case) {
             if ($current) {
                 $transitions[$current->name] = $case;
             }
@@ -54,13 +56,12 @@ final class EnumState
         return array_filter(is_array($transitions) ? $transitions : [$transitions]);
     }
 
-    private static function castTransitions(string $class, array $transitions): array
+    private static function castTransitions(string|UnitEnum $class, array $transitions): array
     {
-
         foreach ($transitions as $key => $value) {
             unset($transitions[$key]);
 
-            $key = EnumGetters::tryCast($class, $key)?->name ?? $key;
+            $key = EnumGetters::tryCast($class, $key)->name ?? $key;
 
             if (is_array($value)) {
                 $transitions[$key] = self::castTransitions($class, $value);
@@ -98,7 +99,7 @@ final class EnumState
         return str_starts_with($name, 'to') || str_starts_with($name, 'tryTo');
     }
 
-    public static function call(UnitEnum|State $currentState, string $name, array $arguments): mixed
+    public static function call(UnitEnum $currentState, string $name, array $arguments): mixed
     {
         $toState = EnumGetters::tryGet(
             $currentState::class,
@@ -106,6 +107,9 @@ final class EnumState
             true
         );
 
+        /**
+         * @var State $currentState
+         */
         if (str_starts_with($name, 'tryTo')) {
             return $currentState->tryTo($toState, ...$arguments);
         }

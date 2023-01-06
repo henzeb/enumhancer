@@ -5,7 +5,6 @@ namespace Henzeb\Enumhancer\Helpers;
 use Blade;
 use Henzeb\Enumhancer\Exceptions\NotAnEnumException;
 use UnitEnum;
-use function Henzeb\Enumhancer\Functions\value as value;
 
 /**
  * @internal
@@ -44,7 +43,7 @@ final class EnumBlade
         Blade::stringable(
             $enumClass,
             function (UnitEnum $enum) use ($keepValueCase): string {
-                return value($enum, $keepValueCase);
+                return (string)EnumValue::value($enum, $keepValueCase);
             }
         );
     }

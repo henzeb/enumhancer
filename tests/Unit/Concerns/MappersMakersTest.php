@@ -6,6 +6,7 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use ValueError;
 
 /**
@@ -59,7 +60,7 @@ class MappersMakersTest extends TestCase
 
     public function testMakeShouldThrowExceptionForNonMap()
     {
-            $this->expectException(\RuntimeException::class);
+            $this->expectException(RuntimeException::class);
             EnhancedBackedEnum::make('mappedEnum', $this::class);
     }
 

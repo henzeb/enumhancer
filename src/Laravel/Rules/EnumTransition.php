@@ -7,18 +7,22 @@ use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Helpers\EnumImplements;
 use Illuminate\Contracts\Validation\Rule;
 use UnitEnum;
+use function trigger_error;
+use const E_USER_ERROR;
 
 class EnumTransition implements Rule
 {
 
     private mixed $transitionTo = null;
 
-    public function __construct(private readonly UnitEnum $currentState, private readonly ?TransitionHook $hook = null)
-    {
+    final public function __construct(
+        private readonly UnitEnum $currentState,
+        private readonly ?TransitionHook $hook = null
+    ) {
         if (!EnumImplements::state($this->currentState::class)) {
-            \trigger_error(
+            trigger_error(
                 sprintf('%s does not implement `State`', $this->currentState::class),
-                \E_USER_ERROR
+                E_USER_ERROR
             );
         }
     }
@@ -31,7 +35,7 @@ class EnumTransition implements Rule
         $this->transitionTo = $value;
 
         /**
-         * @var $currentState IsEnum|State
+         * @var State $currentState
          */
         $currentState = $this->currentState;
 

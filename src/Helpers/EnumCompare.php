@@ -16,7 +16,7 @@ final class EnumCompare
             ->equals(...$with);
     }
 
-    public static function isValidCall(string $class, $name, array $arguments): bool
+    public static function isValidCall(string $class, string $name, array $arguments): bool
     {
         EnumCheck::check($class);
 

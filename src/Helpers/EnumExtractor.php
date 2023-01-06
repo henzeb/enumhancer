@@ -19,21 +19,8 @@ final class EnumExtractor
         EnumCheck::check($class);
 
         $mappers = EnumMapper::getMappers($class, ...$mappers);
-        /**
-         * @var $class UnitEnum|string
-         */
+        $match = self::getMatchArray($class);
 
-        $match = array_map(
-            function ($enum) {
-
-                if (property_exists($enum, 'value')) {
-                    return $enum->value;
-                }
-
-                return $enum->name;
-            },
-            $class::cases()
-        );
         $match = implode(
             '\b|\b',
             array_merge(
@@ -47,5 +34,28 @@ final class EnumExtractor
         $matches = array_map(fn($value) => EnumMapper::map($class, $value, ...$mappers), $matches[0] ?? []);
 
         return EnumGetters::getArray($class, $matches);
+    }
+
+    /**
+     * @param UnitEnum|string $class
+     * @return array|string[]
+     */
+    protected static function getMatchArray(UnitEnum|string $class): array
+    {
+        /**
+         * @var UnitEnum|string $class
+         */
+        $match = array_map(
+            function ($enum) {
+
+                if (property_exists($enum, 'value')) {
+                    return $enum->value;
+                }
+
+                return $enum->name;
+            },
+            $class::cases()
+        );
+        return $match;
     }
 }

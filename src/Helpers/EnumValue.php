@@ -25,7 +25,7 @@ final class EnumValue
             return (int)$enum->value;
         }
 
-        return array_search($enum, $enum::cases());
+        return (int)array_search($enum, $enum::cases());
     }
 
     private static function isStrict(UnitEnum $enum): bool

@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantInvalidMapperEnum
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantMapperClassEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantMapperClassFlippedEnum;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use ValueError;
 
 
@@ -59,7 +60,7 @@ class MappersTest extends TestCase
 
     public function testGetShouldThrowExceptionForNonMap()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         EnhancedBackedEnum::get('mappedEnum', self::class);
     }
 

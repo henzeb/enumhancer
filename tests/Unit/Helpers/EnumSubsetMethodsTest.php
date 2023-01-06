@@ -17,7 +17,7 @@ class EnumSubsetMethodsTest extends TestCase
     public function testShouldThrowErrorWithWrongEnumType(): void
     {
         $this->expectError();
-        (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
+        (new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
     }
 
 
@@ -48,7 +48,7 @@ class EnumSubsetMethodsTest extends TestCase
     public function testEqualsMultiShouldReturnTrue()
     {
         $this->assertTrue(
-            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->equals(IntBackedEnum::TEST)
         );
     }
@@ -65,7 +65,7 @@ class EnumSubsetMethodsTest extends TestCase
     {
         $this->assertEquals(
             $this->getNames(IntBackedEnum::cases()),
-            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
                 ->names()
         );
     }
@@ -92,7 +92,7 @@ class EnumSubsetMethodsTest extends TestCase
     {
         $this->assertEquals(
             $this->getValues(EnhancedUnitEnum::cases()),
-            (new \Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
+            (new EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
                 ->values()
         );
     }

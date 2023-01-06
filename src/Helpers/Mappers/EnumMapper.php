@@ -10,6 +10,7 @@ use ReflectionClass;
 use RuntimeException;
 use UnitEnum;
 use ValueError;
+use function array_walk;
 
 /**
  * @internal
@@ -75,6 +76,10 @@ final class EnumMapper
 
     private static function getConstantMappers(string $enum): array
     {
+        /**
+         * @var UnitEnum $enum
+         */
+
         $mappers = [];
         $constants = (new ReflectionClass($enum))->getConstants();
 
@@ -89,7 +94,7 @@ final class EnumMapper
         return $mappers;
     }
 
-    protected static function parseConstantAsMapper(string $enum, string $name, mixed $constant): ?Mapper
+    protected static function parseConstantAsMapper(UnitEnum|string $enum, string $name, mixed $constant): ?Mapper
     {
         if (is_array($constant)) {
             return self::wrapInMapper($constant);
@@ -99,7 +104,7 @@ final class EnumMapper
             return null;
         }
 
-        self::checkMappers($enum, $constant);
+        self::checkMappers(is_object($enum)?$enum::class:$enum, $constant);
 
         return self::instantiateMapper(
             $constant,
@@ -163,7 +168,7 @@ final class EnumMapper
     {
         EnumCheck::check($enum);
 
-        \array_walk(
+        array_walk(
             $mappers,
             function ($mapper) {
                 if (is_string($mapper) && !EnumMapper::isMapperClass($mapper)) {

@@ -2,9 +2,8 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use UnitEnum;
 use Stringable;
-use function Henzeb\Enumhancer\Functions\v;
+use UnitEnum;
 
 class EnumProxy implements Stringable
 {
@@ -14,7 +13,7 @@ class EnumProxy implements Stringable
     public function __construct(private readonly UnitEnum $enum, bool $keepValueCase)
     {
         $this->name = $this->enum->name;
-        $this->value = v($this->enum, $keepValueCase);
+        $this->value = (string)EnumValue::value($this->enum, $keepValueCase);
     }
 
     public function __toString(): string

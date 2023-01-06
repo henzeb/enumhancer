@@ -87,7 +87,7 @@ function value(?UnitEnum $enum, bool $keepValueCase = true): string|int|null
  */
 function vl(?UnitEnum $enum): string|int|null
 {
-    return value($enum, false);
+    return v($enum, false);
 }
 
 function valueLowercase(?UnitEnum $enum): string|int|null

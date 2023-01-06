@@ -6,6 +6,7 @@ use Henzeb\Enumhancer\Helpers\Bitmasks\EnumBitmasks;
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumImplements;
 use Illuminate\Contracts\Validation\Rule;
+use function array_key_exists;
 
 class EnumBitmask implements Rule
 {
@@ -30,7 +31,7 @@ class EnumBitmask implements Rule
         if ($this->singleBit) {
             return $value == 0
                 || (EnumBitmasks::isBit($value)
-                    && \array_key_exists($value, EnumBitmasks::getCaseBits($this->type))
+                    && array_key_exists($value, EnumBitmasks::getCaseBits($this->type))
                 );
         }
 

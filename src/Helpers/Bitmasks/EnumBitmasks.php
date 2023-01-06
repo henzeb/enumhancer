@@ -11,6 +11,7 @@ use Henzeb\Enumhancer\Helpers\EnumLabels;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use ReflectionClass;
 use UnitEnum;
+use const E_USER_ERROR;
 
 final class EnumBitmasks
 {
@@ -35,12 +36,12 @@ final class EnumBitmasks
     {
         EnumCheck::check($enum);
 
-        if (\in_array($enum, self::$isValid)
-            || !\is_a($enum, BackedEnum::class, true)
+        if (in_array($enum, self::$isValid)
+            || !is_a($enum, BackedEnum::class, true)
             || self::ignoreIntValues($enum)
         ) {
             self::$isValid[] = $enum;
-            self::$isValid = \array_unique(self::$isValid);
+            self::$isValid = array_unique(self::$isValid);
             return;
         }
 
@@ -51,8 +52,14 @@ final class EnumBitmasks
 
     public static function ignoreIntValues(string $enum): bool
     {
+        /**
+         * @var UnitEnum $enum
+         */
+
+        EnumCheck::check($enum);
+
         foreach ((new ReflectionClass($enum))->getConstants() as $constant => $value) {
-            if (\strtolower($constant) === 'bit_values' and \is_bool($value)) {
+            if (strtolower($constant) === 'bit_values' and is_bool($value)) {
                 return !$value;
             }
         }
@@ -84,11 +91,11 @@ final class EnumBitmasks
         ) {
             return pow(
                 2,
-                array_search($enum, $enum::cases())
+                (int)array_search($enum, $enum::cases())
             );
         }
 
-        return $value;
+        return (int)$value;
     }
 
     public static function getMask(string $class, UnitEnum|string|int ...$enums): Bitmask
@@ -99,7 +106,7 @@ final class EnumBitmasks
         );
     }
 
-    public static function getBits(string $class, Bitmask|UnitEnum|string|int ...$values): int
+    public static function getBits(string|UnitEnum $class, Bitmask|UnitEnum|string|int ...$values): int
     {
         $bits = 0;
 
@@ -110,8 +117,10 @@ final class EnumBitmasks
         return $bits;
     }
 
-    private static function castToBits(Bitmask|UnitEnum|string|int $value, string $class): int
+    private static function castToBits(Bitmask|UnitEnum|string|int $value, string|UnitEnum $class): int
     {
+        $class = \is_object($class) ? $class::class : $class;
+
         if ($value instanceof Bitmask) {
             self::forOrFail($class, $value);
             return $value->value();
@@ -124,16 +133,19 @@ final class EnumBitmasks
         }
 
         if (self::isInt($value) && self::isValidBitmask($class, $value)) {
+            /**
+             * @var int $value
+             */
             return $value;
         }
 
-        self::throwMismatch($class, \gettype($value));
+        self::throwMismatch($class, gettype($value));
     }
 
     public static function getCaseBits(string $class): array
     {
         /**
-         * @var $class UnitEnum|string
+         * @var UnitEnum|string $class
          */
         $bits = [];
 
@@ -181,7 +193,7 @@ final class EnumBitmasks
     {
         if (!self::isValidBitmask($enum, $bitmask)) {
             throw new InvalidBitmaskEnum(
-                $enum,
+                is_object($enum) ? $enum::class : $enum,
                 $bitmask
             );
         }
@@ -223,29 +235,24 @@ final class EnumBitmasks
         );
     }
 
-    /**
-     * @param BackedEnum|string $enum
-     * @param BackedEnum $case
-     * @return void
-     */
-    protected static function triggerInvalidBitCase(BackedEnum|string $enum, BackedEnum $case): void
+    protected static function triggerInvalidBitCase(UnitEnum|string $enum, UnitEnum $case): never
     {
-        \trigger_error(
-            sprintf('%s::%s is not a valid bit value', $enum, $case->name),
-            \E_USER_ERROR
+        trigger_error(
+            sprintf('%s::%s is not a valid bit value', $enum::class ?? $enum, $case->name),
+            E_USER_ERROR
         );
     }
 
     protected static function isInt(mixed $value): bool
     {
-        return is_scalar($value) && \filter_var($value, FILTER_VALIDATE_INT) !== false;
+        return is_scalar($value) && filter_var($value, FILTER_VALIDATE_INT) !== false;
     }
 
-    public static function triggerNotImplementingBitmasks(string $enum): void
+    public static function triggerNotImplementingBitmasks(string $enum): never
     {
-        \trigger_error(
+        trigger_error(
             sprintf('`%s` is not implementing `Bitmasks`', $enum),
-            \E_USER_ERROR
+            E_USER_ERROR
         );
     }
 }

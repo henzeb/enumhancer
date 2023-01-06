@@ -4,11 +4,11 @@ namespace Henzeb\Enumhancer\Helpers\Subset;
 
 use BackedEnum;
 use Closure;
-use Henzeb\Enumhancer\Concerns\Labels;
 use Henzeb\Enumhancer\Contracts\EnumSubset;
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumImplements;
+use Henzeb\Enumhancer\Helpers\EnumLabels;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use UnitEnum;
 
@@ -16,7 +16,7 @@ class EnumSubsetMethods implements EnumSubset
 {
     private array $enums;
 
-    public function __construct(private string $enumType, UnitEnum|BackedEnum ...$enums)
+    public function __construct(private readonly string $enumType, UnitEnum|BackedEnum ...$enums)
     {
         EnumCheck::matches($enumType, ...$enums);
 
@@ -74,9 +74,7 @@ class EnumSubsetMethods implements EnumSubset
     {
         return array_map(
             function (mixed $enum) {
-                return $enum->value
-                    ?? (method_exists($enum, 'value') ? $enum->value() : null)
-                    ?? $enum->name;
+                return EnumValue::value($enum, !EnumImplements::value($enum::class));
             },
             $this->enums
         );
@@ -88,13 +86,11 @@ class EnumSubsetMethods implements EnumSubset
             [],
             ...array_map(
                 function (UnitEnum $case) use ($keepEnumCase) {
-                    /**
-                     * @var $case UnitEnum|Labels
-                     */
+
                     return [
                         EnumValue::value($case, $keepEnumCase)
                         =>
-                            EnumImplements::labels($case::class) ? $case->label() : $case->name
+                            EnumLabels::getLabelOrName($case)
                     ];
                 },
                 $this->enums

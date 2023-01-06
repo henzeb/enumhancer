@@ -13,6 +13,9 @@ use function sprintf;
 use function trigger_error;
 use const E_USER_ERROR;
 
+/**
+ * @internal
+ */
 final class EnumMacros
 {
     private static array $macros;
@@ -67,7 +70,7 @@ final class EnumMacros
      */
     private static function isStaticMacro(callable $callable): bool
     {
-        return (new ReflectionFunction($callable))->isStatic();
+        return (new ReflectionFunction($callable(...)))->isStatic();
     }
 
     /**
@@ -83,7 +86,13 @@ final class EnumMacros
             return self::callStatic($enum::class, $name, $arguments);
         }
 
-        return Closure::bind($macro, $enum, $enum::class)(...$arguments);
+        $macro = Closure::bind($macro, $enum, $enum::class);
+
+        if (!$macro) {
+            self::triggerError($enum::class, $name);
+        }
+
+        return $macro(...$arguments);
     }
 
     /**
@@ -93,13 +102,13 @@ final class EnumMacros
     {
         EnumCheck::check($enum);
 
-        $macro = self::$macros[$enum][$name];
+        $macro = Closure::bind(self::$macros[$enum][$name], null, $enum);
 
-        if (false === self::isStaticMacro($macro)) {
+        if (!$macro || false === self::isStaticMacro($macro)) {
             self::triggerError($enum, $name);
         }
 
-        return Closure::bind($macro, null, $enum)(...$arguments);
+        return $macro(...$arguments);
     }
 
     private static function triggerError(string $enum, string $name): never

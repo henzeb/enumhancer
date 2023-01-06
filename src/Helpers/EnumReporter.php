@@ -24,7 +24,13 @@ final class EnumReporter
     public static function set(Reporter|string|null $reporter): void
     {
         if (!is_null($reporter) && !is_subclass_of($reporter, Reporter::class)) {
-            throw new RuntimeException($reporter . ' is not a ' . Reporter::class);
+            throw new RuntimeException(
+                \sprintf(
+                    '%s is not a %s',
+                    \is_object($reporter) ? $reporter::class : $reporter,
+                    Reporter::class
+                )
+            );
         }
 
         static::$reporter = $reporter;
@@ -37,16 +43,33 @@ final class EnumReporter
         }
 
         if (is_string(self::$reporter)) {
-            return new (self::$reporter)();
+            /**
+             * @var Reporter $reporter ;
+             */
+            $reporter = new (self::$reporter)();
+            self::$reporter = $reporter;
         }
+
         return self::$reporter;
     }
 
-    public static function getOrReport(string $class, $key, ?BackedEnum $context, ?Reporter $reporter): ?UnitEnum
-    {
+    public static function getOrReport(
+        string $class,
+        int|string|UnitEnum|null $key,
+        ?BackedEnum $context,
+        ?Reporter $reporter
+    ): mixed {
         $enum = EnumGetters::tryGet($class, $key);
 
         if (!$enum) {
+            if ($key instanceof UnitEnum) {
+                $key = $key->name;
+            }
+
+            if (!\is_null($key)) {
+                $key = (string)$key;
+            }
+
             $reporter?->report($class, $key, $context);
         }
 

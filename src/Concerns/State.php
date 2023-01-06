@@ -57,7 +57,7 @@ trait State
          */
         $state = EnumGetters::tryCast(self::class, $state);
 
-        return $state && in_array($state, $this->allowedTransitions($hook));
+        return $state !== null && in_array($state, $this->allowedTransitions($hook));
     }
 
     /**

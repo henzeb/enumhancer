@@ -2,6 +2,12 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.21.0 - 2023-01-06
+
+- added [(basic) enum binding](docs/binding.md) allowing you to bind
+  basic enumerations to your routes and use Enumhancers secret sauce.
+- Fixed a lot of potential issues with PHPstan.
+
 ## 1.20.0 - 2023-01-04
 
 - bugfix in [Default](docs/defaults.md) where configured defaults would
