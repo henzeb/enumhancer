@@ -5,6 +5,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Rules;
 use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 use Henzeb\Enumhancer\Laravel\Rules\IsEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Illuminate\Validation\Rule;
 use Orchestra\Testbench\TestCase;
 
@@ -38,6 +39,7 @@ class IsEnumTest extends TestCase
             'simple-fails' => [false, SimpleEnum::class, 'close'],
             'simple-fails-not-an-enum' => [false, SimpleEnum::class, 'not-enum'],
             'simple-mapper-passes-1' => [true, SimpleEnum::class, 'accessible', ['accessible' => 'open']],
+            'default-fails' => [false, DefaultsEnum::class, 'does-not-exists']
         ];
     }
 

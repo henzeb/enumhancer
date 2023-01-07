@@ -84,7 +84,7 @@ class SubstituteEnumsTest extends TestCase
 
     public function testShouldBindBasicEnumOptionally()
     {
-       // $this->get('/optional/')->assertOk()->assertSee('');
+        $this->get('/optional/')->assertOk()->assertSee('');
         $this->get('/optional/open')->assertOk()->assertSee('Open');
     }
 

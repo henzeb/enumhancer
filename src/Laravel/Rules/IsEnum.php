@@ -26,7 +26,7 @@ class IsEnum implements Rule
     {
         $this->value = EnumMapper::map($this->type, $value, ...$this->mappers);
 
-        return (bool)EnumGetters::tryGet($this->type, $this->value);
+        return (bool)EnumGetters::tryGet($this->type, $this->value, useDefault: false);
     }
 
     public function message(): string|array

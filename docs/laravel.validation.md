@@ -11,6 +11,9 @@ cases.
 Alternatively, you can use `isEnum` which will also allow you to inject
 [Mappers](mappers.md) as second parameter.
 
+Note: Unlike Laravel's own rule, when using backed enums with a default,
+`isEnum` will fail the validation.
+
 ```php
 use Henzeb\Enumhancer\Laravel\Rules\IsEnum;
 
