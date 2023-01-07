@@ -66,7 +66,7 @@ class SubstituteEnums
             $route?->signatureParameters(['subClass' => UnitEnum::class])
         )->mapWithKeys(
             function (ReflectionParameter $parameter) {
-                $backedEnumClass = rtrim((string)$parameter->getType(), '?');
+                $backedEnumClass = ltrim((string)$parameter->getType(), '?');
 
                 if (enum_exists($backedEnumClass)) {
                     return [$parameter->getName() => new ReflectionEnum($backedEnumClass)];

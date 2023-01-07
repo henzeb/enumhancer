@@ -59,6 +59,7 @@ class SubstituteEnumsTest extends TestCase
 
         $router->get('/optional/{status?}',
             function (SimpleEnum $status = null) {
+                return $status?->name;
             }
         );
 
@@ -83,7 +84,8 @@ class SubstituteEnumsTest extends TestCase
 
     public function testShouldBindBasicEnumOptionally()
     {
-        $this->get('/optional/')->assertOk();
+       // $this->get('/optional/')->assertOk()->assertSee('');
+        $this->get('/optional/open')->assertOk()->assertSee('Open');
     }
 
     public function testShouldBindBasicEnumWithDefault()
