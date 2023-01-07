@@ -2,6 +2,13 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.22.0 - 2023-01-07
+
+- added [asEnum](docs/formrequests.md) to laravel's FormRequests
+- tiny fix in [isEnum](docs/laravel.validation.md#isEnum)
+  validation: When [Defaults](docs/defaults.md) are used, it
+  should fail validation.
+
 ## 1.21.0 - 2023-01-06
 
 - added [(basic) enum binding](docs/binding.md) allowing you to bind

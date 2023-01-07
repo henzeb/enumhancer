@@ -3,7 +3,7 @@
 Laravel supports enum validation out of the box. For other situations Enumhancer
 can help you out.
 
-## Validating enums
+## isEnum
 
 For validation of unit enums see [From](from.md). This will work for most
 cases.

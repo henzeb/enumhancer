@@ -86,6 +86,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 
 - [Blade](docs/blade.md)
 - [Casting](docs/casting.md)
+- [FormRequest](docs/formrequests.md)
 - [Implicit (basic) enum binding](docs/binding.md)
 - [Validation](docs/laravel.validation.md)
 

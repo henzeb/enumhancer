@@ -5,8 +5,10 @@ namespace Henzeb\Enumhancer\Laravel\Providers;
 use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Laravel\Middleware\SubstituteEnums;
+use Henzeb\Enumhancer\Laravel\Mixins\FormRequestMixin;
 use Henzeb\Enumhancer\Laravel\Mixins\RulesMixin;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +18,7 @@ class EnumhancerServiceProvider extends ServiceProvider
     {
         $this->setupReporter();
 
-        $this->setupRules();
+        $this->setupMacroMixins();
 
         $this->setupEnumBindingMiddleware($kernel);
     }
@@ -28,9 +30,10 @@ class EnumhancerServiceProvider extends ServiceProvider
         EnumReporter::laravel();
     }
 
-    private function setupRules(): void
+    private function setupMacroMixins(): void
     {
         Rule::mixin(new RulesMixin());
+        FormRequest::mixin(new FormRequestMixin());
     }
 
     protected function setupEnumBindingMiddleware(Kernel $kernel): void
