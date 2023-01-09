@@ -1,0 +1,7 @@
+includes:
+    - baseline.neon
+parameters:
+    ignoreErrors:
+        -
+            '#Unsafe usage of new static.*#'
+

@@ -1,0 +1,10 @@
+includes:
+    - baseline.neon
+    - vendor/nunomaduro/larastan/extension.neon
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+parameters:
+    scanDirectories:
+        - src
+    paths:
+        - src
+    level: 8
