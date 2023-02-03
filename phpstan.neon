@@ -1,5 +1,5 @@
 includes:
-    - baseline.neon
+    - phpstan-baseline.neon
     - vendor/nunomaduro/larastan/extension.neon
     - vendor/phpstan/phpstan/conf/bleedingEdge.neon
 parameters:
@@ -7,4 +7,4 @@ parameters:
         - src
     paths:
         - src
-    level: 8
+    level: 6

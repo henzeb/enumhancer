@@ -11,6 +11,8 @@ use RuntimeException;
 use UnitEnum;
 use ValueError;
 use function array_walk;
+use function is_a;
+use function is_subclass_of;
 
 /**
  * @internal
@@ -104,7 +106,7 @@ final class EnumMapper
             return null;
         }
 
-        self::checkMappers(is_object($enum)?$enum::class:$enum, $constant);
+        self::checkMappers(is_object($enum) ? $enum::class : $enum, $constant);
 
         return self::instantiateMapper(
             $constant,
@@ -115,9 +117,16 @@ final class EnumMapper
         );
     }
 
+    public static function isValidMapper(string $enum, mixed $value): bool
+    {
+        return self::isMapperClass($value)
+            || is_array($value)
+            || is_a($value, $enum);
+    }
+
     public static function isMapperClass(mixed $mapper): bool
     {
-        return is_a($mapper, Mapper::class, true);
+        return is_subclass_of($mapper, Mapper::class);
     }
 
     protected static function instantiateMapper(string $class, bool $flip = false): Mapper

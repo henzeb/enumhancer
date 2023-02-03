@@ -3,13 +3,11 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Middleware;
 
 
-use Henzeb\Enumhancer\Concerns\Defaults;
 use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedIntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
-use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Config;
 use Orchestra\Testbench\TestCase;
 
@@ -41,6 +39,12 @@ class SubstituteEnumsTest extends TestCase
 
     protected function defineWebRoutes($router)
     {
+        $router->get('/noparams',
+            function () {
+                return null;
+            }
+        );
+
         $router->get('/backed/{status}',
             function (EnhancedBackedEnum $status) {
                 return $status->name;
@@ -68,6 +72,11 @@ class SubstituteEnumsTest extends TestCase
                 $this->assertEquals(DefaultsEnum::Default, $status);
             }
         );
+    }
+
+    public function testApiRouteNoParameters()
+    {
+        $this->get('/noparams')->assertOk();
     }
 
     public function testApiRouteBindsBasicEnum()

@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Laravel\Middleware;
 
 use BackedEnum;
+use Closure;
 use Henzeb\Enumhancer\Helpers\EnumDefaults;
 use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumImplements;
@@ -15,7 +16,7 @@ use UnitEnum;
 
 class SubstituteEnums
 {
-    public function handle(Request $request, \Closure $next): mixed
+    public function handle(Request $request, Closure $next): mixed
     {
         foreach ($this->getParameters($request->route()) as $key => $parameter) {
             if ($request->route($key) === null) {
@@ -68,11 +69,7 @@ class SubstituteEnums
             function (ReflectionParameter $parameter) {
                 $backedEnumClass = ltrim((string)$parameter->getType(), '?');
 
-                if (enum_exists($backedEnumClass)) {
-                    return [$parameter->getName() => new ReflectionEnum($backedEnumClass)];
-                }
-
-                return [];
+                return [$parameter->getName() => new ReflectionEnum($backedEnumClass)];
             }
         )->filter()->toArray();
     }

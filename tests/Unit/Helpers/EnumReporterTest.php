@@ -2,18 +2,20 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
-use Mockery;
-use stdClass;
 use BackedEnum;
-use RuntimeException;
-use Psr\Log\LoggerInterface;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Log;
-use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Contracts\Reporter;
+use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
-use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
+use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use Illuminate\Support\Facades\Log;
+use Mockery;
+use Orchestra\Testbench\TestCase;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
+use stdClass;
 
 
 class EnumReporterTest extends TestCase
@@ -134,6 +136,15 @@ class EnumReporterTest extends TestCase
                 ]
             ]
         );
+    }
+
+    public function testMakeOrReportWithUnitEnum()
+    {
+        $mock = Mockery::mock(Reporter::class);
+        $mock->expects('report')
+            ->with(EnhancedBackedEnum::class, 'Unique', null);
+
+        EnumReporter::getOrReport(EnhancedBackedEnum::class, EnhancedUnitEnum::Unique, null, $mock);
     }
 
     public function testMakeOrReportShouldErrorWithNonEnum()

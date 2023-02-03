@@ -14,6 +14,11 @@ trait Macros
         EnumMacros::macro(self::class, $name, $callable);
     }
 
+    public static function hasMacro(string $name): bool
+    {
+        return EnumMacros::hasMacro(self::class, $name);
+    }
+
     public static function mixin(string|object $mixin): void
     {
         EnumMacros::mixin(self::class, $mixin);

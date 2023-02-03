@@ -2,6 +2,13 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 1.23.0 - 2023-02-03
+
+- added [PHPStan](docs/phpstan.md) support
+- added [IDE-helper](docs/ide-helper.md) (requires another package)
+- added global class for configuring Enumhancer
+- added global [Macro](docs/macros.md#global-macros) support
+
 ## 1.22.0 - 2023-01-07
 
 - added [asEnum](docs/formrequests.md) to laravel's FormRequests
@@ -25,7 +32,7 @@ All notable changes to `Enumhancer` will be documented in this file
 ### Extended features
 
 - You can now set Mapper FQCN in constants starting with
- `map` and `map_flip`
+  `map` and `map_flip`
 - [Mappers](docs/mappers.md) methods now are usable statically
 - All Laravel rules have now macro's set on `Rule`
 
@@ -38,27 +45,27 @@ All notable changes to `Enumhancer` will be documented in this file
 ## 1.19.0 - 2022-12-15
 
 - You can now use constants for [Mappers](docs/mappers.md)
- and [Defaults](docs/defaults.md)
+  and [Defaults](docs/defaults.md)
 - you can now flag a unit enum as `strict`, so you don't
- have to worry about casing in [Values](docs/value.md).
+  have to worry about casing in [Values](docs/value.md).
 
 ## 1.18.0 - 2022-12-14
 
 - Added Magic method functionality to [State](docs/state.md)
 - Added `to` and `tryTo` methods to `State`
 - Added `is`, `isNot`, `isIn` and `isNotIn`
- to [Comparison](docs/comparison.md)
+  to [Comparison](docs/comparison.md)
 
 ## 1.17.0 - 2022-12-13
 
 - Added [Flip](docs/mappers.md#flip), allowing to use
- a single mapper for mapping between enums
+  a single mapper for mapping between enums
 - [From](docs/from.md)
- now allows `UnitEnum` objects for use with `Flip`
+  now allows `UnitEnum` objects for use with `Flip`
 - [Comparison](docs/comparison.md) now allows different enums
- when used with [Mappers](docs/mappers.md)
+  when used with [Mappers](docs/mappers.md)
 - Deprecated [Makers](docs/makers.md), replaced by
- [Getters](docs/getters.md)
+  [Getters](docs/getters.md)
 
 ## 1.16.0 - 2022-12-11
 
@@ -66,7 +73,7 @@ All notable changes to `Enumhancer` will be documented in this file
 - Added [Dropdown](docs/dropdown.md)
 - [Comparison](docs/configure.md) now accepts null values
 - Fixed bug in [Casting](docs/casting.md) where in the latest Laravel versions
- the `Keep Enum Value Case` switch no longer worked.
+  the `Keep Enum Value Case` switch no longer worked.
 
 ## 1.15.0 - 2022-06-21
 

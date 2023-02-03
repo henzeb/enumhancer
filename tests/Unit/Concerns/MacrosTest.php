@@ -3,7 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use BadMethodCallException;
-use Closure;
+use Henzeb\Enumhancer\Helpers\Enumhancer;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosAnotherUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosUnitEnum;
 use PHPUnit\Framework\TestCase;
@@ -54,6 +54,15 @@ class MacrosTest extends TestCase
     {
         MacrosUnitEnum::macro('test', fn() => $this);
         $this->assertEquals(MacrosUnitEnum::Hearts, MacrosUnitEnum::Hearts->test());
+    }
+
+    public function testShouldOverrideMethodCaseInsensitive()
+    {
+        MacrosUnitEnum::macro('test', static fn() => false);
+        MacrosUnitEnum::macro('TEST', static fn() => true);
+
+        $this->assertTrue(MacrosUnitEnum::test());
+
     }
 
     public function testAllowPassingParameters()
@@ -126,6 +135,35 @@ class MacrosTest extends TestCase
 
         $this->assertTrue(MacrosUnitEnum::test());
 
+    }
+
+    public function testHasMacros()
+    {
+        $this->assertFalse(MacrosUnitEnum::hasMacro('test'));
+        MacrosUnitEnum::macro('test', fn() => true);
+        $this->assertTrue(MacrosUnitEnum::hasMacro('test'));
+
+    }
+
+    public function testHasMacrosGlobal()
+    {
+        $this->assertFalse(MacrosUnitEnum::hasMacro('test'));
+        Enumhancer::macro('test', fn() => true);
+        $this->assertTrue(MacrosUnitEnum::hasMacro('test'));
+    }
+
+    public function testGlobalMacroMixin()
+    {
+        $mixin = new class {
+            protected function test()
+            {
+                return static fn() => true;
+            }
+        };
+
+        Enumhancer::mixin($mixin::class);
+
+        $this->assertTrue(MacrosUnitEnum::test());
     }
 
     protected function tearDown(): void

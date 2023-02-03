@@ -96,19 +96,26 @@ final class EnumState
     {
         EnumCheck::check($class);
 
-        return str_starts_with($name, 'to') || str_starts_with($name, 'tryTo');
+        return (str_starts_with($name, 'to') || str_starts_with($name, 'tryTo'))
+            && self::getToState($class, $name) !== null;
+    }
+
+    private static function getToState(string $class, string $name): ?UnitEnum
+    {
+        return EnumGetters::tryGet(
+            $class,
+            substr($name, str_starts_with($name, 'tryTo') ? 5 : 2),
+            true,
+            false
+        );
     }
 
     public static function call(UnitEnum $currentState, string $name, array $arguments): mixed
     {
-        $toState = EnumGetters::tryGet(
-            $currentState::class,
-            substr($name, str_starts_with($name, 'tryTo') ? 5 : 2),
-            true
-        );
+        $toState = self::getToState($currentState::class, $name);
 
         /**
-         * @var State $currentState
+         * @var State|UnitEnum $currentState
          */
         if (str_starts_with($name, 'tryTo')) {
             return $currentState->tryTo($toState, ...$arguments);

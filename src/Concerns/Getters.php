@@ -11,9 +11,9 @@ trait Getters
         return EnumGetters::get(self::class, $value);
     }
 
-    public static function tryGet(int|string|null $value): ?self
+    public static function tryGet(int|string|null $value, bool $useDefault = true): ?self
     {
-        return EnumGetters::tryGet(self::class, $value);
+        return EnumGetters::tryGet(self::class, $value, false, $useDefault);
     }
 
     /**
@@ -29,8 +29,8 @@ trait Getters
      * @param iterable $values
      * @return self[]
      */
-    public static function tryArray(iterable $values): array
+    public static function tryArray(iterable $values, bool $useDefault = true): array
     {
-        return EnumGetters::tryArray(self::class, $values);
+        return EnumGetters::tryArray(self::class, $values, false, $useDefault);
     }
 }

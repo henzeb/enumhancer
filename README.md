@@ -82,6 +82,11 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 - [Name](docs/functions.md#name)
 - [Value](docs/functions.md#value)
 
+### Development
+
+- [IDE-Helper](docs/ide-helper.md)
+- [PHPstan](docs/phpstan.md)
+
 ### Laravel specific Features
 
 - [Blade](docs/blade.md)

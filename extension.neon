@@ -1,7 +1,45 @@
-includes:
-    - baseline.neon
-parameters:
-    ignoreErrors:
-        -
-            '#Unsafe usage of new static.*#'
+rules:
+	- Henzeb\Enumhancer\PHPStan\Constants\Rules\DefaultConstantRule
+	- Henzeb\Enumhancer\PHPStan\Constants\Rules\MapperConstantRule
+	- Henzeb\Enumhancer\PHPStan\Constants\Rules\StrictConstantRule
 
+services:
+	-
+		class: Henzeb\Enumhancer\PHPStan\Constants\DefaultConstantAlwaysUsed
+		tags:
+			- phpstan.constants.alwaysUsedClassConstantsExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Constants\BitmaskConstantAlwaysUsed
+		tags:
+			- phpstan.constants.alwaysUsedClassConstantsExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Constants\StrictConstantAlwaysUsed
+		tags:
+			- phpstan.constants.alwaysUsedClassConstantsExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Constants\MapperConstantAlwaysUsed
+		tags:
+			- phpstan.constants.alwaysUsedClassConstantsExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Methods\EnumMacrosMethodsClassReflection
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Methods\EnumComparisonMethodsClassReflection
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Methods\EnumConstructorMethodsClassReflection
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension
+
+	-
+		class: Henzeb\Enumhancer\PHPStan\Methods\EnumStateMethodsClassReflection
+		tags:
+			- phpstan.broker.methodsClassReflectionExtension

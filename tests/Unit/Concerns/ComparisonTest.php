@@ -129,6 +129,14 @@ class ComparisonTest extends TestCase
         );
     }
 
+    public function testShouldFailUsingMagicFunctionThatDoesNotExist()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->assertFalse(
+            IntBackedEnum::TEST->isClosed()
+        );
+    }
+
     public function testShouldReturnTrueUsingMagicFunctionIsNot()
     {
         $this->assertTrue(
@@ -221,15 +229,15 @@ class ComparisonTest extends TestCase
 
     public function testIs(): void
     {
-        //$this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('another_enum'));
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('another_enum'));
 
         $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(1));
 
-        //$this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(EnhancedUnitEnum::ANOTHER_ENUM));
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(EnhancedUnitEnum::ANOTHER_ENUM));
 
-       // $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('mapped'));
+        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('mapped'));
 
-        //$this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->is('something else'));
+        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->is('something else'));
     }
 
     public function testIsNot(): void

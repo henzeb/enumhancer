@@ -1,0 +1,38 @@
+<?php
+
+namespace Henzeb\Enumhancer\PHPStan\Methods;
+
+use Henzeb\Enumhancer\Helpers\EnumCompare;
+use Henzeb\Enumhancer\PHPStan\Reflections\ClosureMethodReflection;
+use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\MethodReflection;
+use PHPStan\Reflection\MethodsClassReflectionExtension;
+use PHPStan\Type\BooleanType;
+use PHPStan\Type\ClosureType;
+
+class EnumComparisonMethodsClassReflection implements MethodsClassReflectionExtension
+{
+    public function hasMethod(ClassReflection $classReflection, string $methodName): bool
+    {
+        if (!$classReflection->isEnum()) {
+            return false;
+        }
+
+        return EnumCompare::isValidCall(
+            $classReflection->getName(),
+            $methodName,
+            []
+        );
+    }
+
+    public function getMethod(
+        ClassReflection $classReflection,
+        string $methodName
+    ): MethodReflection {
+        return new ClosureMethodReflection(
+            $classReflection,
+            $methodName,
+            new ClosureType([], new BooleanType(), false)
+        );
+    }
+}

@@ -2,12 +2,14 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use Closure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
 use ReflectionMethod;
 use UnitEnum;
+use function array_change_key_case;
+use function array_merge;
+use function is_null;
 use function is_string;
 use function sprintf;
 use function trigger_error;
@@ -18,7 +20,8 @@ use const E_USER_ERROR;
  */
 final class EnumMacros
 {
-    private static array $macros;
+    private static array $macros = [];
+    private static array $globalMacros = [];
 
     public static function macro(string $enum, string $name, callable $callable): void
     {
@@ -27,26 +30,47 @@ final class EnumMacros
         self::$macros[$enum][$name] = $callable;
     }
 
+    public static function globalMacro(string $name, callable $callable): void
+    {
+        self::$globalMacros[$name] = $callable;
+    }
+
+    private static function getMethodsFromMixin(object $mixin): array
+    {
+        return (new ReflectionClass($mixin))->getMethods(
+            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
+        );
+    }
+
     /**
      * @throws ReflectionException
      */
-    public static function mixin(string $enum, string|object $mixin): void
+    public static function mixin(?string $enum, string|object $mixin): void
     {
-        EnumCheck::check($enum);
+        if (!is_null($enum)) {
+            EnumCheck::check($enum);
+        }
 
         if (is_string($mixin)) {
             $mixin = new $mixin();
         }
 
-        $methods = (new ReflectionClass($mixin))->getMethods(
-            ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED
-        );
 
-        foreach ($methods as $method) {
-            self::macro($enum, $method->name, $method->invoke($mixin));
+        foreach (self::getMethodsFromMixin($mixin) as $method) {
+            if ($enum) {
+                self::macro($enum, $method->name, $method->invoke($mixin));
+                continue;
+            }
+
+            self::globalMacro($method->name, $method->invoke($mixin));
         }
 
         unset($mixin);
+    }
+
+    public static function globalMixin(string|object $mixin): void
+    {
+        self::mixin(null, $mixin);
     }
 
     public static function flush(string $enum): void
@@ -58,11 +82,31 @@ final class EnumMacros
         }
     }
 
+    public static function flushGlobal(): void
+    {
+        self::$globalMacros = [];
+    }
+
     public static function hasMacro(string $enum, string $name): bool
+    {
+        return self::getMacro($enum, $name) !== null;
+    }
+
+    private static function getMacro(string $enum, string $name): ?callable
     {
         EnumCheck::check($enum);
 
-        return EnumImplements::macros($enum) && isset(self::$macros[$enum][$name]);
+        $name = strtolower($name);
+
+        return array_change_key_case(self::getMacros($enum))[$name] ?? null;
+    }
+
+    private static function getMacros(string $enum): array
+    {
+        return array_merge(
+            self::$globalMacros ?? [],
+            self::$macros[$enum] ?? []
+        );
     }
 
     /**
@@ -80,17 +124,13 @@ final class EnumMacros
     {
         EnumCheck::check($enum);
 
-        $macro = self::$macros[$enum::class][$name];
+        $macro = self::getMacro($enum::class, $name);
 
-        if (self::isStaticMacro($macro)) {
+        if ($macro && self::isStaticMacro($macro)) {
             return self::callStatic($enum::class, $name, $arguments);
         }
 
-        $macro = Closure::bind($macro, $enum, $enum::class);
-
-        if (!$macro) {
-            self::triggerError($enum::class, $name);
-        }
+        $macro = ($macro ?? fn() => true)(...)->bindTo($enum, $enum::class);
 
         return $macro(...$arguments);
     }
@@ -102,11 +142,13 @@ final class EnumMacros
     {
         EnumCheck::check($enum);
 
-        $macro = Closure::bind(self::$macros[$enum][$name], null, $enum);
+        $macro = self::getMacro($enum, $name);
 
         if (!$macro || false === self::isStaticMacro($macro)) {
             self::triggerError($enum, $name);
         }
+
+        $macro = $macro(...)->bindTo(null, $enum);
 
         return $macro(...$arguments);
     }

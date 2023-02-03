@@ -37,7 +37,8 @@ Suit::tryFrom('circles'); // returns Suit::Default
 
 Suit::get('default'); // returns Suit::Default
 Suit::get('circles'); // throws ValueError
-Suit::tryGet('circles'); // returns Suit::Default
+Suit::tryGet('circles', true); // returns Suit::Default
+Suit::tryGet('circles'); // returns null
 ````
 
 ## The default keyword

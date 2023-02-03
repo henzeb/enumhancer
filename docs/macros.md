@@ -59,6 +59,14 @@ Suit::mixin(SuitMixin::class);
 Suit::mixin(new SuitMixin());
 ````
 
+## hasMacro
+
+This method will allow you to test if a method exists before using it.
+
+````php
+Suit::hasMacro('toJson'); // returns true if exists, false otherwise
+````
+
 ## flushMacros
 
 You may want to flush macro's in certain situations. This will only flush
@@ -67,3 +75,20 @@ macro's for the enum it's called on.
 ````php
 Suit::flushMacros(); // only flushes macro's belonging to Suit
 ````
+
+## Global macro's
+
+Enumhancer also supports global macro's, which will be available to you on
+every enum using the `Macros` trait.
+
+````php
+\Henzeb\Enumhancer\Helpers\Enumhancer::macro('macro', fn()=>true);
+
+\Henzeb\Enumhancer\Helpers\Enumhancer::mixin(GlobalMixin::class);
+\Henzeb\Enumhancer\Helpers\Enumhancer::mixin(new GlobalMxin());
+
+\Henzeb\Enumhancer\Helpers\Enumhancer::flushMacros();
+````
+
+Note: flushing macro's using the global method only flushes global macro's.
+flushing macro's on an enum will not touch the global macro's

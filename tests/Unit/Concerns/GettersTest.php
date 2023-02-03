@@ -6,6 +6,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 use Generator;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Getters\GetUnitEnum;
 use PHPUnit\Framework\TestCase;
 
@@ -163,15 +164,42 @@ class GettersTest extends TestCase
         );
     }
 
-    public function testGetStringBackedEnumWithInteger() {
+    public function testGetStringBackedEnumWithInteger()
+    {
         $this->assertEquals(
             StringBackedGetEnum::TEST1, StringBackedGetEnum::get(1)
         );
     }
 
-    public function testGetUnitEnumWithInteger() {
+    public function testGetUnitEnumWithInteger()
+    {
         $this->assertEquals(
             GetUnitEnum::Zero, GetUnitEnum::get(0)
+        );
+    }
+
+    public function testTryGetShouldReturnDefault(): void
+    {
+        $this->assertEquals(
+            DefaultsEnum::default(),
+            DefaultsEnum::tryGet('caseMissing')
+        );
+
+        $this->assertEquals(
+            [DefaultsEnum::default()],
+            DefaultsEnum::tryArray(['caseMissing'])
+        );
+    }
+
+    public function testTryGetShouldNotReturnDefault(): void
+    {
+        $this->assertEquals(
+            null,
+            DefaultsEnum::tryGet('caseMissing', false)
+        );
+        $this->assertEquals(
+            [],
+            DefaultsEnum::tryArray(['caseMissing'], false)
         );
     }
 }

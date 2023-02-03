@@ -8,6 +8,9 @@ use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use RuntimeException;
 use UnitEnum;
+use function is_null;
+use function is_object;
+use function sprintf;
 
 /**
  * @internal
@@ -25,9 +28,9 @@ final class EnumReporter
     {
         if (!is_null($reporter) && !is_subclass_of($reporter, Reporter::class)) {
             throw new RuntimeException(
-                \sprintf(
+                sprintf(
                     '%s is not a %s',
-                    \is_object($reporter) ? $reporter::class : $reporter,
+                    is_object($reporter) ? $reporter::class : $reporter,
                     Reporter::class
                 )
             );
@@ -59,14 +62,14 @@ final class EnumReporter
         ?BackedEnum $context,
         ?Reporter $reporter
     ): mixed {
-        $enum = EnumGetters::tryGet($class, $key);
+        $enum = EnumGetters::tryGet($class, $key, useDefault: false);
 
         if (!$enum) {
             if ($key instanceof UnitEnum) {
                 $key = $key->name;
             }
 
-            if (!\is_null($key)) {
+            if (!is_null($key)) {
                 $key = (string)$key;
             }
 

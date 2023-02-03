@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Contracts;
 
 use UnitEnum;
+use function strtolower;
 use function trigger_error;
 
 /**
@@ -18,6 +19,9 @@ abstract class Mapper
     private ?array $flipped = null;
     private ?string $flipPrefix = null;
 
+    /**
+     * @return array<string|int,string|int|UnitEnum|array<string|int,string|int|UnitEnum>>
+     */
     abstract protected function mappable(): array;
 
     public function makeFlipped(string $prefix = null): self
@@ -57,7 +61,11 @@ abstract class Mapper
 
     private function getMapWithPrefix(string $prefix = null): array
     {
-        return array_change_key_case($this->mappable()[$prefix] ?? []);
+        /**
+         * @var array $mappable
+         */
+        $mappable = $this->mappable();
+        return array_change_key_case($mappable[$prefix] ?? []);
     }
 
     private function getMap(string $prefix = null): array
@@ -74,7 +82,7 @@ abstract class Mapper
         $key = $this->parseValue($key);
 
         if (is_string($key)) {
-            $key = \strtolower($key);
+            $key = strtolower($key);
         }
 
         return $this->parseValue(

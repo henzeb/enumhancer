@@ -21,20 +21,23 @@ final class EnumCompare
         EnumCheck::check($class);
 
         return EnumImplements::comparison($class)
-            && !count($arguments) && str_starts_with($name, 'is');
+            && !count($arguments) && str_starts_with(strtolower($name), 'is')
+            && self::getValueFromString($class, $name);
+    }
+
+    private static function getValueFromString(string $class, string $name): ?UnitEnum
+    {
+        return EnumGetters::tryGet(
+            $class,
+            substr($name, str_starts_with(strtolower($name), 'isnot') ? 5 : 2),
+            true,
+            false
+        );
     }
 
     public static function call(UnitEnum $enum, string $name): bool
     {
-        $value = EnumGetters::tryGet(
-            $enum::class,
-            substr($name, str_starts_with($name, 'isNot') ? 5 : 2),
-            true
-        );
-
-        if (!$value) {
-            EnumMagicCalls::throwException($enum::class, $name);
-        }
+        $value = self::getValueFromString($enum::class, $name);
 
         return str_starts_with($name, 'isNot') !== self::equals($enum, $value);
     }

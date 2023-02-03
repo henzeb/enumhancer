@@ -38,7 +38,7 @@ final class EnumMagicCalls
         }
 
         if (EnumImplements::constructor($enum)) {
-            return EnumGetters::tryGet($enum, $name, true) ?? self::throwException($enum, $name);
+            return EnumGetters::tryGet($enum, $name, true, false) ?? self::throwException($enum, $name);
         }
 
         self::throwException($enum, $name);

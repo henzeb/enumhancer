@@ -53,6 +53,7 @@
         "macros",
         "macroable",
         "binding",
+        "ide-helper",
         "implicit"
     ],
     "homepage": "https://github.com/henzeb/enumhancer",
@@ -69,7 +70,10 @@
         "php": "^8.1"
     },
     "require-dev": {
+        "composer/composer": "^2.5",
+        "henzeb/enumhancer-ide-helper": "main-dev",
         "mockery/mockery": "^1.5",
+        "nette/php-generator": "^4.0",
         "nunomaduro/larastan": "^2.3",
         "orchestra/testbench": "v6.24.1|^v7.18",
         "phpstan/phpstan": "^1.9",
@@ -93,7 +97,6 @@
         "test-coverage-txt": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
         "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
         "test-dox": "vendor/bin/phpunit --testdox"
-
     },
     "config": {
         "sort-packages": true

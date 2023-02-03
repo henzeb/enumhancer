@@ -2,12 +2,13 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
-use BackedEnum;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use ReflectionClass;
 use UnitEnum;
 use ValueError;
+use function array_key_exists;
 use function Henzeb\Enumhancer\Functions\backing;
+use function is_object;
 use function strtolower;
 
 /**
@@ -39,7 +40,7 @@ final class EnumGetters
             return $class::get($value);
         }
 
-        $value = \is_object($value) ? $value->name : $value;
+        $value = is_object($value) ? $value->name : $value;
 
         $match = !is_null($value) ? self::match($class, $value) : null;
 
@@ -80,14 +81,18 @@ final class EnumGetters
         return $return;
     }
 
-    public static function tryArray(string $class, iterable $values, bool $useMapper = false): array
-    {
+    public static function tryArray(
+        string $class,
+        iterable $values,
+        bool $useMapper = false,
+        bool $useDefault = true
+    ): array {
         EnumCheck::check($class);
 
         $return = [];
 
         foreach ($values as $value) {
-            $return[] = self::tryGet($class, $value, $useMapper);
+            $return[] = self::tryGet($class, $value, $useMapper, $useDefault);
         }
 
         return array_filter($return);
@@ -123,7 +128,7 @@ final class EnumGetters
             return $case;
         }
 
-        if (\array_key_exists($value, array_keys($constants))) {
+        if (array_key_exists($value, array_keys($constants))) {
             return $constants[array_keys($constants)[$value]];
         }
 
@@ -175,6 +180,6 @@ final class EnumGetters
     private static function isCase(mixed $case, string $name, int|string $value): bool
     {
         return $value === strtolower($name)
-            || strtolower(backing($case)??'') === $value;
+            || strtolower(backing($case) ?? '') === $value;
     }
 }

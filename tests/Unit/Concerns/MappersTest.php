@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Contracts\Mapper;
+use Henzeb\Enumhancer\Helpers\Mappers\EnumMapper;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Mappers\ConstantInvalidMapperEnum;
@@ -373,9 +374,37 @@ class MappersTest extends TestCase
         $this->assertEquals(ConstantMapperClassFlippedEnum::Alpha, ConstantMapperClassFlippedEnum::get('beta'));
     }
 
-    public function testShouldBeInvalidWhenStringIsClass() {
+    public function testShouldBeInvalidWhenStringIsClass()
+    {
 
         $this->expectException(ValueError::class);
         ConstantInvalidMapperEnum::get('Alpha');
+    }
+
+    public function testIsValidMapper()
+    {
+        $this->assertTrue(EnumMapper::isValidMapper(ConstantMapperClassEnum::class, ConstantMapperClassEnum::Beta));
+        $this->assertTrue(EnumMapper::isValidMapper(
+            ConstantMapperClassEnum::class,
+            ['test' => ConstantMapperClassEnum::Alpha])
+        );
+
+        $this->assertFalse(EnumMapper::isValidMapper(ConstantMapperClassEnum::class, $this));
+        $this->assertFalse(EnumMapper::isValidMapper(ConstantMapperClassEnum::class, $this::class));
+
+        $mapper = new class extends Mapper {
+            protected function mappable(): array
+            {
+                return [];
+            }
+        };
+
+        $this->assertTrue(
+            EnumMapper::isValidMapper(ConstantMapperClassEnum::class, $mapper)
+        );
+
+        $this->assertTrue(
+            EnumMapper::isValidMapper(ConstantMapperClassEnum::class, $mapper::class)
+        );
     }
 }

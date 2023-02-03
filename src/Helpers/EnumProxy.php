@@ -10,10 +10,10 @@ class EnumProxy implements Stringable
     public readonly string $name;
     public readonly string $value;
 
-    public function __construct(private readonly UnitEnum $enum, bool $keepValueCase)
+    public function __construct(UnitEnum $enum, bool $keepValueCase)
     {
-        $this->name = $this->enum->name;
-        $this->value = (string)EnumValue::value($this->enum, $keepValueCase);
+        $this->name = $enum->name;
+        $this->value = (string)EnumValue::value($enum, $keepValueCase);
     }
 
     public function __toString(): string

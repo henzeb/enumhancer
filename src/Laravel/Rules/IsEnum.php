@@ -11,8 +11,17 @@ use Illuminate\Contracts\Validation\Rule;
 class IsEnum implements Rule
 {
     private mixed $value = null;
+
+
+    /**
+     * @var array|array[]|Mapper[]|null[]|string[]
+     */
     private array $mappers;
 
+    /**
+     * @param string $type
+     * @param Mapper|string|array|null ...$mappers
+     */
     public function __construct(private readonly string $type, Mapper|string|array|null ...$mappers)
     {
         EnumCheck::check($type);
@@ -29,6 +38,9 @@ class IsEnum implements Rule
         return (bool)EnumGetters::tryGet($this->type, $this->value, useDefault: false);
     }
 
+    /**
+     * @return string|array<int,string>
+     */
     public function message(): string|array
     {
         $message = trans(

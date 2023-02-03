@@ -82,9 +82,14 @@ final class EnumProperties
             ?? self::$global[$property] ?? null;
     }
 
-    public static function global(string $key, mixed $value): void
+    public static function getGlobal(string $property): mixed
     {
-        self::$global[$key] = $value;
+        return self::$global[$property] ?? null;
+    }
+
+    public static function global(string $property, mixed $value): mixed
+    {
+        return self::$global[$property] = $value;
     }
 
     public static function clear(string $class, string $property = null): void
@@ -100,8 +105,14 @@ final class EnumProperties
         }
     }
 
-    public static function clearGlobal(): void
+    public static function clearGlobal(string $property = null): void
     {
-        self::$global = [];
+        if (!empty($property)) {
+            unset(self::$global[$property]);
+        }
+
+        if (empty($property)) {
+            self::$global = [];
+        }
     }
 }
