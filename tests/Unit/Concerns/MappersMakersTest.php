@@ -38,7 +38,7 @@ class MappersMakersTest extends TestCase
 
     public function testMakeShouldErrorWithoutMapper()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::make('mappedEnum');
     }
 
@@ -60,13 +60,13 @@ class MappersMakersTest extends TestCase
 
     public function testMakeShouldThrowExceptionForNonMap()
     {
-            $this->expectException(RuntimeException::class);
-            EnhancedBackedEnum::make('mappedEnum', $this::class);
+        $this->expectException(RuntimeException::class);
+        EnhancedBackedEnum::make('mappedEnum', $this::class);
     }
 
     public function testMakeShouldNotMapWhenNull()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::make(null, $this->getMapper());
     }
 
@@ -80,7 +80,7 @@ class MappersMakersTest extends TestCase
 
     public function testMakeShouldErrorWithMap()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::make('not existing', $this->getMapper());
     }
 
@@ -130,7 +130,7 @@ class MappersMakersTest extends TestCase
 
     public function testGetArrayShouldNotMapWhenNull()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::makeArray([null], $this->getMapper());
     }
 
@@ -144,7 +144,7 @@ class MappersMakersTest extends TestCase
 
     public function testGetArrayShouldThrowErrorWorkWithoutMapper()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::makeArray(['Does Not exist']);
     }
 
@@ -167,7 +167,7 @@ class MappersMakersTest extends TestCase
 
     public function testGetArrayShouldThrowErrorWitMapper()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         EnhancedBackedEnum::makeArray(['ENUM', 'doesNotExist'], $this->getMapper());
     }
 

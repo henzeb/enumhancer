@@ -9,19 +9,20 @@ use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Getters\GetUnitEnum;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 
 class GettersTest extends TestCase
 {
     public function testExpectValueErrorWhenGetNull()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         StringBackedGetEnum::get(null);
     }
 
     public function testExpectValueErrorWhenGetUnknownValue()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         StringBackedGetEnum::get('RANDOM_UNKNOWN_VALUE');
     }
 
@@ -128,7 +129,7 @@ class GettersTest extends TestCase
 
     public function testGetArrayFails()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
 
         StringBackedGetEnum::getArray(['DOES_NOT_EXIST']);
     }

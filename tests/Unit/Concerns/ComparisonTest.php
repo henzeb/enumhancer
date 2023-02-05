@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 
 class ComparisonTest extends TestCase
@@ -33,7 +34,7 @@ class ComparisonTest extends TestCase
         $class = new class {
             use Comparison;
         };
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnhancedBackedEnum::ENUM->equals($class);
     }

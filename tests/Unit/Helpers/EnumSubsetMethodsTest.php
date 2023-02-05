@@ -10,13 +10,14 @@ use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class EnumSubsetMethodsTest extends TestCase
 {
 
     public function testShouldThrowErrorWithWrongEnumType(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         (new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
     }
 
@@ -165,6 +166,7 @@ class EnumSubsetMethodsTest extends TestCase
 
     private function getValues(array $cases): array
     {
-        return array_map(fn($enum) => $enum->value ?? (method_exists($enum, 'value')?$enum->value():null) ?? $enum->name, $cases);
+        return array_map(fn($enum) => $enum->value ?? (method_exists($enum,
+            'value') ? $enum->value() : null) ?? $enum->name, $cases);
     }
 }

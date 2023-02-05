@@ -8,19 +8,20 @@ use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Getters\GetUnitEnum;
 use PHPUnit\Framework\TestCase;
+use ValueError;
 
 
 class MakersTest extends TestCase
 {
     public function testExpectValueErrorWhenMakeNull()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         StringBackedGetEnum::make(null);
     }
 
     public function testExpectValueErrorWhenMakeUnknownValue()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
         StringBackedGetEnum::make('RANDOM_UNKNOWN_VALUE');
     }
 
@@ -127,7 +128,7 @@ class MakersTest extends TestCase
 
     public function testMakeArrayFails()
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
 
         StringBackedGetEnum::makeArray(['DOES_NOT_EXIST']);
     }
@@ -163,13 +164,15 @@ class MakersTest extends TestCase
         );
     }
 
-    public function testMakeStringBackedEnumWithInteger() {
+    public function testMakeStringBackedEnumWithInteger()
+    {
         $this->assertEquals(
             StringBackedGetEnum::TEST1, StringBackedGetEnum::make(1)
         );
     }
 
-    public function testMakeUnitEnumWithInteger() {
+    public function testMakeUnitEnumWithInteger()
+    {
         $this->assertEquals(
             GetUnitEnum::Zero, GetUnitEnum::make(0)
         );

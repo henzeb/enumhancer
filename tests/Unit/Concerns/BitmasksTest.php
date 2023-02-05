@@ -7,6 +7,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEn
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class BitmasksTest extends TestCase
 {
@@ -106,37 +107,37 @@ class BitmasksTest extends TestCase
 
     public function testBitShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         BitmasksIncorrectIntEnum::Read->bit();
     }
 
     public function testBitsShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         BitmasksIncorrectIntEnum::bits();
     }
 
     public function testShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         BitmasksIncorrectIntEnum::mask();
     }
 
     public function testFromMaskShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         BitmasksIncorrectIntEnum::fromMask(5);
     }
 
     public function testTryMaskShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         BitmasksIncorrectIntEnum::tryMask(5);
     }
 
     public function testShouldThrowErrorWhenCastingTobits()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         EnumBitmasks::getBits(BitmasksIntEnum::class, 64);
     }
 }

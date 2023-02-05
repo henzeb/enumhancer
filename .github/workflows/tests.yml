@@ -21,8 +21,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.1','8.2']
-        stability: [prefer-lowest, prefer-stable]
+        php: [ '8.1','8.2' ]
+        stability: [ prefer-lowest, prefer-stable ]
 
     steps:
       - name: Checkout Code
@@ -59,7 +59,12 @@ jobs:
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
       - name: Execute PHPUnit
+        run: vendor/bin/phpunit
+        if: ${{ !env.CC_TOKEN || (matrix.stability != 'prefer-stable' && matrix.php != '8.2') }}
+
+      - name: Execute PHPUnit for codeclimate
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.2' }}
 
       - name: Upload coverage to codeclimate
         uses: paambaati/codeclimate-action@v3.1.1
@@ -69,4 +74,4 @@ jobs:
         with:
           coverageCommand: ''
           coverageLocations: ./coverage.xml:clover
-        if: ${{ !env.ACT && env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.2' }}
+        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.2' }}

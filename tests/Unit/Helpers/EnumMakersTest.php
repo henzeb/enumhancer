@@ -3,11 +3,10 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use Henzeb\Enumhancer\Helpers\EnumGetters;
-
-use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use stdClass;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use TypeError;
 
 /**
  * @ignore
@@ -16,28 +15,28 @@ class EnumMakersTest extends TestCase
 {
     public function testMakeShouldFailWithInvalidClass()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumGetters::get(stdClass::class, 'test');
     }
 
     public function testTryMakeShouldFailWithInvalidClass()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumGetters::tryGet(stdClass::class, 'test');
     }
 
     public function testMakeArrayShouldFailWithInvalidClass()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumGetters::getArray(stdClass::class, ['test']);
     }
 
     public function testTryMakeArrayShouldFailWithInvalidClass()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumGetters::tryArray(stdClass::class, ['test']);
     }
@@ -54,6 +53,7 @@ class EnumMakersTest extends TestCase
 
     public function testTryCastAlreadyEnum()
     {
-        $this->assertEquals(EnhancedUnitEnum::ENUM, EnumGetters::tryCast(EnhancedUnitEnum::class, EnhancedUnitEnum::ENUM));
+        $this->assertEquals(EnhancedUnitEnum::ENUM,
+            EnumGetters::tryCast(EnhancedUnitEnum::class, EnhancedUnitEnum::ENUM));
     }
 }

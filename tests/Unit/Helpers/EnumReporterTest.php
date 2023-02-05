@@ -16,6 +16,7 @@ use Orchestra\Testbench\TestCase;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use stdClass;
+use TypeError;
 
 
 class EnumReporterTest extends TestCase
@@ -73,7 +74,7 @@ class EnumReporterTest extends TestCase
     public function testObjectIsNotAReporter()
     {
 
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumReporter::set(new stdClass());
     }
@@ -149,13 +150,13 @@ class EnumReporterTest extends TestCase
 
     public function testMakeOrReportShouldErrorWithNonEnum()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         EnumReporter::getOrReport(stdClass::class, '', null, new LaravelLogReporter());
     }
 
     public function testMakeOrReportArrayShouldErrorWithNonEnum()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         EnumReporter::getOrReportArray(stdClass::class, [], null, new LaravelLogReporter());
     }
 }

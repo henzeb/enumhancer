@@ -21,7 +21,7 @@ class FromTest extends TestCase
 
     function testUnitEnumCanCallFromAndFail(): void
     {
-        $this->expectError();
+        $this->expectException(ValueError::class);
 
         ConstructableUnitEnum::from('doesnotexist');
     }

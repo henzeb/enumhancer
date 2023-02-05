@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Illuminate\Validation\Rule;
 use Orchestra\Testbench\TestCase;
+use TypeError;
 
 class EnumBitmaskTest extends TestCase
 {
@@ -32,7 +33,7 @@ class EnumBitmaskTest extends TestCase
 
     public function testInstanceValidatesType(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         Rule::enumBitmask(self::class);
     }
 

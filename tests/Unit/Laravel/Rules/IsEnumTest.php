@@ -8,6 +8,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Illuminate\Validation\Rule;
 use Orchestra\Testbench\TestCase;
+use TypeError;
 
 class IsEnumTest extends TestCase
 {
@@ -25,7 +26,7 @@ class IsEnumTest extends TestCase
 
     public function testInstanceValidatesType(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         Rule::isEnum(self::class);
     }
 
@@ -75,6 +76,7 @@ class IsEnumTest extends TestCase
 
         $rule->passes('should', 'fail');
 
-        $this->assertEquals('`fail` is not a valid Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum value.', $rule->message());
+        $this->assertEquals('`fail` is not a valid Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum value.',
+            $rule->message());
     }
 }

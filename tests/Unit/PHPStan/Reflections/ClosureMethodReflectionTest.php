@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\PHPStan\Reflections;
 
 use Henzeb\Enumhancer\PHPStan\Reflections\ClosureMethodReflection;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
+use Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Mappers\MapperClass;
 use PHPStan\Reflection\FunctionVariant;
 use PHPStan\ShouldNotHappenException;
 use PHPStan\Testing\PHPStanTestCase;
@@ -75,7 +76,8 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
         bool $isStatic,
         bool|string|null $docComment
     ) {
-        $classReflection = $this->createReflectionProvider()->getClass(self::class);
+        $classReflection = $this->createReflectionProvider()->getClass(MapperClass::class);
+
         $closureType = $this->closureFactory->fromClosureObject($callable);
 
         $closureReflection = new ClosureMethodReflection(
@@ -84,6 +86,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             $closureType,
             $isStatic,
         );
+
         $closureReflection->setDocDocument($docComment);
         $this->assertEquals($classReflection, $closureReflection->getDeclaringClass());
         $this->assertFalse($closureReflection->isPrivate());

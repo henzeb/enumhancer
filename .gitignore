@@ -4,6 +4,7 @@
 .phpunit.result.cache
 build
 coverage
+coverage.xml
 composer.lock
 testbench.yaml
 vendor

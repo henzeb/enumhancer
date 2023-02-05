@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use BadMethodCallException;
+use Exception;
 use Henzeb\Enumhancer\Helpers\Enumhancer;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosAnotherUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosUnitEnum;
@@ -10,6 +11,18 @@ use PHPUnit\Framework\TestCase;
 
 class MacrosTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        set_error_handler(static function (int $errno, string $errstr): never {
+            throw new Exception($errstr, $errno);
+        }, E_USER_ERROR);
+    }
+
+    public function expectError(): void
+    {
+        $this->expectException(Exception::class);
+    }
+
     public function testShouldAddMacroAndflush()
     {
         MacrosUnitEnum::macro('test', static fn() => true);

@@ -8,24 +8,25 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEn
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class BitmaskTest extends TestCase
 {
     public function testShouldFailWithStringForEnum(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         new Bitmask('test', 1);
     }
 
     public function testShouldFailWithNonEnum(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         new Bitmask(Bitmask::class, 1);
     }
 
     public function testShouldFailWithInvalidBitmaskEnum(): void
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
         new Bitmask(BitmasksIncorrectIntEnum::class, 1);
     }
 

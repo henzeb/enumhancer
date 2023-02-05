@@ -3,17 +3,15 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 
-use Henzeb\Enumhancer\Helpers\EnumProperties;
-use Henzeb\Enumhancer\Concerns\ConfigureDefaults;
-use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
-use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
-use PHPUnit\Framework\TestCase;
-use RuntimeException;
-use stdClass;
-use Henzeb\Enumhancer\Exceptions\ReservedPropertyNameException;
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
+use Henzeb\Enumhancer\Exceptions\ReservedPropertyNameException;
+use Henzeb\Enumhancer\Helpers\EnumProperties;
+use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
+use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
+use PHPUnit\Framework\TestCase;
+use stdClass;
+use TypeError;
 
 class EnumPropertiesTest extends TestCase
 {
@@ -46,21 +44,21 @@ class EnumPropertiesTest extends TestCase
 
     public function testStoreShouldNotAcceptNonEnums()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumProperties::store(stdClass::class, 'property', 'value');
     }
 
     public function testGetShouldNotAcceptNonEnums()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumProperties::get(stdClass::class, 'property');
     }
 
     public function testClearShouldNotAcceptNonEnums()
     {
-        $this->expectError();
+        $this->expectException(TypeError::class);
 
         EnumProperties::clear(stdClass::class);
     }
