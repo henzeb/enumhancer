@@ -3,14 +3,18 @@
 namespace Henzeb\Enumhancer\Laravel\Reporters;
 
 use BackedEnum;
-use Illuminate\Support\Facades\Log;
-use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Contracts\Reporter;
+use Henzeb\Enumhancer\Enums\LogLevel;
+use Illuminate\Support\Facades\Log;
 use function class_basename;
 
 class LaravelLogReporter implements Reporter
 {
     private readonly ?LogLevel $level;
+
+    /**
+     * @var string[]
+     */
     private array $channels;
 
     public function __construct(
@@ -26,6 +30,9 @@ class LaravelLogReporter implements Reporter
         return (string)($this->level ?? LogLevel::default() ?? LogLevel::Notice)->value();
     }
 
+    /**
+     * @return string[]
+     */
     private function getChannels(): array
     {
         if (empty($this->channels)) {

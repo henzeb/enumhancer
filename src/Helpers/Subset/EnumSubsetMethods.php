@@ -2,21 +2,28 @@
 
 namespace Henzeb\Enumhancer\Helpers\Subset;
 
-use BackedEnum;
 use Closure;
-use Henzeb\Enumhancer\Contracts\EnumSubset;
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumGetters;
-use Henzeb\Enumhancer\Helpers\EnumImplements;
 use Henzeb\Enumhancer\Helpers\EnumLabels;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use UnitEnum;
 
-class EnumSubsetMethods implements EnumSubset
+/**
+ * @template T of UnitEnum
+ */
+class EnumSubsetMethods
 {
+    /**
+     * @var T[]
+     */
     private array $enums;
 
-    public function __construct(private readonly string $enumType, UnitEnum|BackedEnum ...$enums)
+    /**
+     * @param class-string<T> $enumType
+     * @param T ...$enums
+     */
+    public function __construct(private readonly string $enumType, UnitEnum ...$enums)
     {
         EnumCheck::matches($enumType, ...$enums);
 
@@ -65,21 +72,32 @@ class EnumSubsetMethods implements EnumSubset
         return $value;
     }
 
+
+    /**
+     * @return string[]
+     */
     public function names(): array
     {
         return array_map(fn(UnitEnum $enum) => $enum->name, $this->enums);
     }
 
-    public function values(): array
+    /**
+     * @return string[]|int[]
+     */
+    public function values(bool $keepEnumCase = null): array
     {
         return array_map(
-            function (mixed $enum) {
-                return EnumValue::value($enum, !EnumImplements::value($enum::class));
+            function (mixed $enum) use ($keepEnumCase) {
+                return EnumValue::value($enum, $keepEnumCase);
             },
             $this->enums
         );
     }
 
+    /**
+     * @param bool|null $keepEnumCase
+     * @return array<string|int,string>
+     */
     public function dropdown(bool $keepEnumCase = null): array
     {
         return array_replace(
@@ -98,6 +116,9 @@ class EnumSubsetMethods implements EnumSubset
         );
     }
 
+    /**
+     * @return T[]
+     */
     public function cases(): array
     {
         return $this->enums;

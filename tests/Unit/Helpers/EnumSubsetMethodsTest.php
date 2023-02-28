@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
 
 use Henzeb\Enumhancer\Concerns\Dropdown;
+use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
@@ -166,7 +167,6 @@ class EnumSubsetMethodsTest extends TestCase
 
     private function getValues(array $cases): array
     {
-        return array_map(fn($enum) => $enum->value ?? (method_exists($enum,
-            'value') ? $enum->value() : null) ?? $enum->name, $cases);
+        return array_map(fn($enum) => EnumValue::value($enum), $cases);
     }
 }

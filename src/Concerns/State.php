@@ -1,11 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace Henzeb\Enumhancer\Concerns;
 
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
-use Henzeb\Enumhancer\Exceptions\IllegalNextEnumTransitionException;
-use Henzeb\Enumhancer\Exceptions\SyntaxException;
 use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Helpers\EnumState;
@@ -16,9 +15,12 @@ trait State
     use MagicCalls;
 
     /**
-     * @throws IllegalEnumTransitionException|SyntaxException
+     * @param string|int|static $state
+     * @param TransitionHook|null $hook
+     * @return static
+     * @throws IllegalEnumTransitionException
      */
-    public function transitionTo(self|string|int $state, TransitionHook $hook = null): self
+    public function transitionTo(self|string|int $state, TransitionHook $hook = null): static
     {
         $state = EnumGetters::cast(self::class, $state);
 
@@ -32,12 +34,18 @@ trait State
         throw new IllegalEnumTransitionException($this, $state);
     }
 
-    public function to(self|string|int $state, TransitionHook $hook = null): self
+    /**
+     * @param string|int|static $state
+     * @param TransitionHook|null $hook
+     * @return static
+     * @throws IllegalEnumTransitionException
+     */
+    public function to(self|string|int $state, TransitionHook $hook = null): static
     {
         return $this->transitionTo($state, $hook);
     }
 
-    public function tryTo(self|string|int $state, TransitionHook $hook = null): self
+    public function tryTo(self|string|int $state, TransitionHook $hook = null): static
     {
         if ($this->isTransitionAllowed($state, $hook)) {
             return $this->transitionTo($state, $hook);
@@ -62,7 +70,7 @@ trait State
 
     /**
      * @param TransitionHook|null $hook
-     * @return array
+     * @return static[]
      */
     public function allowedTransitions(TransitionHook $hook = null): array
     {
@@ -73,13 +81,16 @@ trait State
     }
 
     /**
-     * @return self[]
+     * @return static[]
      */
     public static function transitions(): array
     {
         return EnumState::transitions(self::class, self::customTransitions());
     }
 
+    /**
+     * @return static[]
+     */
     protected static function customTransitions(): array
     {
         return EnumProperties::get(self::class, EnumProperties::reservedWord('state')) ?? [];

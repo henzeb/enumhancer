@@ -7,6 +7,7 @@ use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use ReflectionClass;
+use ReflectionException;
 use RuntimeException;
 use UnitEnum;
 use ValueError;
@@ -19,10 +20,16 @@ use function is_subclass_of;
  */
 final class EnumMapper
 {
+    /**
+     * @param string $enum
+     * @param string|int|UnitEnum|null $value
+     * @param array<string|int, mixed>|Mapper|string|null ...$mappers
+     * @return string|null
+     */
     public static function map(
         string $enum,
-        string|int|UnitEnum|null $value,
-        Mapper|array|string|null ...$mappers
+        UnitEnum|int|string|null $value,
+        array|string|Mapper|null ...$mappers
     ): ?string {
         EnumCheck::check($enum);
 
@@ -37,6 +44,12 @@ final class EnumMapper
         return $value instanceof UnitEnum ? $value->name : $value;
     }
 
+    /**
+     * @param string $enum
+     * @param iterable<string|int, mixed> $values
+     * @param Mapper|string|array<string|int,string|int|UnitEnum|array<string|int,string|int|UnitEnum>>|null ...$mappers
+     * @return string[]
+     */
     public static function mapArray(string $enum, iterable $values, Mapper|string|array|null ...$mappers): array
     {
         $mapped = [];
@@ -48,6 +61,9 @@ final class EnumMapper
         return $mapped;
     }
 
+    /**
+     * @return Mapper[]
+     */
     private static function sanitizeMapperArray(array $mappers): array
     {
         return array_map(
@@ -76,6 +92,11 @@ final class EnumMapper
         );
     }
 
+    /**
+     * @param string $enum
+     * @return Mapper[]
+     * @throws ReflectionException
+     */
     private static function getConstantMappers(string $enum): array
     {
         /**
@@ -141,11 +162,19 @@ final class EnumMapper
         return $class::newInstance();
     }
 
+    /**
+     * @param array<string|int,string|int|UnitEnum|array<string|int,string|int|UnitEnum>> $map
+     * @return Mapper
+     */
     protected static function wrapInMapper(array $map): Mapper
     {
         return EnumArrayMapper::newInstance($map);
     }
 
+    /**
+     * @param string $enum
+     * @return array<string|int,string|int|UnitEnum|array<string|int,string|int|UnitEnum>>
+     */
     private static function getConfiguredMapper(string $enum): array
     {
         return EnumProperties::get(
@@ -156,8 +185,9 @@ final class EnumMapper
 
     /**
      * @param string $enum
-     * @param array $mappers
-     * @return array
+     * @param Mapper|string|array|null ...$mappers
+     * @return Mapper
+     * @throws ReflectionException
      */
     public static function getMappers(string $enum, Mapper|string|array|null ...$mappers): array
     {

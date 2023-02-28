@@ -79,6 +79,13 @@ final class EnumReporter
         return $enum;
     }
 
+    /**
+     * @param string $class
+     * @param iterable<string|int|null|UnitEnum> $keys
+     * @param BackedEnum|null $context
+     * @param Reporter|null $reporter
+     * @return UnitEnum[]
+     */
     public static function getOrReportArray(
         string $class,
         iterable $keys,

@@ -45,7 +45,7 @@ class EnumTransition implements Rule
     /**
      * Get the validation error message.
      *
-     * @return array
+     * @return string[]
      */
     public function message()
     {

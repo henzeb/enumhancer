@@ -14,13 +14,13 @@ class IsEnum implements Rule
 
 
     /**
-     * @var array|array[]|Mapper[]|null[]|string[]
+     * @var array|array<string|int,string|Mapper|int>|Mapper[]|null[]|string[]
      */
     private array $mappers;
 
     /**
      * @param string $type
-     * @param Mapper|string|array|null ...$mappers
+     * @param array|array<string|int,string|Mapper|int>|Mapper[]|null[]|string[] $mappers
      */
     public function __construct(private readonly string $type, Mapper|string|array|null ...$mappers)
     {
@@ -39,7 +39,7 @@ class IsEnum implements Rule
     }
 
     /**
-     * @return string|array<int,string>
+     * @return string|string[]
      */
     public function message(): string|array
     {

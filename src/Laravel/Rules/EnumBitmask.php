@@ -12,8 +12,10 @@ class EnumBitmask implements Rule
 {
     private mixed $value = null;
 
-    public function __construct(private readonly string $type, private readonly bool $singleBit = false)
-    {
+    public function __construct(
+        private readonly string $type,
+        private readonly bool $singleBit = false
+    ) {
         EnumCheck::check($type);
 
         if (!EnumImplements::bitmasks($type)) {
@@ -38,6 +40,9 @@ class EnumBitmask implements Rule
         return EnumBitmasks::isValidBitmask($this->type, $value);
     }
 
+    /**
+     * @return string|string[]
+     */
     public function message(): string|array
     {
         $message = trans(

@@ -11,6 +11,7 @@ use Henzeb\Enumhancer\Helpers\EnumLabels;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use ReflectionClass;
 use UnitEnum;
+use function is_object;
 use const E_USER_ERROR;
 
 final class EnumBitmasks
@@ -119,7 +120,7 @@ final class EnumBitmasks
 
     private static function castToBits(Bitmask|UnitEnum|string|int $value, string|UnitEnum $class): int
     {
-        $class = \is_object($class) ? $class::class : $class;
+        $class = is_object($class) ? $class::class : $class;
 
         if ($value instanceof Bitmask) {
             self::forOrFail($class, $value);
@@ -142,6 +143,10 @@ final class EnumBitmasks
         self::throwMismatch($class, gettype($value));
     }
 
+    /**
+     * @param string $class
+     * @return array<int,string>
+     */
     public static function getCaseBits(string $class): array
     {
         /**

@@ -2,9 +2,6 @@
 
 namespace Henzeb\Enumhancer\Tests\Fixtures;
 
-use Henzeb\Enumhancer\Contracts\Mapper;
-use Henzeb\Enumhancer\Concerns\Enhancers;
-use Henzeb\Enumhancer\Concerns\Constructor;
 use Henzeb\Enumhancer\Concerns\Extractor;
 
 enum ExtractBackedEnum: string

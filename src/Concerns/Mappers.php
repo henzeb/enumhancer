@@ -23,17 +23,6 @@ trait Mappers
         return null;
     }
 
-    /**
-     * @deprecated
-     */
-    public static function make(string|int|UnitEnum|null $value, Mapper|string $mapper = null): self
-    {
-        return self::get(
-            $value,
-            $mapper
-        );
-    }
-
     public static function get(string|int|UnitEnum|null $value, Mapper|string|array|null ...$mapper): self
     {
         return EnumGetters::get(
@@ -42,34 +31,12 @@ trait Mappers
         );
     }
 
-    /**
-     * @deprecated
-     */
-    public static function tryMake(string|int|UnitEnum|null $value, Mapper|string $mapper = null): ?self
-    {
-        return self::tryGet(
-            $value,
-            $mapper
-        );
-    }
 
     public static function tryGet(string|int|UnitEnum|null $value, Mapper|string|array|null ...$mapper): ?self
     {
         return EnumGetters::tryGet(
             self::class,
             EnumMapper::map(self::class, $value, ...[...$mapper, self::mapper()])
-        );
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function makeArray(iterable $values, Mapper|string $mapper = null): array
-    {
-
-        return self::getArray(
-            $values,
-            $mapper
         );
     }
 
@@ -81,37 +48,11 @@ trait Mappers
         );
     }
 
-    /**
-     * @deprecated
-     */
-    public static function tryMakeArray(iterable $values, Mapper|string $mapper = null): array
-    {
-        return self::tryArray(
-            $values,
-            $mapper
-        );
-    }
-
     public static function tryArray(iterable $values, Mapper|string|array|null ...$mapper): array
     {
         return EnumGetters::tryArray(
             self::class,
             EnumMapper::mapArray(self::class, $values, ...[...$mapper, self::mapper()])
-        );
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function makeOrReport(
-        int|string|UnitEnum|null $value,
-        BackedEnum $context = null,
-        Mapper|string $mapper = null
-    ): ?self {
-        return self::getOrReport(
-            $value,
-            $context,
-            $mapper
         );
     }
 
@@ -125,21 +66,6 @@ trait Mappers
             EnumMapper::map(self::class, $value, ...[...$mapper, self::mapper()]),
             $context,
             self::reporter()
-        );
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function makeOrReportArray(
-        iterable $values,
-        BackedEnum $context = null,
-        Mapper|string $mapper = null
-    ): array {
-        return self::getOrReportArray(
-            $values,
-            $context,
-            $mapper,
         );
     }
 

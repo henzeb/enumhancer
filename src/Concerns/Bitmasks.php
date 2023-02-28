@@ -12,6 +12,9 @@ trait Bitmasks
         return EnumBitmasks::getBit($this);
     }
 
+    /**
+     * @return array<int,string>
+     */
     public static function bits(): array
     {
         return EnumBitmasks::getCaseBits(self::class);

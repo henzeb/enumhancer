@@ -6,12 +6,11 @@ namespace Henzeb\Enumhancer\Tests\Fixtures;
 
 use Henzeb\Enumhancer\Concerns\Getters;
 use Henzeb\Enumhancer\Concerns\State;
-use Henzeb\Enumhancer\Concerns\Makers;
 
 
 enum StringBackedGetEnum: string
 {
-    use Makers, Getters, State;
+    use Getters, State;
 
     case TEST = 'TEST';
 

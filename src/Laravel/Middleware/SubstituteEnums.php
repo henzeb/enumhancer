@@ -10,6 +10,7 @@ use Henzeb\Enumhancer\Helpers\EnumImplements;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use ReflectionEnum;
+use ReflectionException;
 use ReflectionParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UnitEnum;
@@ -59,7 +60,8 @@ class SubstituteEnums
 
     /**
      * @param Route|null $route
-     * @return array
+     * @return array<string, ReflectionEnum>
+     * @throws ReflectionException
      */
     private function getParameters(Route|null $route): array
     {

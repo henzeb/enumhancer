@@ -73,9 +73,8 @@
         "composer/composer": "^2.5",
         "henzeb/enumhancer-ide-helper": "main-dev",
         "mockery/mockery": "^1.5",
-        "nette/php-generator": "^4.0",
         "nunomaduro/larastan": "^2.3",
-        "orchestra/testbench": "v6.24.1|^v7.18",
+        "orchestra/testbench": "^v7.18|^8.0",
         "phpstan/phpstan": "^1.9",
         "phpunit/phpunit": "^9.5.27"
     },

@@ -67,7 +67,6 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 - [From](docs/from.md)
 - [Getters](docs/getters.md)
 - [Labels](docs/labels.md)
-- ~~[Makers](docs/makers.md)~~ (deprecated)
 - [Macros](docs/macros.md)
 - [Mappers](docs/mappers.md)
 - [Properties](docs/properties.md)
@@ -99,7 +98,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 
 When you are installing this package into a laravel project, Enumhancer will
 automatically set macro's for the `validation rules` and sets the global
-`Reporter` for the `makeOrReport` methods, so that it will use Laravel's
+`Reporter` for the `getOrReport` methods, so that it will use Laravel's
 `Log` facade.
 
 If you don't want that to happen, you can tell Laravel not to discover the

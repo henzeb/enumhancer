@@ -2,12 +2,15 @@
 
 namespace Henzeb\Enumhancer\Concerns;
 
-use Henzeb\Enumhancer\Contracts\EnumSubset;
 use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
 use UnitEnum;
 
 trait Subset
 {
+    /**
+     * @param static[] $enums
+     * @return EnumSubsetMethods<self>
+     */
     public static function without(self ...$enums): EnumSubsetMethods
     {
         return new EnumSubsetMethods(
@@ -21,7 +24,11 @@ trait Subset
         );
     }
 
-    public static function of(self ...$enums): EnumSubset
+    /**
+     * @param static[] $enums
+     * @return EnumSubsetMethods<static>
+     */
+    public static function of(self ...$enums): EnumSubsetMethods
     {
         return new EnumSubsetMethods(
             self::class,

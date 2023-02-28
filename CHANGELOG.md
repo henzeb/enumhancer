@@ -2,6 +2,16 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 2.0.0 - 2023-02-28
+
+- Now supports Laravel 10
+- dropped support for laravel 8
+
+### Upgrade notes
+
+- Makers (make, tryMake etc.) are removed in favor
+  of [Getters](docs/getters.md)
+
 ## 1.23.0 - 2023-02-03
 
 - added [PHPStan](docs/phpstan.md) support
