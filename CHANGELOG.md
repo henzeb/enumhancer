@@ -2,6 +2,10 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 2.1.0 - 2023-05-12
+
+- Support for [Attributes](docs/attributes.md)
+
 ## 2.0.0 - 2023-02-28
 
 - Now supports Laravel 10

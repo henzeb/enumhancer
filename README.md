@@ -57,6 +57,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 
 ### Features
 
+- [Attributes](docs/attributes.md)
 - [Bitmasks](docs/bitmasks.md)
 - [Constructor](docs/constructor.md)
 - [Comparison](docs/comparison.md)
