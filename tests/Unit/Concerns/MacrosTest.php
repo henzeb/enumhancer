@@ -182,5 +182,7 @@ class MacrosTest extends TestCase
     protected function tearDown(): void
     {
         MacrosUnitEnum::flushMacros();
+
+        restore_error_handler();
     }
 }

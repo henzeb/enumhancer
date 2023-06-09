@@ -91,12 +91,19 @@ final class Bitmask
 
     public function cases(): array
     {
-        return array_values(
-            array_filter(
-                $this->enumFQCN::cases(),
-                fn(UnitEnum $case) => $this->bitmask & EnumBitmasks::getBit($case)
-            )
-        );
+        $matchingCases = [];
+
+        foreach ($this->enumFQCN::cases() as $case) {
+            $value = EnumBitmasks::getBit($case);
+            if ($this->bitmask === $value) {
+                return [$case];
+            }
+            if ($this->bitmask & $value) {
+                $matchingCases[] = $case;
+            }
+        }
+
+        return $matchingCases;
     }
 
     public function __toString(): string

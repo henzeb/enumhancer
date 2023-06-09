@@ -2,6 +2,12 @@
 
 All notable changes to `Enumhancer` will be documented in this file
 
+## 2.2.0 - 2023-06-09
+
+- fixed serious bug in [Getters](docs/getters.md) where
+  getting by integer would not match value first.
+- added support for [BIT_MODIFIER](docs/bitmasks.md#modifiers)
+
 ## 2.1.0 - 2023-05-12
 
 - Support for [Attributes](docs/attributes.md)

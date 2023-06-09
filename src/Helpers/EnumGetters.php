@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use BackedEnum;
 use Henzeb\Enumhancer\Concerns\Mappers;
 use ReflectionClass;
 use UnitEnum;
@@ -123,6 +124,15 @@ final class EnumGetters
         $constants = self::cases($class);
 
         $case = self::findCase($constants, $value);
+
+        if (!$case && is_a($class, BackedEnum::class, true)) {
+            foreach ($constants as $constant) {
+                if ($constant->value == $value) {
+                    $case = $constant;
+                    break;
+                }
+            }
+        }
 
         if ($case) {
             return $case;

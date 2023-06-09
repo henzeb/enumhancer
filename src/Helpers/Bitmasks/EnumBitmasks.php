@@ -30,7 +30,7 @@ final class EnumBitmasks
 
     public static function isBit(mixed $bit): bool
     {
-        return self::isInt($bit) && self::countSetBits($bit) === 1;
+        return self::isInt($bit) && (self::countSetBits($bit) === 1 || $bit === 0);
     }
 
     public static function validateBitmaskCases(string $enum): void
@@ -67,18 +67,42 @@ final class EnumBitmasks
         return true;
     }
 
+    public static function isModifier(BackedEnum|string $enum): bool
+    {
+        /**
+         * @var UnitEnum $enum
+         */
+
+        EnumCheck::check($enum);
+
+        if (self::ignoreIntValues($enum)) {
+            return false;
+        }
+
+        foreach ((new ReflectionClass($enum))->getConstants() as $constant => $value) {
+            if (strtolower($constant) === 'bit_modifier' and is_bool($value)) {
+                return $value;
+            }
+        }
+        return false;
+    }
+
     private static function validateBitCases(BackedEnum|string $enum): void
     {
+        if (self::isModifier($enum)) {
+            return;
+        }
+
         foreach ($enum::cases() as $case) {
-            self::validateBitCase($case);
+            if (self::validateBitCase($case)) {
+                self::triggerInvalidBitCase($case::class, $case);
+            }
         }
     }
 
-    private static function validateBitCase(BackedEnum $case): void
+    private static function validateBitCase(BackedEnum $case): bool
     {
-        if (self::isInt($case->value) && !self::isBit($case->value)) {
-            self::triggerInvalidBitCase($case::class, $case);
-        }
+        return self::isInt($case->value) && !self::isBit($case->value);
     }
 
     public static function getBit(UnitEnum $enum): int
@@ -88,7 +112,7 @@ final class EnumBitmasks
         $value = EnumValue::value($enum);
 
         if (self::ignoreIntValues($enum::class)
-            || !filter_var($value, FILTER_VALIDATE_INT)
+            || !is_int($value)
         ) {
             return pow(
                 2,
@@ -96,7 +120,7 @@ final class EnumBitmasks
             );
         }
 
-        return (int)$value;
+        return $value;
     }
 
     public static function getMask(string $class, UnitEnum|string|int ...$enums): Bitmask
@@ -242,8 +266,9 @@ final class EnumBitmasks
 
     protected static function triggerInvalidBitCase(UnitEnum|string $enum, UnitEnum $case): never
     {
+        $enum = is_string($enum) ? $enum : $enum::class;
         trigger_error(
-            sprintf('%s::%s is not a valid bit value', $enum::class ?? $enum, $case->name),
+            sprintf('%s::%s is not a valid bit value', $enum, $case->name),
             E_USER_ERROR
         );
     }

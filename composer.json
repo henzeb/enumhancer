@@ -72,6 +72,7 @@
     "require-dev": {
         "composer/composer": "^2.5",
         "henzeb/enumhancer-ide-helper": "main-dev",
+        "infection/infection": "^0.27.0",
         "mockery/mockery": "^1.5",
         "nunomaduro/larastan": "^2.3",
         "orchestra/testbench": "^v7.18|^8.0",
@@ -98,7 +99,10 @@
         "test-dox": "vendor/bin/phpunit --testdox"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     },
     "extra": {
         "laravel": {

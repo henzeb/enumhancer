@@ -45,6 +45,35 @@ Note: when the flag `BIT_VALUES` is set, each case must have a valid bit set.
 For example: `7` would throw a fatal error as this consists of the bits `1` `2`
 and `4`.
 
+### Modifiers
+
+Sometimes, you want to use your enum as a modifier where
+a combination might result in another case. This is not
+possible by default, so you need to enable the
+`BIT_MODIFIER` flag
+
+````php
+enum Permission: int
+{
+    use Henzeb\Enumhancer\Concerns\Bitmasks;
+
+    private const BIT_VALUES = true;
+    
+    private const BIT_MODIFIER = true;
+
+    case Nothing = 0;
+    case Read = 1;
+    case Write = 2;
+    case ReadAndWrite = 3;
+}
+
+Permission::mask(
+    Permission::Read, 
+    Permission::Write
+)->cases(); // returns [Permission::ReadWrite] 
+
+````
+
 ## Bits
 
 When you want to use the bits in a dropdown, you can easily use `bits`.
@@ -67,8 +96,8 @@ if [Mappers](mappers.md) are being used, any value will be mapped.
 
 ### mask
 
- To get a mask, simply call the static method on your enum. just like with
- [Comparison](comparison.md), you can add as many enum or values that represent enums
+To get a mask, simply call the static method on your enum. just like with
+[Comparison](comparison.md), you can add as many enum or values that represent enums
 as you need.
 
 ````php
