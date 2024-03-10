@@ -67,8 +67,9 @@ trait CastsBasicEnumerations
             && 'toArray' === (debug_backtrace(2)[5]['function'] ?? null);
     }
 
-    protected function getStorableEnumValue($value)
+    protected function getStorableEnumValue($expectedEnumValue, $value = null)
     {
+        $value ??= $expectedEnumValue;
         if ($value instanceof UnitEnum) {
             $keepEnumCase = property_exists($this, 'keepEnumCase') ? $this->keepEnumCase : true;
 

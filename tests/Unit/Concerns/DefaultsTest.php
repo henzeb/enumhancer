@@ -22,7 +22,7 @@ use UnitEnum;
 
 class DefaultsTest extends TestCase
 {
-    public function providesCases(): array
+    public static function providesCases(): array
     {
         return [
             [DefaultsEnum::class, DefaultsEnum::Default],
@@ -45,7 +45,7 @@ class DefaultsTest extends TestCase
         ];
     }
 
-    public function providesAssertionTestcases(): array
+    public static function providesAssertionTestcases(): array
     {
         return [
             [DefaultsEnum::Default, true],

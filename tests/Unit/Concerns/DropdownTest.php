@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class DropdownTest extends TestCase
 {
-    public static function dropdownTestcases(): array
+    public static function providesDropdownTestcases(): array
     {
         return [
             [
@@ -56,11 +56,6 @@ class DropdownTest extends TestCase
                 true
             ]
         ];
-    }
-
-    public function providesDropdownTestcases(): array
-    {
-        return self::dropdownTestcases();
     }
 
     /**

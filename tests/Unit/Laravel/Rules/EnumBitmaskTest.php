@@ -37,7 +37,7 @@ class EnumBitmaskTest extends TestCase
         Rule::enumBitmask(self::class);
     }
 
-    public function providesTestCases(): array
+    public static function providesTestCases(): array
     {
         return [
             'zero-bit-success' => [true, 0],
@@ -65,7 +65,7 @@ class EnumBitmaskTest extends TestCase
         $this->assertEquals($expected, Rule::enumBitmask(BitmasksIntEnum::class)->passes('test', $value));
     }
 
-    public function providesSingleBitTestCases(): array
+    public static function providesSingleBitTestCases(): array
     {
         return [
             'zero-bit-success' => [true, 0],

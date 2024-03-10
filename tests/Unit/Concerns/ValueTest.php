@@ -2,16 +2,16 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Value\ValueIntBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Value\ValueStrictEnum;
 use PHPUnit\Framework\TestCase;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Value\ValueIntBackedEnum;
 
 
 class ValueTest extends TestCase
 {
-    public function providesEnumsForValue()
+    public static function providesEnumsForValue(): array
     {
         return [
             'backed-1' => [EnhancedBackedEnum::ENUM, EnhancedBackedEnum::ENUM->value],
@@ -22,7 +22,7 @@ class ValueTest extends TestCase
         ];
     }
 
-    public function providesEnumsForKey()
+    public static function providesEnumsForKey(): array
     {
         return [
             'string-backed-1' => [EnhancedBackedEnum::ENUM, 0],
@@ -52,7 +52,7 @@ class ValueTest extends TestCase
 
     /**
      * @param $enum
-     * @param string $expected
+     * @param int $expected
      * @return void
      *
      * @dataProvider providesEnumsForKey

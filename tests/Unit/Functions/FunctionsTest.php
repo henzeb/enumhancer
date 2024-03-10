@@ -2,27 +2,27 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Functions;
 
-use UnitEnum;
-use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumProxy;
 use Henzeb\Enumhancer\Helpers\EnumValue;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use PHPUnit\Framework\TestCase;
+use UnitEnum;
 use function Henzeb\Enumhancer\Functions\b;
-use function Henzeb\Enumhancer\Functions\n;
-use function Henzeb\Enumhancer\Functions\v;
-use function Henzeb\Enumhancer\Functions\bl;
-use function Henzeb\Enumhancer\Functions\vl;
-use function Henzeb\Enumhancer\Functions\name;
-use function Henzeb\Enumhancer\Functions\valueLowercase;
-use function Henzeb\Enumhancer\Functions\backingLowercase;
 use function Henzeb\Enumhancer\Functions\backing;
+use function Henzeb\Enumhancer\Functions\backingLowercase;
+use function Henzeb\Enumhancer\Functions\bl;
+use function Henzeb\Enumhancer\Functions\n;
+use function Henzeb\Enumhancer\Functions\name;
+use function Henzeb\Enumhancer\Functions\v;
 use function Henzeb\Enumhancer\Functions\value as EnumValue;
+use function Henzeb\Enumhancer\Functions\valueLowercase;
+use function Henzeb\Enumhancer\Functions\vl;
 
 
 class FunctionsTest extends TestCase
 {
-    function providesBackedFunctionTestcases(): array
+    public static function providesBackedFunctionTestcases(): array
     {
         return [
             'b-unit' => ['Henzeb\Enumhancer\Functions\b', EnhancedUnitEnum::THIRD_ENUM],
@@ -31,7 +31,11 @@ class FunctionsTest extends TestCase
             'backing-backed' => ['Henzeb\Enumhancer\Functions\backing', EnhancedBackedEnum::ENUM],
             'bl-unit' => ['Henzeb\Enumhancer\Functions\bl', EnhancedUnitEnum::THIRD_ENUM, false],
             'bl-backed' => ['Henzeb\Enumhancer\Functions\bl', EnhancedBackedEnum::ENUM],
-            'backing-lower-unit' => ['Henzeb\Enumhancer\Functions\backingLowercase', EnhancedUnitEnum::THIRD_ENUM, false],
+            'backing-lower-unit' => [
+                'Henzeb\Enumhancer\Functions\backingLowercase',
+                EnhancedUnitEnum::THIRD_ENUM,
+                false
+            ],
             'backing-lower-backed' => ['Henzeb\Enumhancer\Functions\backingLowercase', EnhancedBackedEnum::ENUM],
         ];
     }
@@ -71,7 +75,7 @@ class FunctionsTest extends TestCase
     }
 
 
-    function providesNameFunctionTestcases(): array
+    public static function providesNameFunctionTestcases(): array
     {
         return [
             'n-unit' => ['Henzeb\Enumhancer\Functions\n', EnhancedUnitEnum::THIRD_ENUM],
@@ -107,7 +111,7 @@ class FunctionsTest extends TestCase
         );
     }
 
-    function providesValueFunctionTestcases(): array
+    public static function providesValueFunctionTestcases(): array
     {
         return [
             'v-unit' => ['Henzeb\Enumhancer\Functions\v', EnhancedUnitEnum::THIRD_ENUM],

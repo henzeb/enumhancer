@@ -24,7 +24,7 @@ class EnumTransitionTest extends TestCase
         ];
     }
 
-    protected function providesFailingValidationTestCases(): array
+    public static function providesFailingValidationTestCases(): array
     {
         return [
             'basic-open-move' => [false, StateElevatorEnum::Open, 'Move'],
@@ -54,7 +54,7 @@ class EnumTransitionTest extends TestCase
         ];
     }
 
-    public function providesAllowedValidationCases(): array
+    public static function providesAllowedValidationCases(): array
     {
         return [
             'basic-open-close' => [true, StateElevatorEnum::Open, 'close'],
@@ -164,7 +164,7 @@ class EnumTransitionTest extends TestCase
             )->errors()->get('state')[0]);
     }
 
-    public function providesTranslationTestcases(): array
+    public static function providesTranslationTestcases(): array
     {
         return [
             ['Transition from `:from` to `:to` is not allowed', 'Transition from `Move` to `Open` is not allowed'],

@@ -3,26 +3,26 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
 
 
+use Henzeb\Enumhancer\Contracts\TransitionHook;
+use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
+use Henzeb\Enumhancer\Helpers\EnumValue;
+use Henzeb\Enumhancer\Laravel\Concerns\CastsStatefulEnumerations;
+use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsLowerCaseModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
+use Illuminate\Database\Eloquent\Model;
+use Orchestra\Testbench\TestCase;
 use UnitEnum;
 use ValueError;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Database\Eloquent\Model;
-use Henzeb\Enumhancer\Helpers\EnumValue;
-use Henzeb\Enumhancer\Contracts\TransitionHook;
-use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
-use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
-use Henzeb\Enumhancer\Laravel\Concerns\CastsStatefulEnumerations;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsModel;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsStatefulEnumsLowerCaseModel;
 
 class CastsStatefulEnumerationsTest extends TestCase
 {
-    public function providesEnums()
+    public static function providesEnums(): array
     {
         return [
             [SubsetUnitEnum::ENUM, 'unitEnum'],

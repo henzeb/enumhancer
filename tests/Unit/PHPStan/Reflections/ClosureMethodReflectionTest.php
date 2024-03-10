@@ -24,7 +24,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
         $this->closureFactory = self::getContainer()->getByType(ClosureTypeFactory::class);
     }
 
-    public function providesTestcases(): array
+    public static function providesTestcases(): array
     {
         return [
             [

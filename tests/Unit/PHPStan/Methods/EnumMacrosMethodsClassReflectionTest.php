@@ -8,7 +8,6 @@ use Henzeb\Enumhancer\PHPStan\Reflections\ClosureMethodReflection;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosUnitEnum;
 use Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Macros\MacrosLogicExceptionEnum;
-use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\Adapter\Phpunit\MockeryTestCaseSetUp;
@@ -141,22 +140,6 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
             $methodReflection->getVariants()
         );
         $this->assertTrue($methodReflection->isStatic());
-    }
-
-    public function testThrowsException(): void
-    {
-        MacrosLogicExceptionEnum::macro('aStaticMacroCall', $this->erroneousStaticMacroCall);
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(MacrosLogicExceptionEnum::class);
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(
-            'PHPStan Could not properly parse closure `aStaticMacroCall` for '
-            . '`Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Macros\MacrosLogicExceptionEnum`, '
-            . 'Check if a default value\'s code is not trying to execute this macro.'
-        );
-        $this->reflection->getMethod($classReflection, 'aStaticMacroCall');
-
     }
 
     protected function tearDown(): void

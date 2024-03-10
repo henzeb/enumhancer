@@ -30,7 +30,7 @@ class IsEnumTest extends TestCase
         Rule::isEnum(self::class);
     }
 
-    protected function providesCasesForPasses(): array
+    public static function providesCasesForPasses(): array
     {
         return [
             'simple-passes-1' => [true, SimpleEnum::class, 'open'],

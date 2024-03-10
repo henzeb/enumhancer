@@ -11,13 +11,12 @@ use Henzeb\Enumhancer\Tests\Fixtures\CustomReportingEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\NotReportingEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\ReporterTestEnum;
-
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
 class ReportersTest extends TestCase
 {
-    public function providesEnumsToTestWith(): array
+    public static function providesEnumsToTestWith(): array
     {
         return [
             'just-reporters' => [ReporterTestEnum::class],

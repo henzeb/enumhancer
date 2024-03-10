@@ -3,19 +3,19 @@
 namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
 
 
-use UnitEnum;
-use ValueError;
-use Orchestra\Testbench\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
+use Orchestra\Testbench\TestCase;
+use UnitEnum;
+use ValueError;
 
 class CastsBasicEnumerationsTest extends TestCase
 {
-    public function providesEnums()
+    public static function providesEnums(): array
     {
         return [
             [SubsetUnitEnum::ENUM, 'unitEnum'],

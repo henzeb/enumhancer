@@ -2,16 +2,15 @@
 
 namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
-use Mockery;
-use UnitEnum;
-use Mockery\Mock;
-use PHPUnit\Framework\TestCase;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorDisableTransitionEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\Mock;
+use UnitEnum;
 
 class StateTest extends MockeryTestCase
 {
@@ -53,7 +52,7 @@ class StateTest extends MockeryTestCase
         );
     }
 
-    public function providesNotAllowedTransitionTestcases(): array
+    public static function providesNotAllowedTransitionTestcases(): array
     {
         return [
             'basic-open-move' => [StateElevatorEnum::Open, 'Move'],
@@ -133,12 +132,13 @@ class StateTest extends MockeryTestCase
         $this->assertTrue(StateElevatorDisableTransitionEnum::Close->isTransitionAllowed('move'));
     }
 
-    public function testTransitionsShouldBeFullyPropagatedWhenUsingCustomTransitions() {
+    public function testTransitionsShouldBeFullyPropagatedWhenUsingCustomTransitions()
+    {
 
         $this->assertEquals(
             [
-                'Open'=> null,
-                'Close'=> StateElevatorDisableTransitionEnum::Move,
+                'Open' => null,
+                'Close' => StateElevatorDisableTransitionEnum::Move,
                 'Move' => StateElevatorDisableTransitionEnum::Stop,
             ],
             StateElevatorDisableTransitionEnum::transitions()

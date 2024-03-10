@@ -120,7 +120,7 @@ class EnumSubsetMethodsTest extends TestCase
         $this->assertEquals(EnhancedUnitEnum::cases(), $enums);
     }
 
-    public function providesTestCasesForReturningSubsetOfCases(): array
+    public static function providesTestCasesForReturningSubsetOfCases(): array
     {
         return [
             [[EnhancedUnitEnum::ENUM]],
@@ -140,9 +140,9 @@ class EnumSubsetMethodsTest extends TestCase
         );
     }
 
-    public function providesDropdownTestcases(): array
+    public static function providesDropdownTestcases(): array
     {
-        return DropdownTest::dropdownTestcases();
+        return DropdownTest::providesDropdownTestcases();
     }
 
     /**

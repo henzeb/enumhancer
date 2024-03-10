@@ -2,6 +2,8 @@
 .php_cs
 .php_cs.cache
 .phpunit.result.cache
+.phpunit.cache/
+phpunit.xml.bak
 build
 coverage
 coverage.xml

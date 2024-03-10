@@ -17,7 +17,7 @@ class EnumPropertiesTest extends TestCase
 {
     use ClearsEnumProperties;
 
-    public function providesTestcasesForStoreProperty(): array
+    public static function providesTestcasesForStoreProperty(): array
     {
         return [
             'boolean' => ['property', true, true, ConstructableUnitEnum::class],
@@ -63,7 +63,7 @@ class EnumPropertiesTest extends TestCase
         EnumProperties::clear(stdClass::class);
     }
 
-    public function providesTestcasesForStorePropertyGlobally(): array
+    public static function providesTestcasesForStorePropertyGlobally(): array
     {
         return [
             'boolean' => ['property', true, true],
@@ -230,7 +230,7 @@ class EnumPropertiesTest extends TestCase
         $this->assertEquals('something else', EnumProperties::get(ConstructableUnitEnum::class, 'test'));
     }
 
-    public function providesReservedWords(): array
+    public static function providesReservedWords(): array
     {
         return [
             ['@default_configure', 'defaults'],
