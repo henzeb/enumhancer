@@ -138,7 +138,6 @@ class CastsStatefulEnumerationsTest extends TestCase
 
     public function testShouldAllowTransition()
     {
-        $this->expectException(IllegalEnumTransitionException::class);
         $model = new CastsStatefulEnumsModel();
 
         $model->stringBackedEnum = StringBackedGetEnum::TEST;

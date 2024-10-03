@@ -4,6 +4,7 @@ namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
 
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\State\PostStatus;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorComplexEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorDisableTransitionEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
@@ -312,5 +313,10 @@ class StateTest extends MockeryTestCase
         $this->expectException(IllegalEnumTransitionException::class);
 
         StateElevatorEnum::Open->toMove();
+    }
+
+    public function testStatesWithBackedEnum(): void
+    {
+        $this->assertEquals(PostStatus::DRAFT->to(PostStatus::READY), PostStatus::READY);
     }
 }
