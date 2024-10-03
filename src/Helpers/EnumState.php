@@ -50,6 +50,7 @@ final class EnumState
         );
 
         $transitions = $transitions[$currentTransition->name]
+            ?? $transitions[strtolower($currentTransition->name)]
             ?? $transitions[EnumValue::value($currentTransition)]
             ?? [];
 
