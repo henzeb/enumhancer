@@ -10,7 +10,7 @@ use UnitEnum;
  */
 final class EnumValue
 {
-    public static function value(UnitEnum $enum, bool $keepCase = null): string|int
+    public static function value(UnitEnum $enum, ?bool $keepCase = null): string|int
     {
         if (is_null($keepCase)) {
             $keepCase = self::isStrict($enum);

@@ -53,7 +53,7 @@ class IsEnumTest extends TestCase
      *
      * @dataProvider providesCasesForPasses
      */
-    public function testPasses(bool $expected, string $type, string $value, array $mapper = null): void
+    public function testPasses(bool $expected, string $type, string $value, ?array $mapper = null): void
     {
         $this->assertEquals($expected, Rule::isEnum($type, $mapper)->passes('test', $value));
     }

@@ -24,7 +24,7 @@ abstract class Mapper
      */
     abstract protected function mappable(): array;
 
-    public function makeFlipped(string $prefix = null): self
+    public function makeFlipped(?string $prefix = null): self
     {
         $this->flip = true;
         $this->flipped = null;
@@ -33,7 +33,7 @@ abstract class Mapper
         return $this;
     }
 
-    private function flipMethod(string $prefix = null): self
+    private function flipMethod(?string $prefix = null): self
     {
         return (clone $this)->makeFlipped($prefix);
     }
@@ -59,7 +59,7 @@ abstract class Mapper
         return $value;
     }
 
-    private function getMapWithPrefix(string $prefix = null): array
+    private function getMapWithPrefix(?string $prefix = null): array
     {
         /**
          * @var array $mappable
@@ -68,7 +68,7 @@ abstract class Mapper
         return array_change_key_case($mappable[$prefix] ?? []);
     }
 
-    private function getMap(string $prefix = null): array
+    private function getMap(?string $prefix = null): array
     {
         if ($this->flip) {
             return $this->flipped ?? $this->flipped = $this->flipMappable($prefix);
@@ -77,7 +77,7 @@ abstract class Mapper
         return array_change_key_case($this->mappable());
     }
 
-    private function mapMethod(string|UnitEnum $key, string $prefix = null): string|int|null
+    private function mapMethod(string|UnitEnum $key, ?string $prefix = null): string|int|null
     {
         $key = $this->parseValue($key);
 
@@ -93,12 +93,12 @@ abstract class Mapper
         );
     }
 
-    private function definedMethod(string|UnitEnum $key, string $prefix = null): bool
+    private function definedMethod(string|UnitEnum $key, ?string $prefix = null): bool
     {
         return (bool)$this->map($key, $prefix);
     }
 
-    private function keysMethod(string $prefix = null): array
+    private function keysMethod(?string $prefix = null): array
     {
         if (!$prefix || $this->flip) {
             $mappable = $this->getMap($prefix);
@@ -123,7 +123,7 @@ abstract class Mapper
         );
     }
 
-    private function flipMappable(string $prefix = null): array
+    private function flipMappable(?string $prefix = null): array
     {
         return array_change_key_case(
             array_flip(
@@ -153,16 +153,13 @@ abstract class Mapper
         return self::newInstance()->$name(...$arguments);
     }
 
-    private function triggerError(string $name): bool
+    private function triggerError(string $name): never
     {
-        return trigger_error(
-            sprintf(
-                'Uncaught Error: Call to undefined method %s::%s()',
-                static::class,
-                $name
-            ),
-            E_USER_ERROR
-        );
+        throw new \Error(sprintf(
+            'Uncaught Error: Call to undefined method %s::%s()',
+            static::class,
+            $name
+        ));
     }
 
     public static function newInstance(mixed ...$parameters): static

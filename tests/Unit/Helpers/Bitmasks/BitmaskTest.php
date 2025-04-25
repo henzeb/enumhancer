@@ -26,7 +26,7 @@ class BitmaskTest extends TestCase
 
     public function testShouldFailWithInvalidBitmaskEnum(): void
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         new Bitmask(BitmasksIncorrectIntEnum::class, 1);
     }
 

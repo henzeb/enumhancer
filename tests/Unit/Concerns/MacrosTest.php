@@ -105,7 +105,7 @@ class MacrosTest extends TestCase
 
         $this->assertTrue(MacrosUnitEnum::Diamonds->test());
 
-        $this->expectError();
+        $this->expectException(\Error::class);
 
         $this->assertTrue(MacrosUnitEnum::test());
 

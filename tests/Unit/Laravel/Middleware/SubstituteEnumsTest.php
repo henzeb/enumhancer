@@ -62,7 +62,7 @@ class SubstituteEnumsTest extends TestCase
         );
 
         $router->get('/optional/{status?}',
-            function (SimpleEnum $status = null) {
+            function (?SimpleEnum $status = null) {
                 return $status?->name;
             }
         );

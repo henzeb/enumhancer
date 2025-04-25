@@ -35,7 +35,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'anotherMethod',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (?SimpleEnum $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,
@@ -43,7 +43,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'yetAnotherMethod',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (?SimpleEnum $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,
@@ -51,7 +51,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'callMeMaybe',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (?SimpleEnum $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,

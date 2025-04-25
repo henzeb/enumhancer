@@ -84,7 +84,7 @@ class EnumPropertiesTest extends TestCase
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        ?string $expectedStoreIn = null
     ) {
         EnumProperties::store($storeIn, $key, $value);
 
@@ -104,7 +104,7 @@ class EnumPropertiesTest extends TestCase
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        ?string $expectedStoreIn = null
     ) {
         EnumProperties::storeOnce($storeIn, $key, $value);
 
@@ -129,7 +129,7 @@ class EnumPropertiesTest extends TestCase
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        ?string $expectedStoreIn = null
     ) {
         EnumProperties::storeOnce($storeIn, $key, $value);
 

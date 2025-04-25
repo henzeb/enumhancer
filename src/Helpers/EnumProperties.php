@@ -92,7 +92,7 @@ final class EnumProperties
         return self::$global[$property] = $value;
     }
 
-    public static function clear(string $class, string $property = null): void
+    public static function clear(string $class, ?string $property = null): void
     {
         EnumCheck::check($class);
 
@@ -105,7 +105,7 @@ final class EnumProperties
         }
     }
 
-    public static function clearGlobal(string $property = null): void
+    public static function clearGlobal(?string $property = null): void
     {
         if (!empty($property)) {
             unset(self::$global[$property]);

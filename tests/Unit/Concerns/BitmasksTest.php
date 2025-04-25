@@ -115,31 +115,31 @@ class BitmasksTest extends TestCase
 
     public function testBitShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         BitmasksIncorrectIntEnum::Read->bit();
     }
 
     public function testBitsShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         BitmasksIncorrectIntEnum::bits();
     }
 
     public function testShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         BitmasksIncorrectIntEnum::mask();
     }
 
     public function testFromMaskShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         BitmasksIncorrectIntEnum::fromMask(5);
     }
 
     public function testTryMaskShouldThrowErrorWhenIncorrectValues()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(\Error::class);
         BitmasksIncorrectIntEnum::tryMask(5);
     }
 

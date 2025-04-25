@@ -72,7 +72,7 @@
     "require-dev": {
         "composer/composer": "^2.5",
         "henzeb/enumhancer-ide-helper": "main-dev",
-        "infection/infection": "^0.27.0",
+        "infection/infection": "^0.29.14",
         "mockery/mockery": "^1.5",
         "nunomaduro/larastan": "^2.3",
         "orchestra/testbench": "^v7.18|^8.0|^9",

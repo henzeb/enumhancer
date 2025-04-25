@@ -267,10 +267,7 @@ final class EnumBitmasks
     protected static function triggerInvalidBitCase(UnitEnum|string $enum, UnitEnum $case): never
     {
         $enum = is_string($enum) ? $enum : $enum::class;
-        trigger_error(
-            sprintf('%s::%s is not a valid bit value', $enum, $case->name),
-            E_USER_ERROR
-        );
+        throw new \Error(sprintf('%s::%s is not a valid bit value', $enum, $case->name));
     }
 
     protected static function isInt(mixed $value): bool

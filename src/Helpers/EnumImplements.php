@@ -88,10 +88,7 @@ final class EnumImplements
             return self::implements($arguments[0], $implements);
         }
 
-        trigger_error(
-            sprintf('Call to undefined method %s::%s()', self::class, $name),
-            E_USER_ERROR
-        );
+        throw new \Error(sprintf('Call to undefined method %s::%s()', self::class, $name));
     }
 
     public static function implements(string $class, string $implements): bool

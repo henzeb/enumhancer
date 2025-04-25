@@ -418,14 +418,14 @@ class MapperTest extends TestCase
 
     public function testShouldFailWhenMethodNotexists()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Error::class);
         $this->getMapper([])->DoesNotExist();
 
     }
 
     public function testShouldFailWhenStaticMethodNotexists()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Error::class);
         $this->getMapper([])::DoesAlsoNotExist();
     }
 

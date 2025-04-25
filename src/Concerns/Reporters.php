@@ -13,12 +13,12 @@ trait Reporters
         return EnumReporter::get();
     }
 
-    public static function getOrReport(int|string|null $key, BackedEnum $context = null): ?self
+    public static function getOrReport(int|string|null $key, ?BackedEnum $context = null): ?self
     {
         return EnumReporter::getOrReport(self::class, $key, $context, self::reporter());
     }
 
-    public static function getOrReportArray(iterable $keys, BackedEnum $context = null): array
+    public static function getOrReportArray(iterable $keys, ?BackedEnum $context = null): array
     {
         return EnumReporter::getOrReportArray(self::class, $keys, $context, self::reporter());
     }

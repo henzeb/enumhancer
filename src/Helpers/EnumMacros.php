@@ -155,13 +155,10 @@ final class EnumMacros
 
     private static function triggerError(string $enum, string $name): never
     {
-        trigger_error(
-            sprintf(
-                'Uncaught Error: Non-static method %s::%s() cannot be called statically',
-                $enum,
-                $name
-            ),
-            E_USER_ERROR
-        );
+        throw new \Error(sprintf(
+            'Uncaught Error: Non-static method %s::%s() cannot be called statically',
+            $enum,
+            $name
+        ));
     }
 }

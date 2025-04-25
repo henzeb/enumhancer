@@ -58,7 +58,7 @@ trait Mappers
 
     public static function getOrReport(
         int|string|UnitEnum|null $value,
-        BackedEnum $context = null,
+        ?BackedEnum $context = null,
         Mapper|string|array|null ...$mapper
     ): ?self {
         return EnumReporter::getOrReport(
@@ -71,7 +71,7 @@ trait Mappers
 
     public static function getOrReportArray(
         iterable $values,
-        BackedEnum $context = null,
+        ?BackedEnum $context = null,
         Mapper|string|array|null $mapper = null
     ): array {
         return EnumReporter::getOrReportArray(

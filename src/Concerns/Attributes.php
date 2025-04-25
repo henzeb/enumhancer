@@ -11,7 +11,7 @@ trait Attributes
         return EnumAttributes::fromCase(self::class, $this, $attributeClass);
     }
 
-    protected function getAttributes(string $attributeClass = null): array
+    protected function getAttributes(?string $attributeClass = null): array
     {
         return EnumAttributes::fromCaseArray(self::class, $this, $attributeClass);
     }
@@ -21,7 +21,7 @@ trait Attributes
         return EnumAttributes::fromEnum(self::class, $attributeClass);
     }
 
-    protected static function getEnumAttributes(string $attributeClass = null): array
+    protected static function getEnumAttributes(?string $attributeClass = null): array
     {
         return EnumAttributes::fromEnumArray(self::class, $attributeClass);
     }
