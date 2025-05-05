@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownStringEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownStringLabeledEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Dropdown\DropdownLabeledUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Dropdown\DropdownUnitEnum;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class DropdownTest extends TestCase
@@ -63,8 +64,8 @@ class DropdownTest extends TestCase
      * @param array $expected
      * @param bool $keepCase
      * @return void
-     * @dataProvider providesDropdownTestcases
      */
+    #[DataProvider("providesDropdownTestcases")]
     public function testDropdown(string $enum, array $expected, bool $keepCase = false)
     {
         /**

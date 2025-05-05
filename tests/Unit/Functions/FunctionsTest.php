@@ -6,6 +6,7 @@ use Henzeb\Enumhancer\Helpers\EnumProxy;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use UnitEnum;
 use function Henzeb\Enumhancer\Functions\b;
@@ -40,10 +41,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     * @dataProvider providesBackedFunctionTestcases
-     */
+    #[DataProvider("providesBackedFunctionTestcases")]
     public function testShouldReturnEnumProxy(string $method, ?UnitEnum $enum, bool $keepValueCase = true)
     {
         $proxy = $method($enum, $keepValueCase);
@@ -85,13 +83,7 @@ class FunctionsTest extends TestCase
         ];
     }
 
-    /**
-     * @param string $method
-     * @param UnitEnum $enum
-     * @return void
-     *
-     * @dataProvider providesNameFunctionTestcases
-     */
+    #[DataProvider("providesNameFunctionTestcases")]
     public function testNameShouldReturnName(string $method, UnitEnum $enum): void
     {
         $this->assertEquals(
@@ -124,15 +116,8 @@ class FunctionsTest extends TestCase
             'value-lower-backed' => ['Henzeb\Enumhancer\Functions\valueLowercase', EnhancedBackedEnum::ENUM, false],
         ];
     }
-
-    /**
-     * @param string $method
-     * @param UnitEnum $enum
-     * @param bool $keepValueCase
-     * @return void
-     *
-     * @dataProvider providesValueFunctionTestcases
-     */
+    
+    #[DataProvider("providesValueFunctionTestcases")]
     public function testValueShouldReturnValue(string $method, UnitEnum $enum, bool $keepValueCase = true): void
     {
         $this->assertEquals(

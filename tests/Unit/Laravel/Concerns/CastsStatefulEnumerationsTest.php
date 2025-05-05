@@ -17,6 +17,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Illuminate\Database\Eloquent\Model;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitEnum;
 use ValueError;
 
@@ -35,11 +36,7 @@ class CastsStatefulEnumerationsTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesEnums
-     */
+    #[DataProvider("providesEnums")]
     public function testShouldCastCorrectlyFromString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
         $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
@@ -53,11 +50,7 @@ class CastsStatefulEnumerationsTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesEnums
-     */
+    #[DataProvider("providesEnums")]
     public function testShouldCastCorrectlyToString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
         $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();

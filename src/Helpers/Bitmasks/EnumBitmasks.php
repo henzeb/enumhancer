@@ -3,6 +3,7 @@
 namespace Henzeb\Enumhancer\Helpers\Bitmasks;
 
 use BackedEnum;
+use ErrorException;
 use Henzeb\Enumhancer\Exceptions\InvalidBitmaskEnum;
 use Henzeb\Enumhancer\Helpers\EnumCheck;
 use Henzeb\Enumhancer\Helpers\EnumDefaults;
@@ -10,6 +11,7 @@ use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Helpers\EnumLabels;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use ReflectionClass;
+use TypeError;
 use UnitEnum;
 use function is_object;
 use const E_USER_ERROR;
@@ -267,7 +269,7 @@ final class EnumBitmasks
     protected static function triggerInvalidBitCase(UnitEnum|string $enum, UnitEnum $case): never
     {
         $enum = is_string($enum) ? $enum : $enum::class;
-        trigger_error(
+        throw new TypeError(
             sprintf('%s::%s is not a valid bit value', $enum, $case->name),
             E_USER_ERROR
         );
@@ -280,7 +282,7 @@ final class EnumBitmasks
 
     public static function triggerNotImplementingBitmasks(string $enum): never
     {
-        trigger_error(
+        throw new ErrorException(
             sprintf('`%s` is not implementing `Bitmasks`', $enum),
             E_USER_ERROR
         );

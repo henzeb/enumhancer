@@ -72,12 +72,11 @@
     "require-dev": {
         "composer/composer": "^2.5",
         "henzeb/enumhancer-ide-helper": "main-dev",
-        "infection/infection": "^0.27.0",
+        "larastan/larastan": "^2.11",
         "mockery/mockery": "^1.5",
-        "nunomaduro/larastan": "^2.3",
         "orchestra/testbench": "^v7.18|^8.0|^9",
-        "phpstan/phpstan": "^1.9",
-        "phpunit/phpunit": "^9.5.27|^10"
+        "phpstan/phpstan": "^1.9|^2",
+        "phpunit/phpunit": "^10|^11"
     },
     "autoload": {
         "files": [

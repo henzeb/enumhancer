@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Illuminate\Validation\Rule;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class EnumBitmaskTest extends TestCase
@@ -53,13 +54,7 @@ class EnumBitmaskTest extends TestCase
         ];
     }
 
-    /**
-     * @param bool $expected
-     * @param mixed $value
-     * @return void
-     *
-     * @dataProvider providesTestCases
-     */
+    #[DataProvider("providesTestCases")]
     public function testPasses(bool $expected, mixed $value)
     {
         $this->assertEquals($expected, Rule::enumBitmask(BitmasksIntEnum::class)->passes('test', $value));
@@ -79,14 +74,8 @@ class EnumBitmaskTest extends TestCase
             'multiple-bits-fail' => [false, 24],
         ];
     }
-
-    /**
-     * @param bool $expected
-     * @param mixed $value
-     * @return void
-     *
-     * @dataProvider providesSingleBitTestCases
-     */
+    
+    #[DataProvider("providesSingleBitTestCases")]
     public function testPassesSingleBit(bool $expected, mixed $value)
     {
         $this->assertEquals($expected, Rule::enumBitmask(BitmasksIntEnum::class, true)->passes('test', $value));

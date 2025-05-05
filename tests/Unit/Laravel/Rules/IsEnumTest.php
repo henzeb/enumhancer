@@ -8,6 +8,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Illuminate\Validation\Rule;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use TypeError;
 
 class IsEnumTest extends TestCase
@@ -50,10 +51,9 @@ class IsEnumTest extends TestCase
      * @param string $value
      * @param array|null $mapper
      * @return void
-     *
-     * @dataProvider providesCasesForPasses
      */
-    public function testPasses(bool $expected, string $type, string $value, array $mapper = null): void
+    #[DataProvider("providesCasesForPasses")]
+    public function testPasses(bool $expected, string $type, string $value, array|null $mapper = null): void
     {
         $this->assertEquals($expected, Rule::isEnum($type, $mapper)->passes('test', $value));
     }

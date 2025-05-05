@@ -10,6 +10,7 @@ use PHPStan\ShouldNotHappenException;
 use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ClosureTypeFactory;
 use PHPStan\Type\Generic\TemplateTypeMap;
+use PHPUnit\Framework\Attributes\DataProvider;
 use function is_bool;
 
 class ClosureMethodReflectionTest extends PHPStanTestCase
@@ -35,7 +36,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'anotherMethod',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (SimpleEnum|null $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,
@@ -43,7 +44,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'yetAnotherMethod',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (SimpleEnum|null $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,
@@ -51,7 +52,7 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
             ],
             [
                 'method' => 'callMeMaybe',
-                'callable' => function (SimpleEnum $enum = null): ?SimpleEnum {
+                'callable' => function (SimpleEnum|null $enum = null): ?SimpleEnum {
                     return $enum;
                 },
                 'isStatic' => false,
@@ -67,9 +68,8 @@ class ClosureMethodReflectionTest extends PHPStanTestCase
      * @param bool|string|null $docComment
      * @return void
      * @throws ShouldNotHappenException
-     *
-     * @dataProvider providesTestcases
      */
+    #[DataProvider("providesTestcases")]
     public function testVariableMethods(
         string $method,
         callable $callable,

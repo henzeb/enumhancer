@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 use TypeError;
@@ -74,17 +75,13 @@ class EnumPropertiesTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesTestcasesForStoreProperty
-     */
+    #[DataProvider("providesTestcasesForStoreProperty")]
     public function testStoreProperty(
         string $key,
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        string|null $expectedStoreIn = null
     ) {
         EnumProperties::store($storeIn, $key, $value);
 
@@ -94,17 +91,13 @@ class EnumPropertiesTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesTestcasesForStoreProperty
-     */
+    #[DataProvider("providesTestcasesForStoreProperty")]
     public function testStorePropertyOnce(
         string $key,
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        string|null $expectedStoreIn = null
     ) {
         EnumProperties::storeOnce($storeIn, $key, $value);
 
@@ -119,17 +112,13 @@ class EnumPropertiesTest extends TestCase
 
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesTestcasesForStoreProperty
-     */
+    #[DataProvider("providesTestcasesForStoreProperty")]
     public function testStorePropertyOnceAndTryStoring(
         string $key,
         mixed $value,
         mixed $expectedValue,
         string $storeIn,
-        string $expectedStoreIn = null
+        string|null $expectedStoreIn = null
     ) {
         EnumProperties::storeOnce($storeIn, $key, $value);
 
@@ -200,9 +189,8 @@ class EnumPropertiesTest extends TestCase
      * @param mixed $value
      * @param mixed $expectedValue
      * @return void
-     *
-     * @dataProvider providesTestcasesForStorePropertyGlobally
      */
+    #[DataProvider("providesTestcasesForStorePropertyGlobally")]
     public function testStoreGlobally(string $key, mixed $value, mixed $expectedValue)
     {
 
@@ -241,29 +229,20 @@ class EnumPropertiesTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     * @dataProvider providesReservedWords
-     */
+    #[DataProvider("providesReservedWords")]
     public function testReservedWordsMapping(string $expected, string $name)
     {
         $this->assertEquals($expected, EnumProperties::reservedWord($name));
     }
 
-    /**
-     * @return void
-     * @dataProvider providesReservedWords
-     */
+    #[DataProvider("providesReservedWords")]
     public function testReservedWordsWhenTryingToStore(string $name)
     {
         $this->expectException(ReservedPropertyNameException::class);
         EnumProperties::store(ConstructableUnitEnum::class, $name, 'test');
     }
 
-    /**
-     * @return void
-     * @dataProvider providesReservedWords
-     */
+    #[DataProvider("providesReservedWords")]
     public function testReservedWordsWhenTryingToStoreOnce(string $name)
     {
         $this->expectException(ReservedPropertyNameException::class);

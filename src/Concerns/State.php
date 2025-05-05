@@ -20,7 +20,7 @@ trait State
      * @return static
      * @throws IllegalEnumTransitionException
      */
-    public function transitionTo(self|string|int $state, TransitionHook $hook = null): static
+    public function transitionTo(self|string|int $state, TransitionHook|null $hook = null): static
     {
         $state = EnumGetters::cast(self::class, $state);
 
@@ -40,12 +40,12 @@ trait State
      * @return static
      * @throws IllegalEnumTransitionException
      */
-    public function to(self|string|int $state, TransitionHook $hook = null): static
+    public function to(self|string|int $state, TransitionHook|null $hook = null): static
     {
         return $this->transitionTo($state, $hook);
     }
 
-    public function tryTo(self|string|int $state, TransitionHook $hook = null): static
+    public function tryTo(self|string|int $state, TransitionHook|null $hook = null): static
     {
         if ($this->isTransitionAllowed($state, $hook)) {
             return $this->transitionTo($state, $hook);
@@ -58,7 +58,7 @@ trait State
      * @param TransitionHook|null $hook
      * @return bool
      */
-    public function isTransitionAllowed(self|string|int $state, TransitionHook $hook = null): bool
+    public function isTransitionAllowed(self|string|int $state, TransitionHook|null $hook = null): bool
     {
         /**
          * @var $this UnitEnum
@@ -72,7 +72,7 @@ trait State
      * @param TransitionHook|null $hook
      * @return static[]
      */
-    public function allowedTransitions(TransitionHook $hook = null): array
+    public function allowedTransitions(TransitionHook|null $hook = null): array
     {
         return EnumState::allowedTransitions(
             $this,

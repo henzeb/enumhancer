@@ -10,6 +10,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use TypeError;
 
@@ -128,10 +129,7 @@ class EnumSubsetMethodsTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     * @dataProvider providesTestCasesForReturningSubsetOfCases
-     */
+    #[DataProvider("providesTestCasesForReturningSubsetOfCases")]
     public function testCasesShouldReturnSubsetOfCases(array $cases)
     {
         $this->assertEquals(
@@ -150,8 +148,8 @@ class EnumSubsetMethodsTest extends TestCase
      * @param array $expected
      * @param bool $keepCase
      * @return void
-     * @dataProvider providesDropdownTestcases
      */
+    #[DataProvider("providesDropdownTestcases")]
     public function testDropdown(string $enum, array $expected, bool $keepCase = false)
     {
         /**

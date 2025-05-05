@@ -23,7 +23,7 @@ final class EnumAttributes
         return null;
     }
 
-    public static function fromCaseArray(string $enumClass, UnitEnum $case, string $attributeClass = null): array
+    public static function fromCaseArray(string $enumClass, UnitEnum $case, string|null $attributeClass = null): array
     {
         EnumCheck::check($case, $enumClass);
 
@@ -50,7 +50,7 @@ final class EnumAttributes
         return null;
     }
 
-    public static function fromEnumArray(string $enumClass, string $attributeClass = null): array
+    public static function fromEnumArray(string $enumClass, string|null $attributeClass = null): array
     {
         EnumCheck::check($enumClass);
 

@@ -2,12 +2,12 @@
 
 namespace Henzeb\Enumhancer\Laravel\Rules;
 
+use ErrorException;
 use Henzeb\Enumhancer\Concerns\State;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Helpers\EnumImplements;
 use Illuminate\Contracts\Validation\Rule;
 use UnitEnum;
-use function trigger_error;
 use const E_USER_ERROR;
 
 class EnumTransition implements Rule
@@ -20,7 +20,7 @@ class EnumTransition implements Rule
         private readonly ?TransitionHook $hook = null
     ) {
         if (!EnumImplements::state($this->currentState::class)) {
-            trigger_error(
+            throw new ErrorException(
                 sprintf('%s does not implement `State`', $this->currentState::class),
                 E_USER_ERROR
             );

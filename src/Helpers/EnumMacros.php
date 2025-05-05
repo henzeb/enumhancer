@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use ErrorException;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionFunction;
@@ -12,7 +13,6 @@ use function array_merge;
 use function is_null;
 use function is_string;
 use function sprintf;
-use function trigger_error;
 use const E_USER_ERROR;
 
 /**
@@ -155,7 +155,7 @@ final class EnumMacros
 
     private static function triggerError(string $enum, string $name): never
     {
-        trigger_error(
+        throw new ErrorException(
             sprintf(
                 'Uncaught Error: Non-static method %s::%s() cannot be called statically',
                 $enum,

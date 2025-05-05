@@ -164,4 +164,10 @@ class BitmasksTest extends TestCase
 
         $this->assertEquals(6, BitmasksCorrectModifierEnum::mask(2, 4)->value());
     }
+
+    protected function tearDown(): void
+    {
+        restore_error_handler();
+        restore_exception_handler();
+    }
 }

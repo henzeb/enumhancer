@@ -2,6 +2,7 @@
 
 namespace Henzeb\Enumhancer\Helpers;
 
+use ErrorException;
 use Henzeb\Enumhancer\Concerns\Configure;
 use Henzeb\Enumhancer\Concerns\Constructor;
 use Henzeb\Enumhancer\Concerns\Enhancers;
@@ -88,7 +89,7 @@ final class EnumImplements
             return self::implements($arguments[0], $implements);
         }
 
-        trigger_error(
+        throw new ErrorException(
             sprintf('Call to undefined method %s::%s()', self::class, $name),
             E_USER_ERROR
         );
