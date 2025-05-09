@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Mockery;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitEnum;
 
 class EnumTransitionTest extends TestCase
@@ -74,10 +75,8 @@ class EnumTransitionTest extends TestCase
      * @param UnitEnum $from
      * @param string $to
      * @return void
-     *
-     * @dataProvider providesFailingValidationTestCases
-     * @dataProvider providesAllowedValidationCases
      */
+    #[DataProvider("providesFailingValidationTestCases"), DataProvider("providesAllowedValidationCases")]
     public function testValidateTransition(bool $expected, UnitEnum $from, string $to)
     {
         $this->assertEquals($expected,
@@ -171,13 +170,8 @@ class EnumTransitionTest extends TestCase
             ['Transition to `:to` from `:from` is not allowed', 'Transition to `Open` from `Move` is not allowed']
         ];
     }
-
-    /**
-     * @param string $message
-     * @param string $expected
-     * @return void
-     * @dataProvider providesTranslationTestcases
-     */
+    
+    #[DataProvider("providesTranslationTestcases")]
     public function testTranslatedValidationMessage(string $message, string $expected)
     {
         $translator = app('translator');

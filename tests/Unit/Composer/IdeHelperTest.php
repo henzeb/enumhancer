@@ -210,6 +210,9 @@ class IdeHelperTest extends MockeryTestCase
          * in a user function where laravel is already loaded.
          */
         IdeHelper::generate($event);
+
+        restore_error_handler();
+        restore_exception_handler();
     }
 
     public function tearDown(): void
@@ -218,5 +221,8 @@ class IdeHelperTest extends MockeryTestCase
             unlink('./bootstrap/app.php');
             rmdir('./bootstrap');
         }
+
+        parent::tearDown();
+
     }
 }

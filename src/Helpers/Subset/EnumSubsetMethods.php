@@ -84,7 +84,7 @@ class EnumSubsetMethods
     /**
      * @return string[]|int[]
      */
-    public function values(bool $keepEnumCase = null): array
+    public function values(bool|null $keepEnumCase = null): array
     {
         return array_map(
             function (mixed $enum) use ($keepEnumCase) {
@@ -98,7 +98,7 @@ class EnumSubsetMethods
      * @param bool|null $keepEnumCase
      * @return array<string|int,string>
      */
-    public function dropdown(bool $keepEnumCase = null): array
+    public function dropdown(bool|null $keepEnumCase = null): array
     {
         return array_replace(
             [],

@@ -16,13 +16,15 @@ class EnumImplementsTest extends TestCase
 
         try {
             EnumImplements::doesNotExist(SimpleEnum::class);
-            restore_error_handler();
+
         } catch (Throwable $e) {
-            restore_error_handler();
+            
             $this->assertEquals(
                 'Call to undefined method Henzeb\Enumhancer\Helpers\EnumImplements::doesNotExist()',
                 $e->getMessage()
             );
+        } finally {
+            restore_error_handler();
         }
     }
 }

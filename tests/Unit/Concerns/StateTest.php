@@ -11,6 +11,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery\Mock;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitEnum;
 
 class StateTest extends MockeryTestCase
@@ -86,9 +87,8 @@ class StateTest extends MockeryTestCase
      * @param StateElevatorEnum|StateElevatorComplexEnum|UnitEnum|string|int $from
      * @param StateElevatorEnum|StateElevatorComplexEnum|string|int $to
      * @return void
-     *
-     * @dataProvider providesNotAllowedTransitionTestcases
      */
+    #[DataProvider("providesNotAllowedTransitionTestcases")]
     public function testIllegalTransitionsThrowException(mixed $from, mixed $to): void
     {
         $this->expectException(IllegalEnumTransitionException::class);
@@ -100,9 +100,8 @@ class StateTest extends MockeryTestCase
      * @param StateElevatorEnum|StateElevatorComplexEnum|UnitEnum|string|int $from
      * @param StateElevatorEnum|StateElevatorComplexEnum|string|int $to
      * @return void
-     *
-     * @dataProvider providesNotAllowedTransitionTestcases
      */
+    #[DataProvider("providesNotAllowedTransitionTestcases")]
     public function testIllegalTransitionsToThrowException(mixed $from, mixed $to): void
     {
         $this->expectException(IllegalEnumTransitionException::class);
@@ -147,9 +146,7 @@ class StateTest extends MockeryTestCase
 
     }
 
-    /**
-     * @dataProvider providesNotAllowedTransitionTestcases
-     */
+    #[DataProvider("providesNotAllowedTransitionTestcases")]
     public function testTransitionsNotAllowed(mixed $from, mixed $to): void
     {
         $this->assertFalse($from->isTransitionAllowed($to));

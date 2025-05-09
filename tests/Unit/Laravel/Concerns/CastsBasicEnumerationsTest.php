@@ -10,6 +10,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitEnum;
 use ValueError;
 
@@ -28,11 +29,7 @@ class CastsBasicEnumerationsTest extends TestCase
         ];
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesEnums
-     */
+    #[DataProvider("providesEnums")]
     public function testShouldCastCorrectlyFromString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
         $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
@@ -46,11 +43,7 @@ class CastsBasicEnumerationsTest extends TestCase
         );
     }
 
-    /**
-     * @return void
-     *
-     * @dataProvider providesEnums
-     */
+    #[DataProvider("providesEnums")]
     public function testShouldCastCorrectlyToString(UnitEnum $enum, string $key, bool $keepCase = true)
     {
         $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();

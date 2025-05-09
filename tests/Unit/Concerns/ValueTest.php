@@ -6,6 +6,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Value\ValueIntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Value\ValueStrictEnum;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 
@@ -34,14 +35,7 @@ class ValueTest extends TestCase
         ];
     }
 
-
-    /**
-     * @param $enum
-     * @param string $expected
-     * @return void
-     *
-     * @dataProvider providesEnumsForValue
-     */
+    #[DataProvider("providesEnumsForValue")]
     public function testEnumShouldReturnValue($enum, string $expected): void
     {
         $this->assertEquals(
@@ -49,14 +43,8 @@ class ValueTest extends TestCase
             $enum->value()
         );
     }
-
-    /**
-     * @param $enum
-     * @param int $expected
-     * @return void
-     *
-     * @dataProvider providesEnumsForKey
-     */
+    
+    #[DataProvider("providesEnumsForKey")]
     public function testEnumShouldReturnKey($enum, int $expected): void
     {
         $this->assertEquals(

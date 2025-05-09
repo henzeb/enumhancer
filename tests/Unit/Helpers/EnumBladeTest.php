@@ -9,6 +9,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use UnitEnum;
 use function Henzeb\Enumhancer\Functions\backing;
 use function Henzeb\Enumhancer\Functions\name;
@@ -35,9 +36,8 @@ class EnumBladeTest extends TestCase
      * @param UnitEnum $enum
      * @param bool $keepValueCase
      * @return void
-     *
-     * @dataProvider providesTestcases
      */
+    #[DataProvider("providesTestcases")]
     public function testShouldRenderValue(UnitEnum $enum, bool $keepValueCase = true): void
     {
         $method = $keepValueCase ? 'register' : 'registerLowercase';

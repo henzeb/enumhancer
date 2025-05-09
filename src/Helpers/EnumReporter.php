@@ -19,7 +19,7 @@ final class EnumReporter
 {
     private static Reporter|string|null $reporter = null;
 
-    public static function laravel(LogLevel $logLevel = null, string ...$channels): void
+    public static function laravel(LogLevel|null $logLevel = null, string ...$channels): void
     {
         self::set(new LaravelLogReporter($logLevel, ...$channels));
     }

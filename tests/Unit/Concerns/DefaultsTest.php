@@ -17,6 +17,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsMappedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsNullEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsOverriddenEnum;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use UnitEnum;
 
@@ -79,9 +80,8 @@ class DefaultsTest extends TestCase
      * @param string $enum
      * @param mixed $expected
      * @return void
-     *
-     * @dataProvider providesCases
      */
+    #[DataProvider("providesCases")]
     public function testShouldReturnDefault(string $enum, mixed $expected): void
     {
         /**
@@ -94,9 +94,8 @@ class DefaultsTest extends TestCase
      * @param string $enum
      * @param mixed $expected
      * @return void
-     *
-     * @dataProvider providesCases
      */
+    #[DataProvider("providesCases")]
     public function testShouldReturnTryMakeDefault(string $enum, mixed $expected): void
     {
         /**
@@ -119,9 +118,8 @@ class DefaultsTest extends TestCase
      * @param UnitEnum $enum
      * @param bool $expected
      * @return void
-     *
-     * @dataProvider providesAssertionTestcases
      */
+    #[DataProvider("providesAssertionTestcases")]
     public function testIsDefault(UnitEnum $enum, bool $expected): void
     {
         /**
@@ -130,13 +128,7 @@ class DefaultsTest extends TestCase
         $this->assertEquals($expected, $enum->isDefault());
     }
 
-    /**
-     * @param UnitEnum $enum
-     * @param bool $expected
-     * @return void
-     *
-     * @dataProvider providesAssertionTestcases
-     */
+    #[DataProvider("providesAssertionTestcases")]
     public function testIsNotDefault(UnitEnum $enum, bool $expected): void
     {
         /**
