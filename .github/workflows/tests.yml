@@ -7,11 +7,10 @@ on:
       - master
     paths-ignore:
       - '**.md'
-      - '**.yml'
   pull_request:
     paths-ignore:
       - '**.md'
-      - '**.yml'
+
 jobs:
   tests:
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
@@ -59,7 +58,7 @@ jobs:
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
       - name: Lint PHP files
-        run: find . -name "*.php" -exec php -l {} \;
+        run: find src/ tests/ -name "*.php" -exec php -l {} \;
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
