@@ -12,7 +12,7 @@ use function is_null;
  */
 final class EnumCheck
 {
-    public static function check(UnitEnum|string $enum, string $class = null): void
+    public static function check(UnitEnum|string $enum, string|null $class = null): void
     {
         if (!$enum instanceof UnitEnum && !enum_exists($enum, true)) {
             self::throwError($class);
@@ -28,7 +28,7 @@ final class EnumCheck
         }
     }
 
-    private static function throwError(string $class = null): never
+    private static function throwError(string|null $class = null): never
     {
         $method = 'This method';
 
