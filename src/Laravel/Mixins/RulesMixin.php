@@ -28,7 +28,7 @@ class RulesMixin
 
     public function enumTransition(): Closure
     {
-        return function (UnitEnum $currentState, TransitionHook $hook = null): EnumTransition {
+        return function (UnitEnum $currentState, TransitionHook|null $hook = null): EnumTransition {
             return new EnumTransition($currentState, $hook);
         };
     }
