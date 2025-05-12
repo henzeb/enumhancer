@@ -42,7 +42,7 @@ enum Suit {
 
 Illuminate\Support\Facades\Route::get(
     '/card/{card?}',
-    function (Suit $card = null) {
+    function (Suit|null $card = null) {
         print $card->name ?? 'nothing';
     }
 );
