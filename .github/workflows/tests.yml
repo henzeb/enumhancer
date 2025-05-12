@@ -7,11 +7,10 @@ on:
       - master
     paths-ignore:
       - '**.md'
-      - '**.yml'
   pull_request:
     paths-ignore:
       - '**.md'
-      - '**.yml'
+
 jobs:
   tests:
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
@@ -26,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -44,7 +43,7 @@ jobs:
         if: ${{ !env.ACT }}
 
       - name: Cache composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }} }}
@@ -57,6 +56,9 @@ jobs:
           timeout_minutes: 5
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
+
+      - name: Lint PHP files
+        run: find src/ tests/ -name "*.php" -exec php -l {} \;
 
       - name: Execute PHPUnit
         run: vendor/bin/phpunit
