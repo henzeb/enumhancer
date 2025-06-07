@@ -1,73 +1,43 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\From\FromWithMappersEnum;
-use PHPUnit\Framework\TestCase;
-use ValueError;
 
+test('non backed enum can call from', function () {
+    expect(ConstructableUnitEnum::from('callable'))
+        ->toBe(ConstructableUnitEnum::CALLABLE);
+});
 
-class FromTest extends TestCase
-{
-    function testNonBackedEnumCanCallFrom(): void
-    {
-        $this->assertEquals(
-            ConstructableUnitEnum::CALLABLE,
-            ConstructableUnitEnum::from('callable')
-        );
-    }
+test('unit enum can call from and fail', function () {
+    ConstructableUnitEnum::from('doesnotexist');
+})->throws(ValueError::class);
 
-    function testUnitEnumCanCallFromAndFail(): void
-    {
-        $this->expectException(ValueError::class);
+test('unit enum can call try from', function () {
+    expect(ConstructableUnitEnum::tryFrom('callable'))
+        ->toBe(ConstructableUnitEnum::CALLABLE);
+});
 
-        ConstructableUnitEnum::from('doesnotexist');
-    }
+test('try from should return null', function () {
+    expect(ConstructableUnitEnum::tryFrom('doesNotExist'))
+        ->toBeNull();
+});
 
-    function testUnitEnumCanCallTryFrom(): void
-    {
-        $this->assertEquals(
-            ConstructableUnitEnum::CALLABLE,
-            ConstructableUnitEnum::tryFrom('callable')
-        );
-    }
+test('allow enum as value', function () {
+    expect(ConstructableUnitEnum::tryFrom(ConstructableUnitEnum::CALLABLE))
+        ->toBe(ConstructableUnitEnum::CALLABLE);
 
-    function testTryFromShouldReturnNull(): void
-    {
-        $this->assertNull(
-            ConstructableUnitEnum::tryFrom('doesNotExist')
-        );
-    }
+    expect(ConstructableUnitEnum::from(ConstructableUnitEnum::CALLABLE))
+        ->toBe(ConstructableUnitEnum::CALLABLE);
+});
 
-    public function testAllowEnumAsValue()
-    {
-        $this->assertEquals(
-            ConstructableUnitEnum::CALLABLE,
-            ConstructableUnitEnum::tryFrom(ConstructableUnitEnum::CALLABLE)
-        );
+test('allow mapping when passing enum', function () {
+    expect(FromWithMappersEnum::tryFrom(StringBackedGetEnum::Translated))
+        ->toBe(FromWithMappersEnum::NotTranslated);
 
-        $this->assertEquals(
-            ConstructableUnitEnum::CALLABLE,
-            ConstructableUnitEnum::from(ConstructableUnitEnum::CALLABLE)
-        );
-    }
+    expect(FromWithMappersEnum::tryFrom(StringBackedGetEnum::TEST))
+        ->toBeNull();
 
-    public function testAllowMappingWhenPassingEnum()
-    {
-        $this->assertEquals(
-            FromWithMappersEnum::NotTranslated,
-            FromWithMappersEnum::tryFrom(StringBackedGetEnum::Translated)
-        );
-
-        $this->assertNull(
-            FromWithMappersEnum::tryFrom(StringBackedGetEnum::TEST)
-        );
-
-        $this->assertEquals(
-            FromWithMappersEnum::NotTranslated,
-            FromWithMappersEnum::from(StringBackedGetEnum::Translated)
-        );
-    }
-}
+    expect(FromWithMappersEnum::from(StringBackedGetEnum::Translated))
+        ->toBe(FromWithMappersEnum::NotTranslated);
+});

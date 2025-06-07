@@ -74,9 +74,10 @@
         "henzeb/enumhancer-ide-helper": "main-dev",
         "larastan/larastan": "^2.11",
         "mockery/mockery": "^1.5",
+        "orchestra/pest-plugin-testbench": "^3.2",
         "orchestra/testbench": "^v7.18|^8.0|^9",
-        "phpstan/phpstan": "^1.9|^2",
-        "phpunit/phpunit": "^10|^11"
+        "pestphp/pest": "^2.0|^3.0",
+        "phpstan/phpstan": "^1.9|^2"
     },
     "autoload": {
         "files": [
@@ -92,15 +93,16 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage-txt": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-text",
-        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
-        "test-dox": "vendor/bin/phpunit --testdox"
+        "test": "vendor/bin/pest",
+        "test-coverage-txt": "XDEBUG_MODE=coverage vendor/bin/pest --coverage",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/pest --coverage-html coverage",
+        "test-dox": "vendor/bin/pest --testdox"
     },
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "infection/extension-installer": true
+            "infection/extension-installer": true,
+            "pestphp/pest-plugin": true
         }
     },
     "extra": {

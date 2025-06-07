@@ -1,48 +1,30 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
-
-use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumProxy;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 
-class EnumProxyTest extends TestCase
-{
-    public function testShouldReturnSameName(): void {
-        $this->assertEquals(
-            EnhancedUnitEnum::ENUM->name,
-            (new EnumProxy(EnhancedUnitEnum::ENUM, true))->name
-        );
-    }
+test('should return same name', function () {
+    expect((new EnumProxy(EnhancedUnitEnum::ENUM, true))->name)
+        ->toBe(EnhancedUnitEnum::ENUM->name);
+});
 
-    public function testShouldReturnSameValue(): void {
-        $this->assertEquals(
-            EnumValue::value(EnhancedUnitEnum::ENUM),
-            (new EnumProxy(EnhancedUnitEnum::ENUM, false))->value
-        );
-    }
+test('should return same value', function () {
+    expect((new EnumProxy(EnhancedUnitEnum::ENUM, false))->value)
+        ->toBe(EnumValue::value(EnhancedUnitEnum::ENUM));
+});
 
-    public function testShouldReturnSameCasedValue(): void {
-        $this->assertEquals(
-            EnumValue::value(EnhancedUnitEnum::ENUM, true),
-            (new EnumProxy(EnhancedUnitEnum::ENUM, true))->value
-        );
-    }
+test('should return same cased value', function () {
+    expect((new EnumProxy(EnhancedUnitEnum::ENUM, true))->value)
+        ->toBe(EnumValue::value(EnhancedUnitEnum::ENUM, true));
+});
 
-    public function testShouldBeStringable(): void
-    {
-        $this->assertEquals(
-            EnumValue::value(EnhancedUnitEnum::ENUM),
-            (string)(new EnumProxy(EnhancedUnitEnum::ENUM, false))
-        );
-    }
+test('should be stringable', function () {
+    expect((string)(new EnumProxy(EnhancedUnitEnum::ENUM, false)))
+        ->toBe(EnumValue::value(EnhancedUnitEnum::ENUM));
+});
 
-    public function testShouldBeStringableCasedValue(): void
-    {
-        $this->assertEquals(
-            EnumValue::value(EnhancedUnitEnum::ENUM, true),
-            (string)(new EnumProxy(EnhancedUnitEnum::ENUM, true))
-        );
-    }
-}
+test('should be stringable cased value', function () {
+    expect((string)(new EnumProxy(EnhancedUnitEnum::ENUM, true)))
+        ->toBe(EnumValue::value(EnhancedUnitEnum::ENUM, true));
+});
