@@ -1,50 +1,42 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
-use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Configure\ConfigureEnum;
 
-class ConfigureLabelsTest extends TestCase
-{
-    use ClearsEnumProperties;
+afterEach(function () {
+    \Closure::bind(function () {
+        EnumProperties::clearGlobal();
+        EnumProperties::$properties = [];
+        EnumProperties::$once = [];
+    }, null, EnumProperties::class)();
+});
 
-    public function testSetLabels()
-    {
-        $expected = [
-            ConfigureEnum::Configured->name => 'Yes',
-            ConfigureEnum::NotConfigured->name => 'No'
-        ];
+test('set labels', function () {
+    $expected = [
+        ConfigureEnum::Configured->name => 'Yes',
+        ConfigureEnum::NotConfigured->name => 'No'
+    ];
 
-        ConfigureEnum::setLabels($expected);
+    ConfigureEnum::setLabels($expected);
 
-        $this->assertEquals($expected, ConfigureEnum::labels());
+    expect(ConfigureEnum::labels())->toBe($expected);
+    expect(ConfigureEnum::property(EnumProperties::reservedWord('labels')))->toBe($expected);
+    expect(ConfigureEnum::Configured->label())->toBe('Yes');
+});
 
-        $this->assertEquals($expected, ConfigureEnum::property(EnumProperties::reservedWord('labels')));
+test('set labels once', function () {
+    $expected = [
+        ConfigureEnum::Configured->name => 'Yes',
+        ConfigureEnum::NotConfigured->name => 'No'
+    ];
 
-        $this->assertEquals('Yes', ConfigureEnum::Configured->label());
-    }
+    ConfigureEnum::setLabelsOnce($expected);
 
-    public function testSetLabelsOnce()
-    {
-        $expected = [
-            ConfigureEnum::Configured->name => 'Yes',
-            ConfigureEnum::NotConfigured->name => 'No'
-        ];
+    expect(ConfigureEnum::labels())->toBe($expected);
+    expect(ConfigureEnum::Configured->label())->toBe('Yes');
+    expect(ConfigureEnum::property(EnumProperties::reservedWord('labels')))->toBe($expected);
 
-        ConfigureEnum::setLabelsOnce($expected);
-
-        $this->assertEquals($expected, ConfigureEnum::labels());
-
-        $this->assertEquals('Yes', ConfigureEnum::Configured->label());
-
-        $this->assertEquals($expected, ConfigureEnum::property(EnumProperties::reservedWord('labels')));
-
-        $this->expectException(PropertyAlreadyStoredException::class);
-
-        ConfigureEnum::setLabels([]);
-    }
-}
+    expect(fn() => ConfigureEnum::setLabels([]))
+        ->toThrow(PropertyAlreadyStoredException::class);
+});

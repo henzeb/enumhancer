@@ -1,144 +1,131 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Reporters;
-
-
-use Mockery;
-use Psr\Log\LoggerInterface;
-use Orchestra\Testbench\TestCase;
-use Illuminate\Support\Facades\Log;
 use Henzeb\Enumhancer\Enums\LogLevel;
-use Illuminate\Support\Facades\Config;
-use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
+use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
+use Henzeb\Enumhancer\Tests\TestCase;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+use Psr\Log\LoggerInterface;
 
-class LaravelLogReporterTest extends TestCase
-{
-    public function setUp(): void
-    {
-        parent::setUp();
-        Config::set('logging.default', 'stack');
-    }
+uses(TestCase::class);
 
-    public function testShouldLog()
-    {
-        $spy = Mockery::spy(LoggerInterface::class);
+beforeEach(function () {
+    Config::set('logging.default', 'stack');
+});
 
-        Log::shouldReceive('stack')
-            ->once()
-            ->with(['stack'])
-            ->andReturn($spy);
+test('should log', function () {
+    $spy = \Mockery::spy(LoggerInterface::class);
 
-        (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', null);
+    Log::shouldReceive('stack')
+        ->once()
+        ->with(['stack'])
+        ->andReturn($spy);
 
-        $spy->shouldHaveReceived(
-            'log',
+    (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', null);
+
+    $spy->shouldHaveReceived(
+        'log',
+        [
+            'notice',
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'notice',
-                "EnhancedBackedEnum does not have 'KEY'",
-                [
-                    'class' => EnhancedBackedEnum::class,
-                    'key' => 'KEY',
-                ]
+                'class' => EnhancedBackedEnum::class,
+                'key' => 'KEY',
             ]
-        );
-    }
+        ]
+    );
+});
 
-    public function testShouldLogWithContext()
-    {
-        $spy = Mockery::spy(LoggerInterface::class);
+test('should log with context', function () {
+    $spy = \Mockery::spy(LoggerInterface::class);
 
-        Log::shouldReceive('stack')
-            ->once()
-            ->with(['stack'])
-            ->andReturn($spy);
+    Log::shouldReceive('stack')
+        ->once()
+        ->with(['stack'])
+        ->andReturn($spy);
 
-        (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', EnhancedBackedEnum::ANOTHER_ENUM);
+    (new LaravelLogReporter())->report(EnhancedBackedEnum::class, 'KEY', EnhancedBackedEnum::ANOTHER_ENUM);
 
-
-        $spy->shouldHaveReceived('log',
+    $spy->shouldHaveReceived('log',
+        [
+            'notice',
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'notice',
-                "EnhancedBackedEnum does not have 'KEY'",
-                [
-                    'class' => EnhancedBackedEnum::class,
-                    'key' => 'KEY',
-                    'context' => EnhancedBackedEnum::ANOTHER_ENUM->value
-                ]
+                'class' => EnhancedBackedEnum::class,
+                'key' => 'KEY',
+                'context' => EnhancedBackedEnum::ANOTHER_ENUM->value
             ]
-        );
-    }
+        ]
+    );
+});
 
-    public function testShouldUseDifferentLevel()
-    {
-        $spy = Mockery::spy(LoggerInterface::class);
+test('should use different level', function () {
+    $spy = \Mockery::spy(LoggerInterface::class);
 
-        Log::shouldReceive('stack')
-            ->once()
-            ->with(['stack'])
-            ->andReturn($spy);
+    Log::shouldReceive('stack')
+        ->once()
+        ->with(['stack'])
+        ->andReturn($spy);
 
-        (new LaravelLogReporter(LogLevel::Alert))->report(EnhancedBackedEnum::class, 'KEY', null);
+    (new LaravelLogReporter(LogLevel::Alert))->report(EnhancedBackedEnum::class, 'KEY', null);
 
-        $spy->shouldHaveReceived(
-            'log',
+    $spy->shouldHaveReceived(
+        'log',
+        [
+            'alert',
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'alert',
-                "EnhancedBackedEnum does not have 'KEY'",
-                [
-                    'class' => EnhancedBackedEnum::class,
-                    'key' => 'KEY'
-                ]
+                'class' => EnhancedBackedEnum::class,
+                'key' => 'KEY'
             ]
-        );
-    }
+        ]
+    );
+});
 
-    public function testShouldUseDifferentChannel()
-    {
-        $spy = Mockery::spy(LoggerInterface::class);
+test('should use different channel', function () {
+    $spy = \Mockery::spy(LoggerInterface::class);
 
-        Log::shouldReceive('stack')
-            ->once()
-            ->with(['slack'])
-            ->andReturn($spy);
+    Log::shouldReceive('stack')
+        ->once()
+        ->with(['slack'])
+        ->andReturn($spy);
 
-        (new LaravelLogReporter(LogLevel::default(), 'slack'))->report(EnhancedBackedEnum::class, 'KEY', null);
+    (new LaravelLogReporter(LogLevel::default(), 'slack'))->report(EnhancedBackedEnum::class, 'KEY', null);
 
-        $spy->shouldHaveReceived(
-            'log',
+    $spy->shouldHaveReceived(
+        'log',
+        [
+            'notice',
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'notice',
-                "EnhancedBackedEnum does not have 'KEY'",
-                [
-                    'class' => EnhancedBackedEnum::class,
-                    'key' => 'KEY'
-                ]
+                'class' => EnhancedBackedEnum::class,
+                'key' => 'KEY'
             ]
-        );
-    }
+        ]
+    );
+});
 
-    public function testShouldUseDifferentChannels()
-    {
-        $spy = Mockery::spy(LoggerInterface::class);
+test('should use different channels', function () {
+    $spy = \Mockery::spy(LoggerInterface::class);
 
-        Log::shouldReceive('stack')
-            ->once()
-            ->with(['slack', 'bugsnag'])
-            ->andReturn($spy);
+    Log::shouldReceive('stack')
+        ->once()
+        ->with(['slack', 'bugsnag'])
+        ->andReturn($spy);
 
-        (new LaravelLogReporter(LogLevel::default(), 'slack', 'bugsnag'))
-            ->report(EnhancedBackedEnum::class, 'KEY', null);
+    (new LaravelLogReporter(LogLevel::default(), 'slack', 'bugsnag'))
+        ->report(EnhancedBackedEnum::class, 'KEY', null);
 
-        $spy->shouldHaveReceived(
-            'log',
+    $spy->shouldHaveReceived(
+        'log',
+        [
+            'notice',
+            "EnhancedBackedEnum does not have 'KEY'",
             [
-                'notice',
-                "EnhancedBackedEnum does not have 'KEY'",
-                [
-                    'class' => EnhancedBackedEnum::class,
-                    'key' => 'KEY'
-                ]
+                'class' => EnhancedBackedEnum::class,
+                'key' => 'KEY'
             ]
-        );
-    }
-}
+        ]
+    );
+});

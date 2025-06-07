@@ -1,74 +1,65 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
 
-
-class PropertiesTest extends TestCase
-{
-    use ClearsEnumProperties;
-
-    public function testSetProperty()
-    {
-        EnhancedBackedEnum::property('MyProperty', 'A Value');
-
-        $this->assertEquals('A Value',EnumProperties::get(EnhancedBackedEnum::class, 'MyProperty'));
-    }
-
-    public function testSetPropertyOverridesGlobal()
-    {
-        EnumProperties::global('MyProperty', 'A global Value');
-        EnhancedBackedEnum::property('MyProperty', 'A Value');
-
-        $this->assertEquals('A Value',EnumProperties::get(EnhancedBackedEnum::class, 'MyProperty'));
-    }
-
-    public function testGetProperty()
-    {
+afterEach(function () {
+    \Closure::bind(function () {
         EnumProperties::clearGlobal();
+        EnumProperties::$properties = [];
+        EnumProperties::$once = [];
+    }, null, EnumProperties::class)();
+});
 
-        EnhancedBackedEnum::property('MyProperty', 'A Value');
+test('set property', function () {
+    EnhancedBackedEnum::property('MyProperty', 'A Value');
 
-        $this->assertEquals('A Value', EnhancedBackedEnum::property('MyProperty'));
-    }
+    expect(EnumProperties::get(EnhancedBackedEnum::class, 'MyProperty'))->toBe('A Value');
+});
 
-    public function testUnsetProperty()
-    {
-        EnumProperties::clearGlobal();
-        EnhancedBackedEnum::property('MyProperty', 'A Value');
-        EnhancedBackedEnum::unset('MyProperty');
+test('set property overrides global', function () {
+    EnumProperties::global('MyProperty', 'A global Value');
+    EnhancedBackedEnum::property('MyProperty', 'A Value');
 
-        $this->assertNull(EnhancedBackedEnum::property('MyProperty'));
-    }
+    expect(EnumProperties::get(EnhancedBackedEnum::class, 'MyProperty'))->toBe('A Value');
+});
 
-    public function testDoesNotUnsetGlobalProperty()
-    {
-        EnumProperties::clearGlobal();
-        EnumProperties::store(EnhancedBackedEnum::class, 'property', 'local property');
-        EnumProperties::global( 'property', 'global property');
+test('get property', function () {
+    EnumProperties::clearGlobal();
 
-        EnhancedBackedEnum::unset('property');
+    EnhancedBackedEnum::property('MyProperty', 'A Value');
 
-        $this->assertEquals('global property', EnhancedBackedEnum::property('property'));
+    expect(EnhancedBackedEnum::property('MyProperty'))->toBe('A Value');
+});
 
-    }
+test('unset property', function () {
+    EnumProperties::clearGlobal();
+    EnhancedBackedEnum::property('MyProperty', 'A Value');
+    EnhancedBackedEnum::unset('MyProperty');
 
-    public function testUnsetAllLocalProperties()
-    {
-        EnumProperties::clearGlobal();
-        EnhancedBackedEnum::unsetAll();
-        EnumProperties::global('globalProperty', 'a global property');
-        EnhancedBackedEnum::property('MyProperty', 'A Value');
-        EnhancedBackedEnum::property('MyProperty2', 'Another Value');
-        EnhancedBackedEnum::unsetAll();
+    expect(EnhancedBackedEnum::property('MyProperty'))->toBeNull();
+});
 
-        $this->assertEquals('a global property', EnhancedBackedEnum::property('globalProperty'));
-        $this->assertNull(EnhancedBackedEnum::property('MyProperty'));
-        $this->assertNull(EnhancedBackedEnum::property('MyProperty2'));
-    }
-}
+test('does not unset global property', function () {
+    EnumProperties::clearGlobal();
+    EnumProperties::store(EnhancedBackedEnum::class, 'property', 'local property');
+    EnumProperties::global( 'property', 'global property');
+
+    EnhancedBackedEnum::unset('property');
+
+    expect(EnhancedBackedEnum::property('property'))->toBe('global property');
+});
+
+test('unset all local properties', function () {
+    EnumProperties::clearGlobal();
+    EnhancedBackedEnum::unsetAll();
+    EnumProperties::global('globalProperty', 'a global property');
+    EnhancedBackedEnum::property('MyProperty', 'A Value');
+    EnhancedBackedEnum::property('MyProperty2', 'Another Value');
+    EnhancedBackedEnum::unsetAll();
+
+    expect(EnhancedBackedEnum::property('globalProperty'))->toBe('a global property');
+    expect(EnhancedBackedEnum::property('MyProperty'))->toBeNull();
+    expect(EnhancedBackedEnum::property('MyProperty2'))->toBeNull();
+});

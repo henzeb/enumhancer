@@ -1,106 +1,112 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
-
-
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsLowerCaseModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
+use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsNoPropertyModel;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Orchestra\Testbench\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use UnitEnum;
-use ValueError;
+use Henzeb\Enumhancer\Tests\TestCase;
+uses(TestCase::class);
 
-class CastsBasicEnumerationsTest extends TestCase
-{
-    public static function providesEnums(): array
-    {
-        return [
-            [SubsetUnitEnum::ENUM, 'unitEnum'],
-            [IntBackedEnum::TEST, 'intBackedEnum'],
-            [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+test('should cast correctly from string', function (\UnitEnum $enum, string $key, bool $keepCase = true) {
+    $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
+    $model->setRawAttributes([
+        $key => EnumValue::value($enum, $keepCase)
+    ]);
 
-            [SubsetUnitEnum::ENUM, 'unitEnum', false],
-            [IntBackedEnum::TEST, 'intBackedEnum', false],
-            [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
-        ];
-    }
+    expect($model->$key)->toBe($enum);
+})->with([
+    [SubsetUnitEnum::ENUM, 'unitEnum'],
+    [IntBackedEnum::TEST, 'intBackedEnum'],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+    [SubsetUnitEnum::ENUM, 'unitEnum', false],
+    [IntBackedEnum::TEST, 'intBackedEnum', false],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
+]);
 
-    #[DataProvider("providesEnums")]
-    public function testShouldCastCorrectlyFromString(UnitEnum $enum, string $key, bool $keepCase = true)
-    {
-        $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
-        $model->setRawAttributes([
-            $key => EnumValue::value($enum, $keepCase)
-        ]);
+test('should cast correctly to string', function (\UnitEnum $enum, string $key, bool $keepCase = true) {
+    $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
+    $model->$key = $enum;
 
-        $this->assertEquals(
-            $enum,
-            $model->$key,
-        );
-    }
+    $result = $model->toArray()[$key];
+    $expected = EnumValue::value($enum, $keepCase);
+    expect((string)$result)->toBe((string)$expected);
+})->with([
+    [SubsetUnitEnum::ENUM, 'unitEnum'],
+    [IntBackedEnum::TEST, 'intBackedEnum'],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+    [SubsetUnitEnum::ENUM, 'unitEnum', false],
+    [IntBackedEnum::TEST, 'intBackedEnum', false],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
+]);
 
-    #[DataProvider("providesEnums")]
-    public function testShouldCastCorrectlyToString(UnitEnum $enum, string $key, bool $keepCase = true)
-    {
-        $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
-        $model->$key = $enum;
+test('should handle null', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = null;
 
-        $this->assertEquals(
-            EnumValue::value($enum, $keepCase),
-            $model->toArray()[$key],
-        );
-    }
+    expect($model->unitEnum)->toBeNull();
+});
 
-    public function testShouldHandleNull()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = null;
+test('should handle object in attribute', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
 
-        $this->assertEquals(null, $model->unitEnum);
-    }
+    expect($model->unitEnum)->toBe(SubsetUnitEnum::ENUM);
+});
 
-    public function testShouldHandleObjectInAttribute()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
+test('should handle string value', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = 'enum';
 
-        $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
-    }
+    expect($model->getAttributes()['unitEnum'])->toBe('ENUM');
+    expect($model->unitEnum)->toBe(SubsetUnitEnum::ENUM);
+});
 
-    public function testShouldHandleStringValue()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = 'enum';
+test('should handle string value lower case', function () {
+    $model = new CastsBasicEnumsLowerCaseModel();
+    $model->unitEnum = 'ENUM';
 
-        $this->assertEquals('ENUM', $model->getAttributes()['unitEnum']);
+    expect($model->getAttributes()['unitEnum'])->toBe('enum');
+});
 
-        $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
-    }
+test('should fail if string is not valid', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = 'NotAnEnum';
+})->throws(ValueError::class);
 
-    public function testShouldHandleStringValueLowerCase()
-    {
-        $model = new CastsBasicEnumsLowerCaseModel();
-        $model->unitEnum = 'ENUM';
+test('should fail if enum is not valid', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = IntBackedEnum::TEST;
+})->throws(ValueError::class);
 
-        $this->assertEquals('enum', $model->getAttributes()['unitEnum']);
-    }
+test('should use default keepEnumCase when property does not exist', function () {
+    $model = new CastsBasicEnumsNoPropertyModel();
+    $model->unitEnum = SubsetUnitEnum::ENUM;
 
-    public function testShouldFailIfStringIsNotValid()
-    {
-        $this->expectException(ValueError::class);
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = 'NotAnEnum';
-    }
+    // This should use keepEnumCase = true (default) since the property doesn't exist
+    expect($model->getAttributes()['unitEnum'])->toBe('ENUM');
+});
 
-    public function testShouldFailIfEnumIsNotValid()
-    {
-        $this->expectException(ValueError::class);
+test('should handle unit enum in toArray when shouldUseBasicEnumWorkaround returns true', function () {
+    $model = new CastsBasicEnumsNoPropertyModel();
+    $model->unitEnum = SubsetUnitEnum::ENUM;
 
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = IntBackedEnum::TEST;
-    }
-}
+    // This will trigger shouldUseBasicEnumWorkaround and test line 34
+    $array = $model->toArray();
+    expect((string)$array['unitEnum'])->toBe('ENUM');
+});
+
+test('should return non-enum value in getStorableEnumValue', function () {
+    $model = new CastsBasicEnumsModel();
+    
+    // Use reflection to test the protected method
+    $reflection = new ReflectionClass($model);
+    $method = $reflection->getMethod('getStorableEnumValue');
+    $method->setAccessible(true);
+    
+    // Test with a non-UnitEnum value - this should hit line 79
+    $result = $method->invoke($model, 'some_string', 'some_string');
+    expect($result)->toBe('some_string');
+});

@@ -1,251 +1,208 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
-
-
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
 use Henzeb\Enumhancer\Exceptions\ReservedPropertyNameException;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
-use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use stdClass;
-use TypeError;
 
-class EnumPropertiesTest extends TestCase
-{
-    use ClearsEnumProperties;
-
-    public static function providesTestcasesForStoreProperty(): array
-    {
-        return [
-            'boolean' => ['property', true, true, ConstructableUnitEnum::class],
-            'object' => ['anObject', new stdClass(), new stdClass(), ConstructableUnitEnum::class],
-            'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
-            'enum' => [
-                'anEnum',
-                ConstructableUnitEnum::CALLABLE,
-                ConstructableUnitEnum::CALLABLE,
-                ConstructableUnitEnum::class
-            ],
-            'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
-
-            'another-enum-that-tries-to-get' => [
-                'anotherProperty',
-                true,
-                null,
-                ConstructableUnitEnum::class,
-                StringBackedGetEnum::class
-            ],
-
-        ];
-    }
-
-    public function testStoreShouldNotAcceptNonEnums()
-    {
-        $this->expectException(TypeError::class);
-
-        EnumProperties::store(stdClass::class, 'property', 'value');
-    }
-
-    public function testGetShouldNotAcceptNonEnums()
-    {
-        $this->expectException(TypeError::class);
-
-        EnumProperties::get(stdClass::class, 'property');
-    }
-
-    public function testClearShouldNotAcceptNonEnums()
-    {
-        $this->expectException(TypeError::class);
-
-        EnumProperties::clear(stdClass::class);
-    }
-
-    public static function providesTestcasesForStorePropertyGlobally(): array
-    {
-        return [
-            'boolean' => ['property', true, true],
-            'object' => ['anObject', new stdClass(), new stdClass()],
-            'string' => ['aString', 'A String', 'A String'],
-            'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE],
-            'callable' => ['property', fn() => 'true', fn() => 'true'],
-        ];
-    }
-
-    #[DataProvider("providesTestcasesForStoreProperty")]
-    public function testStoreProperty(
-        string $key,
-        mixed $value,
-        mixed $expectedValue,
-        string $storeIn,
-        string|null $expectedStoreIn = null
-    ) {
-        EnumProperties::store($storeIn, $key, $value);
-
-        $this->assertEquals(
-            $expectedValue,
-            EnumProperties::get($expectedStoreIn ?? $storeIn, $key)
-        );
-    }
-
-    #[DataProvider("providesTestcasesForStoreProperty")]
-    public function testStorePropertyOnce(
-        string $key,
-        mixed $value,
-        mixed $expectedValue,
-        string $storeIn,
-        string|null $expectedStoreIn = null
-    ) {
-        EnumProperties::storeOnce($storeIn, $key, $value);
-
-        $this->assertEquals(
-            $expectedValue,
-            EnumProperties::get($expectedStoreIn ?? $storeIn, $key)
-        );
-
-        $this->expectException(PropertyAlreadyStoredException::class);
-
-        EnumProperties::storeOnce($storeIn, $key, $value);
-
-    }
-
-    #[DataProvider("providesTestcasesForStoreProperty")]
-    public function testStorePropertyOnceAndTryStoring(
-        string $key,
-        mixed $value,
-        mixed $expectedValue,
-        string $storeIn,
-        string|null $expectedStoreIn = null
-    ) {
-        EnumProperties::storeOnce($storeIn, $key, $value);
-
-        $this->assertEquals(
-            $expectedValue,
-            EnumProperties::get($expectedStoreIn ?? $storeIn, $key)
-        );
-
-        $this->expectException(PropertyAlreadyStoredException::class);
-
-        EnumProperties::store($storeIn, $key, $value);
-
-    }
-
-    public function testClearsProperties()
-    {
-        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
-        EnumProperties::store(StringBackedGetEnum::class, 'property', 'a value');
-
-        EnumProperties::clear(ConstructableUnitEnum::class);
-
-        $this->assertNull(EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-        $this->assertEquals('a value', EnumProperties::get(StringBackedGetEnum::class, 'property'));
-    }
-
-    public function testDoesntClearPropertiesOnce()
-    {
-        EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property', 'a value');
-        EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property2', 'a value');
-
-        EnumProperties::clear(ConstructableUnitEnum::class);
-
-        $this->assertEquals('a value', EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-        $this->assertEquals('a value', EnumProperties::get(ConstructableUnitEnum::class, 'property2'));
-    }
-
-    public function testClearsSingleProperty()
-    {
-        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
-        EnumProperties::store(ConstructableUnitEnum::class, 'property2', 'a value');
-
-        EnumProperties::clear(ConstructableUnitEnum::class, 'property');
-
-        $this->assertNull(EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-        $this->assertEquals('a value', EnumProperties::get(ConstructableUnitEnum::class, 'property2'));
-    }
-
-    public function testDoesntClearSinglePropertyOnce()
-    {
-        EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property', 'a value');
-
-        EnumProperties::clear(ConstructableUnitEnum::class, 'property');
-
-        $this->assertEquals('a value', EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-    }
-
-    public function testClearsGlobal()
-    {
-        EnumProperties::global('globalProperty', 'a value');
-
+afterEach(function () {
+    \Closure::bind(function () {
         EnumProperties::clearGlobal();
+        EnumProperties::$properties = [];
+        EnumProperties::$once = [];
+    }, null, EnumProperties::class)();
+});
 
-        $this->assertNull(EnumProperties::get(StringBackedGetEnum::class, 'globalProperty'));
-    }
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @param mixed $expectedValue
-     * @return void
-     */
-    #[DataProvider("providesTestcasesForStorePropertyGlobally")]
-    public function testStoreGlobally(string $key, mixed $value, mixed $expectedValue)
-    {
+test('store should not accept non enums', function () {
+    EnumProperties::store(\stdClass::class, 'property', 'value');
+})->throws(\TypeError::class);
 
-        EnumProperties::global($key, $value);
+test('get should not accept non enums', function () {
+    EnumProperties::get(\stdClass::class, 'property');
+})->throws(\TypeError::class);
 
-        $this->assertEquals(
-            $expectedValue,
-            EnumProperties::get(StringBackedGetEnum::class, $key)
-        );
-    }
+test('clear should not accept non enums', function () {
+    EnumProperties::clear(\stdClass::class);
+})->throws(\TypeError::class);
 
-    public function testIfLocalPropertyOverridesGlobalProperty()
-    {
-        EnumProperties::global('property', 'global value');
-        EnumProperties::store(ConstructableUnitEnum::class, 'property', 'local value');
 
-        $this->assertEquals('local value', EnumProperties::get(ConstructableUnitEnum::class, 'property'));
-    }
+test('store property', function (string $key, mixed $value, mixed $expectedValue, string $storeIn, string|null $expectedStoreIn = null) {
+    EnumProperties::store($storeIn, $key, $value);
 
-    public function testStoreOnceOverridesStore()
-    {
-        EnumProperties::store(ConstructableUnitEnum::class, 'test', 'test');
-        EnumProperties::storeOnce(ConstructableUnitEnum::class, 'test', 'something else');
+    expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
+})->with([
+    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+    'enum' => [
+        'anEnum',
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::class
+    ],
+    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
+    'another-enum-that-tries-to-get' => [
+        'anotherProperty',
+        true,
+        null,
+        ConstructableUnitEnum::class,
+        StringBackedGetEnum::class
+    ],
+]);
 
-        $this->assertEquals('something else', EnumProperties::get(ConstructableUnitEnum::class, 'test'));
-    }
+test('store property once', function (string $key, mixed $value, mixed $expectedValue, string $storeIn, string|null $expectedStoreIn = null) {
+    EnumProperties::storeOnce($storeIn, $key, $value);
 
-    public static function providesReservedWords(): array
-    {
-        return [
-            ['@default_configure', 'defaults'],
-            ['@labels_configure', 'labels'],
-            ['@mapper_configure', 'mapper'],
-            ['@state_configure', 'state'],
-            ['@state_hook_configure', 'hooks'],
-        ];
-    }
+    expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
 
-    #[DataProvider("providesReservedWords")]
-    public function testReservedWordsMapping(string $expected, string $name)
-    {
-        $this->assertEquals($expected, EnumProperties::reservedWord($name));
-    }
+    expect(fn() => EnumProperties::storeOnce($storeIn, $key, $value))->toThrow(PropertyAlreadyStoredException::class);
+})->with([
+    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+    'enum' => [
+        'anEnum',
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::class
+    ],
+    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
+    'another-enum-that-tries-to-get' => [
+        'anotherProperty',
+        true,
+        null,
+        ConstructableUnitEnum::class,
+        StringBackedGetEnum::class
+    ],
+]);
 
-    #[DataProvider("providesReservedWords")]
-    public function testReservedWordsWhenTryingToStore(string $name)
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        EnumProperties::store(ConstructableUnitEnum::class, $name, 'test');
-    }
+test('store property once and try storing', function (string $key, mixed $value, mixed $expectedValue, string $storeIn, string|null $expectedStoreIn = null) {
+    EnumProperties::storeOnce($storeIn, $key, $value);
 
-    #[DataProvider("providesReservedWords")]
-    public function testReservedWordsWhenTryingToStoreOnce(string $name)
-    {
-        $this->expectException(ReservedPropertyNameException::class);
-        EnumProperties::storeOnce(ConstructableUnitEnum::class, $name, 'test');
-    }
-}
+    expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
+
+    expect(fn() => EnumProperties::store($storeIn, $key, $value))->toThrow(PropertyAlreadyStoredException::class);
+})->with([
+    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+    'enum' => [
+        'anEnum',
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::CALLABLE,
+        ConstructableUnitEnum::class
+    ],
+    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
+    'another-enum-that-tries-to-get' => [
+        'anotherProperty',
+        true,
+        null,
+        ConstructableUnitEnum::class,
+        StringBackedGetEnum::class
+    ],
+]);
+
+test('clears properties', function () {
+    EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
+    EnumProperties::store(StringBackedGetEnum::class, 'property', 'a value');
+
+    EnumProperties::clear(ConstructableUnitEnum::class);
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property'))->toBeNull();
+    expect(EnumProperties::get(StringBackedGetEnum::class, 'property'))->toBe('a value');
+});
+
+test('doesnt clear properties once', function () {
+    EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property', 'a value');
+    EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property2', 'a value');
+
+    EnumProperties::clear(ConstructableUnitEnum::class);
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property'))->toBe('a value');
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property2'))->toBe('a value');
+});
+
+test('clears single property', function () {
+    EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
+    EnumProperties::store(ConstructableUnitEnum::class, 'property2', 'a value');
+
+    EnumProperties::clear(ConstructableUnitEnum::class, 'property');
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property'))->toBeNull();
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property2'))->toBe('a value');
+});
+
+test('doesnt clear single property once', function () {
+    EnumProperties::storeOnce(ConstructableUnitEnum::class, 'property', 'a value');
+
+    EnumProperties::clear(ConstructableUnitEnum::class, 'property');
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property'))->toBe('a value');
+});
+
+test('clears global', function () {
+    EnumProperties::global('globalProperty', 'a value');
+
+    EnumProperties::clearGlobal();
+
+    expect(EnumProperties::get(StringBackedGetEnum::class, 'globalProperty'))->toBeNull();
+});
+
+test('store globally', function (string $key, mixed $value, mixed $expectedValue) {
+    EnumProperties::global($key, $value);
+
+    expect(EnumProperties::get(StringBackedGetEnum::class, $key))->toEqual($expectedValue);
+})->with([
+    'boolean' => ['property', true, true],
+    'object' => ['anObject', new \stdClass(), new \stdClass()],
+    'string' => ['aString', 'A String', 'A String'],
+    'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE],
+    'callable' => ['property', fn() => 'true', fn() => 'true'],
+]);
+
+test('if local property overrides global property', function () {
+    EnumProperties::global('property', 'global value');
+    EnumProperties::store(ConstructableUnitEnum::class, 'property', 'local value');
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'property'))->toBe('local value');
+});
+
+test('store once overrides store', function () {
+    EnumProperties::store(ConstructableUnitEnum::class, 'test', 'test');
+    EnumProperties::storeOnce(ConstructableUnitEnum::class, 'test', 'something else');
+
+    expect(EnumProperties::get(ConstructableUnitEnum::class, 'test'))->toBe('something else');
+});
+
+
+test('reserved words mapping', function (string $expected, string $name) {
+    expect(EnumProperties::reservedWord($name))->toBe($expected);
+})->with([
+    ['@default_configure', 'defaults'],
+    ['@labels_configure', 'labels'],
+    ['@mapper_configure', 'mapper'],
+    ['@state_configure', 'state'],
+    ['@state_hook_configure', 'hooks'],
+]);
+
+test('reserved words when trying to store', function (string $name) {
+    EnumProperties::store(ConstructableUnitEnum::class, $name, 'test');
+})->with([
+    '@default_configure',
+    '@labels_configure',
+    '@mapper_configure',
+    '@state_configure',
+    '@state_hook_configure',
+])->throws(ReservedPropertyNameException::class);
+
+test('reserved words when trying to store once', function (string $name) {
+    EnumProperties::storeOnce(ConstructableUnitEnum::class, $name, 'test');
+})->with([
+    '@default_configure',
+    '@labels_configure',
+    '@mapper_configure',
+    '@state_configure',
+    '@state_hook_configure',
+])->throws(ReservedPropertyNameException::class);

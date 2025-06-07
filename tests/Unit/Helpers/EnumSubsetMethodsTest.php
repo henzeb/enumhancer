@@ -1,170 +1,162 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
-
-use Henzeb\Enumhancer\Concerns\Dropdown;
 use Henzeb\Enumhancer\Helpers\EnumValue;
 use Henzeb\Enumhancer\Helpers\Subset\EnumSubsetMethods;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownIntEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownIntLabeledEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownStringEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Dropdown\DropdownStringLabeledEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\Unit\Concerns\DropdownTest;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use TypeError;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Dropdown\DropdownLabeledUnitEnum;
+use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Dropdown\DropdownUnitEnum;
 
-class EnumSubsetMethodsTest extends TestCase
-{
+test('should throw error with wrong enum type', function () {
+    new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM);
+})->throws(TypeError::class);
 
-    public function testShouldThrowErrorWithWrongEnumType(): void
-    {
-        $this->expectException(TypeError::class);
-        (new EnumSubsetMethods(IntBackedEnum::class, EnhancedUnitEnum::ENUM));
-    }
+test('equals should return false when no enums passed', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class))
+            ->equals()
+    )->toBeFalse();
+});
 
+test('equals should return false when null passed', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class))
+            ->equals(null)
+    )->toBeFalse();
+});
 
-    public function testEqualsShouldReturnFalseWhenNoEnumsPassed()
-    {
-        $this->assertFalse(
-            (new EnumSubsetMethods(IntBackedEnum::class))
-                ->equals()
-        );
-    }
+test('equals should return true', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class, IntBackedEnum::TEST))
+            ->equals(IntBackedEnum::TEST)
+    )->toBeTrue();
+});
 
-    public function testEqualsShouldReturnFalseWhenNullPassed()
-    {
-        $this->assertFalse(
-            (new EnumSubsetMethods(IntBackedEnum::class))
-                ->equals(null)
-        );
-    }
+test('equals multi should return true', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            ->equals(IntBackedEnum::TEST)
+    )->toBeTrue();
+});
 
-    public function testEqualsShouldReturnTrue()
-    {
-        $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedEnum::class, IntBackedEnum::TEST))
-                ->equals(IntBackedEnum::TEST)
-        );
-    }
+test('equals multi with null should return true', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            ->equals(IntBackedEnum::TEST, null)
+    )->toBeTrue();
+});
 
-    public function testEqualsMultiShouldReturnTrue()
-    {
-        $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
-                ->equals(IntBackedEnum::TEST)
-        );
-    }
+test('names should return array of names', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            ->names()
+    )->toBe(getNames(IntBackedEnum::cases()));
+});
 
-    public function testEqualsMultiWithNullShouldReturnTrue()
-    {
-        $this->assertTrue(
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
-                ->equals(IntBackedEnum::TEST, null)
-        );
-    }
+test('value should return array of values string backed', function () {
+    expect(
+        (new EnumSubsetMethods(StringBackedGetEnum::class, ...StringBackedGetEnum::cases()))
+            ->values()
+    )->toBe(getValues(StringBackedGetEnum::cases()));
+});
 
-    public function testNamesShouldReturnArrayOfNames()
-    {
-        $this->assertEquals(
-            $this->getNames(IntBackedEnum::cases()),
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
-                ->names()
-        );
-    }
+test('value should return array of values int backed', function () {
+    expect(
+        (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
+            ->values()
+    )->toBe(getValues(IntBackedEnum::cases()));
+});
 
-    public function testValueShouldReturnArrayOfValuesStringBacked()
-    {
-        $this->assertEquals(
-            $this->getValues(StringBackedGetEnum::cases()),
-            (new EnumSubsetMethods(StringBackedGetEnum::class, ...StringBackedGetEnum::cases()))
-                ->values()
-        );
-    }
-
-    public function testValueShouldReturnArrayOfValuesIntBacked()
-    {
-        $this->assertEquals(
-            $this->getValues(IntBackedEnum::cases()),
-            (new EnumSubsetMethods(IntBackedEnum::class, ...IntBackedEnum::cases()))
-                ->values()
-        );
-    }
-
-    public function testValueShouldReturnArrayOfValuesUnitEnums()
-    {
-        $this->assertEquals(
-            $this->getValues(EnhancedUnitEnum::cases()),
-            (new EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
-                ->values()
-        );
-    }
-
-    public function testValueShouldReturnArrayOfValuesUnitEnumsWithoutValue()
-    {
-        $this->assertEquals(
-            $this->getValues(SubsetUnitEnum::cases()),
-            (new EnumSubsetMethods(SubsetUnitEnum::class, ...SubsetUnitEnum::cases()))
-                ->values()
-        );
-    }
-
-    public function testShouldRunClosureOnArrayOfEnums()
-    {
-        $enums = [];
+test('value should return array of values unit enums', function () {
+    expect(
         (new EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
-            ->do(
-                function (EnhancedUnitEnum $enum) use (&$enums) {
-                    $enums[] = $enum;
-                }
-            );
-        $this->assertEquals(EnhancedUnitEnum::cases(), $enums);
-    }
+            ->values()
+    )->toBe(getValues(EnhancedUnitEnum::cases()));
+});
 
-    public static function providesTestCasesForReturningSubsetOfCases(): array
-    {
-        return [
-            [[EnhancedUnitEnum::ENUM]],
-            [[EnhancedUnitEnum::ENUM, EnhancedUnitEnum::THIRD_ENUM]]
-        ];
-    }
+test('value should return array of values unit enums without value', function () {
+    expect(
+        (new EnumSubsetMethods(SubsetUnitEnum::class, ...SubsetUnitEnum::cases()))
+            ->values()
+    )->toBe(getValues(SubsetUnitEnum::cases()));
+});
 
-    #[DataProvider("providesTestCasesForReturningSubsetOfCases")]
-    public function testCasesShouldReturnSubsetOfCases(array $cases)
-    {
-        $this->assertEquals(
-            $cases,
-            (new EnumSubsetMethods(EnhancedUnitEnum::class, ...$cases))->cases()
+test('should run closure on array of enums', function () {
+    $enums = [];
+    (new EnumSubsetMethods(EnhancedUnitEnum::class, ...EnhancedUnitEnum::cases()))
+        ->do(
+            function (EnhancedUnitEnum $enum) use (&$enums) {
+                $enums[] = $enum;
+            }
         );
-    }
+    expect($enums)->toBe(EnhancedUnitEnum::cases());
+});
 
-    public static function providesDropdownTestcases(): array
-    {
-        return DropdownTest::providesDropdownTestcases();
-    }
+test('cases should return subset of cases', function (array $cases) {
+    expect(
+        (new EnumSubsetMethods(EnhancedUnitEnum::class, ...$cases))->cases()
+    )->toBe($cases);
+})->with([
+    [[EnhancedUnitEnum::ENUM]],
+    [[EnhancedUnitEnum::ENUM, EnhancedUnitEnum::THIRD_ENUM]]
+]);
 
-    /**
-     * @param string $enum
-     * @param array $expected
-     * @param bool $keepCase
-     * @return void
-     */
-    #[DataProvider("providesDropdownTestcases")]
-    public function testDropdown(string $enum, array $expected, bool $keepCase = false)
-    {
-        /**
-         * @var $enum Dropdown|string
-         */
-        $this->assertEquals($expected, (new EnumSubsetMethods($enum, ...$enum::cases()))->dropdown($keepCase));
-    }
+test('dropdown', function (string $enum, array $expected, bool $keepCase = false) {
+    expect((new EnumSubsetMethods($enum, ...$enum::cases()))->dropdown($keepCase))->toBe($expected);
+})->with([
+    [
+        DropdownUnitEnum::class,
+        ['orange' => 'Orange', 'apple' => 'Apple', 'banana' => 'Banana']
+    ],
+    [
+        DropdownUnitEnum::class,
+        ['Orange' => 'Orange', 'Apple' => 'Apple', 'Banana' => 'Banana'],
+        true
+    ],
+    [
+        DropdownLabeledUnitEnum::class,
+        ['orange' => 'an orange', 'apple' => 'an apple', 'banana' => 'a banana']
+    ],
+    [
+        DropdownLabeledUnitEnum::class,
+        ['Orange' => 'an orange', 'Apple' => 'an apple', 'Banana' => 'a banana'],
+        true
+    ],
+    [
+        DropdownIntEnum::class,
+        [2 => 'Orange', 3 => 'Apple', 5 => 'Banana']
+    ],
+    [
+        DropdownIntLabeledEnum::class,
+        [2 => 'an orange', 3 => 'an apple', 5 => 'a banana']
+    ],
+    [
+        DropdownStringEnum::class,
+        ['My orange' => 'Orange', 'My apple' => 'Apple', 'My banana' => 'Banana']
+    ],
+    [
+        DropdownStringLabeledEnum::class,
+        ['My orange' => 'an orange', 'My apple' => 'an apple', 'My banana' => 'a banana']
+    ],
+    [
+        DropdownStringLabeledEnum::class,
+        ['My orange' => 'an orange', 'My apple' => 'an apple', 'My banana' => 'a banana'],
+        true
+    ]
+]);
 
-    private function getNames(array $cases): array
-    {
-        return array_map(fn($enum) => $enum->name, $cases);
-    }
+function getNames(array $cases): array
+{
+    return array_map(fn($enum) => $enum->name, $cases);
+}
 
-    private function getValues(array $cases): array
-    {
-        return array_map(fn($enum) => EnumValue::value($enum), $cases);
-    }
+function getValues(array $cases): array
+{
+    return array_map(fn($enum) => EnumValue::value($enum), $cases);
 }

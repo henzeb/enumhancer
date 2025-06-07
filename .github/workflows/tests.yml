@@ -60,12 +60,12 @@ jobs:
       - name: Lint PHP files
         run: find src/ tests/ -name "*.php" -exec php -l {} \;
 
-      - name: Execute PHPUnit
-        run: vendor/bin/phpunit
+      - name: Execute Pest
+        run: vendor/bin/pest
         if: ${{ !env.CC_TOKEN || (matrix.stability != 'prefer-stable' && matrix.php != '8.2') }}
 
-      - name: Execute PHPUnit for codeclimate
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+      - name: Execute Pest for codeclimate
+        run: vendor/bin/pest --coverage-clover=coverage.xml
         if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.2' }}
 
       - name: Upload coverage to codeclimate

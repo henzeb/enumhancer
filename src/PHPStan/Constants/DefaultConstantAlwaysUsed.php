@@ -3,12 +3,12 @@
 namespace Henzeb\Enumhancer\PHPStan\Constants;
 
 use Henzeb\Enumhancer\Helpers\EnumImplements;
-use PHPStan\Reflection\ConstantReflection;
+use PHPStan\Reflection\ClassConstantReflection;
 use PHPStan\Rules\Constants\AlwaysUsedClassConstantsExtension;
 
 class DefaultConstantAlwaysUsed implements AlwaysUsedClassConstantsExtension
 {
-    public function isAlwaysUsed(ConstantReflection $constant): bool
+    public function isAlwaysUsed(ClassConstantReflection $constant): bool
     {
         $constantName = $constant->getName();
 

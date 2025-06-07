@@ -1,223 +1,185 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers\Bitmasks;
-
 use Henzeb\Enumhancer\Exceptions\InvalidBitmaskEnum;
 use Henzeb\Enumhancer\Helpers\Bitmasks\Bitmask;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
-use PHPUnit\Framework\TestCase;
-use TypeError;
+test('should fail with string for enum', function () {
+    new Bitmask('test', 1);
+})->throws(\TypeError::class);
 
-class BitmaskTest extends TestCase
-{
-    public function testShouldFailWithStringForEnum(): void
-    {
-        $this->expectException(TypeError::class);
-        new Bitmask('test', 1);
-    }
+test('should fail with non enum', function () {
+    new Bitmask(Bitmask::class, 1);
+})->throws(TypeError::class);
 
-    public function testShouldFailWithNonEnum(): void
-    {
-        $this->expectException(TypeError::class);
-        new Bitmask(Bitmask::class, 1);
-    }
+test('should fail with invalid bitmask enum', function () {
+    new Bitmask(BitmasksIncorrectIntEnum::class, 1);
+})->throws(TypeError::class);
 
-    public function testShouldFailWithInvalidBitmaskEnum(): void
-    {
-        $this->expectException(TypeError::class);
-        new Bitmask(BitmasksIncorrectIntEnum::class, 1);
-    }
+test('should fail with invalid bitmask value', function () {
+    new Bitmask(BitmasksIntEnum::class, 7);
+})->throws(InvalidBitmaskEnum::class);
 
-    public function testShouldFailWithInvalidBitmaskValue(): void
-    {
-        $this->expectException(InvalidBitmaskEnum::class);
-        new Bitmask(BitmasksIntEnum::class, 7);
-    }
+test('should be without errors', function () {
+    new Bitmask(BitmasksIntEnum::class, 8);
+    new Bitmask(BitmasksIntEnum::class, 16);
+    new Bitmask(BitmasksIntEnum::class, 24);
+    new Bitmask(BitmasksIntEnum::class, 32);
+    new Bitmask(BitmasksIntEnum::class, 40);
 
-    public function testShouldBewithoutErrors(): void
-    {
-        new Bitmask(BitmasksIntEnum::class, 8);
-        new Bitmask(BitmasksIntEnum::class, 16);
-        new Bitmask(BitmasksIntEnum::class, 24);
-        new Bitmask(BitmasksIntEnum::class, 32);
-        new Bitmask(BitmasksIntEnum::class, 40);
+    expect(fn() => new Bitmask(BitmasksIntEnum::class, 64))->toThrow(InvalidBitmaskEnum::class);
+});
 
-        $this->expectException(InvalidBitmaskEnum::class);
-        new Bitmask(BitmasksIntEnum::class, 64);
+test('has', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
 
-    }
+    expect($bitmask->has(8))->toBeTrue();
+    expect($bitmask->has(32))->toBeFalse();
 
-    public function testHas()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
+    expect($bitmask->has(BitmasksIntEnum::Execute))->toBeTrue();
+    expect($bitmask->has(BitmasksIntEnum::Write))->toBeFalse();
 
-        $this->assertTrue($bitmask->has(8));
-        $this->assertFalse($bitmask->has(32));
+    expect($bitmask->has('Execute'))->toBeTrue();
+    expect($bitmask->has('Write'))->toBeFalse();
+});
 
-        $this->assertTrue($bitmask->has(BitmasksIntEnum::Execute));
-        $this->assertFalse($bitmask->has(BitmasksIntEnum::Write));
+test('all', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
 
-        $this->assertTrue($bitmask->has('Execute'));
-        $this->assertFalse($bitmask->has('Write'));
-    }
+    expect($bitmask->all(new Bitmask(BitmasksIntEnum::class, 0)))->toBeTrue();
+    expect($bitmask->all(new Bitmask(BitmasksIntEnum::class, 24)))->toBeTrue();
+    expect($bitmask->all(new Bitmask(BitmasksIntEnum::class, 32)))->toBeFalse();
+    expect($bitmask->all(new Bitmask(BitmasksIntEnum::class, 40)))->toBeFalse();
+    expect($bitmask->all(new Bitmask(BitmasksIntEnum::class, 56)))->toBeFalse();
 
-    public function testAll()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
+    expect($bitmask->all())->toBeTrue();
+    expect($bitmask->all(8, 16))->toBeTrue();
+    expect($bitmask->all(32))->toBeFalse();
+    expect($bitmask->all(8, 32))->toBeFalse();
+    expect($bitmask->all(8, 16, 32))->toBeFalse();
 
-        $this->assertTrue($bitmask->all(new Bitmask(BitmasksIntEnum::class, 0)));
-        $this->assertTrue($bitmask->all(new Bitmask(BitmasksIntEnum::class, 24)));
-        $this->assertFalse($bitmask->all(new Bitmask(BitmasksIntEnum::class, 32)));
-        $this->assertFalse($bitmask->all(new Bitmask(BitmasksIntEnum::class, 40)));
-        $this->assertFalse($bitmask->all(new Bitmask(BitmasksIntEnum::class, 56)));
+    expect($bitmask->all('Execute', 'Read'))->toBeTrue();
+    expect($bitmask->all('Write'))->toBeFalse();
+    expect($bitmask->all('Execute', 'Write'))->toBeFalse();
+    expect($bitmask->all('Execute', 'Read', 'Write'))->toBeFalse();
 
-        $this->assertTrue($bitmask->all());
-        $this->assertTrue($bitmask->all(8, 16));
-        $this->assertFalse($bitmask->all(32));
-        $this->assertFalse($bitmask->all(8, 32));
-        $this->assertFalse($bitmask->all(8, 16, 32));
+    expect($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Read))->toBeTrue();
+    expect($bitmask->all(BitmasksIntEnum::Write))->toBeFalse();
+    expect($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Write))->toBeFalse();
+    expect($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write))->toBeFalse();
 
-        $this->assertTrue($bitmask->all('Execute', 'Read'));
-        $this->assertFalse($bitmask->all('Write'));
-        $this->assertFalse($bitmask->all('Execute', 'Write'));
-        $this->assertFalse($bitmask->all('Execute', 'Read', 'Write'));
+    expect(fn() => $bitmask->all(new Bitmask(EnhancedUnitEnum::class, 1)))->toThrow(InvalidBitmaskEnum::class);
+});
 
-        $this->assertTrue($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Read));
-        $this->assertFalse($bitmask->all(BitmasksIntEnum::Write));
-        $this->assertFalse($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Write));
-        $this->assertFalse($bitmask->all(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write));
+test('any', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
 
-        $this->expectException(InvalidBitmaskEnum::class);
-        $bitmask->all(new Bitmask(EnhancedUnitEnum::class, 1));
-    }
+    expect($bitmask->any(new Bitmask(BitmasksIntEnum::class, 0)))->toBeTrue();
+    expect($bitmask->any(new Bitmask(BitmasksIntEnum::class, 24)))->toBeTrue();
+    expect($bitmask->any(new Bitmask(BitmasksIntEnum::class, 32)))->toBeFalse();
+    expect($bitmask->any(new Bitmask(BitmasksIntEnum::class, 40)))->toBeFalse();
+    expect($bitmask->any(new Bitmask(BitmasksIntEnum::class, 56)))->toBeFalse();
 
-    public function testAny()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
+    expect($bitmask->any())->toBeTrue();
+    expect($bitmask->any(8, 16))->toBeTrue();
+    expect($bitmask->any(32))->toBeFalse();
+    expect($bitmask->any(8, 32))->toBeTrue();
+    expect($bitmask->any(8, 16, 32))->toBeTrue();
 
-        $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 0)));
-        $this->assertTrue($bitmask->any(new Bitmask(BitmasksIntEnum::class, 24)));
-        $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 32)));
-        $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 40)));
-        $this->assertFalse($bitmask->any(new Bitmask(BitmasksIntEnum::class, 56)));
+    expect($bitmask->any('Execute', 'Read'))->toBeTrue();
+    expect($bitmask->any('Write'))->toBeFalse();
+    expect($bitmask->any('Execute', 'Write'))->toBeTrue();
+    expect($bitmask->any('Execute', 'Read', 'Write'))->toBeTrue();
 
-        $this->assertTrue($bitmask->any());
-        $this->assertTrue($bitmask->any(8, 16));
-        $this->assertFalse($bitmask->any(32));
-        $this->assertTrue($bitmask->any(8, 32));
-        $this->assertTrue($bitmask->any(8, 16, 32));
+    expect($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Read))->toBeTrue();
+    expect($bitmask->any(BitmasksIntEnum::Write))->toBeFalse();
+    expect($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Write))->toBeTrue();
+    expect($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write))->toBeTrue();
+});
 
-        $this->assertTrue($bitmask->any('Execute', 'Read'));
-        $this->assertFalse($bitmask->any('Write'));
-        $this->assertTrue($bitmask->any('Execute', 'Write'));
-        $this->assertTrue($bitmask->any('Execute', 'Read', 'Write'));
+test('xor', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
 
-        $this->assertTrue($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Read));
-        $this->assertFalse($bitmask->any(BitmasksIntEnum::Write));
-        $this->assertTrue($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Write));
-        $this->assertTrue($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write));
-    }
+    expect($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 0)))->toBeTrue();
+    expect($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 24)))->toBeTrue();
+    expect($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 32)))->toBeFalse();
+    expect($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 40)))->toBeFalse();
+    expect(
+        $bitmask->xor(
+            new Bitmask(BitmasksIntEnum::class, 40),
+            new Bitmask(BitmasksIntEnum::class, 24)
+        )
+    )->toBeTrue();
+    expect($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 56)))->toBeFalse();
 
-    public function testXor()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
+    expect($bitmask->xor())->toBeFalse();
 
-        $this->assertTrue($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 0)));
-        $this->assertTrue($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 24)));
-        $this->assertFalse($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 32)));
-        $this->assertFalse($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 40)));
-        $this->assertTrue(
-            $bitmask->xor(
-                new Bitmask(BitmasksIntEnum::class, 40),
-                new Bitmask(BitmasksIntEnum::class, 24)
-            )
-        );
-        $this->assertFalse($bitmask->xor(new Bitmask(BitmasksIntEnum::class, 56)));
+    expect($bitmask->xor(8, 16))->toBeFalse();
+    expect($bitmask->xor(32))->toBeFalse();
+    expect($bitmask->xor(8, 32))->toBeTrue();
+    expect($bitmask->xor(8, 16, 32))->toBeFalse();
 
-        $this->assertFalse($bitmask->xor());
+    expect($bitmask->xor('Execute', 'Read'))->toBeFalse();
+    expect($bitmask->xor('Write'))->toBeFalse();
+    expect($bitmask->xor('Execute', 'Write'))->toBeTrue();
+    expect($bitmask->xor('Execute', 'Read', 'Write'))->toBeFalse();
 
-        $this->assertFalse($bitmask->xor(8, 16));
-        $this->assertFalse($bitmask->xor(32));
-        $this->assertTrue($bitmask->xor(8, 32));
-        $this->assertFalse($bitmask->xor(8, 16, 32));
+    expect($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Read))->toBeFalse();
+    expect($bitmask->xor(BitmasksIntEnum::Write))->toBeFalse();
+    expect($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Write))->toBeTrue();
+    expect($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write))->toBeFalse();
+});
 
-        $this->assertFalse($bitmask->xor('Execute', 'Read'));
-        $this->assertFalse($bitmask->xor('Write'));
-        $this->assertTrue($bitmask->xor('Execute', 'Write'));
-        $this->assertFalse($bitmask->xor('Execute', 'Read', 'Write'));
+test('none', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 8);
 
-        $this->assertFalse($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Read));
-        $this->assertFalse($bitmask->xor(BitmasksIntEnum::Write));
-        $this->assertTrue($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Write));
-        $this->assertFalse($bitmask->xor(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write));
-    }
+    expect($bitmask->none(new Bitmask(BitmasksIntEnum::class, 0)))->toBeTrue();
+    expect($bitmask->none(new Bitmask(BitmasksIntEnum::class, 8)))->toBeFalse();
+    expect($bitmask->none(
+        new Bitmask(BitmasksIntEnum::class, 16),
+        new Bitmask(BitmasksIntEnum::class, 32)
+    ))->toBeTrue();
+    expect($bitmask->none(
+        new Bitmask(BitmasksIntEnum::class, 8),
+        new Bitmask(BitmasksIntEnum::class, 32)
+    ))->toBeFalse();
 
-    public function testNone()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 8);
+    expect($bitmask->none(8))->toBeFalse();
+    expect($bitmask->none(32))->toBeTrue();
+    expect($bitmask->none(16, 32))->toBeTrue();
+    expect($bitmask->none(8, 32))->toBeFalse();
 
-        $this->assertTrue($bitmask->none(new Bitmask(BitmasksIntEnum::class, 0)));
-        $this->assertFalse($bitmask->none(new Bitmask(BitmasksIntEnum::class, 8)));
-        $this->assertTrue($bitmask->none(
-            new Bitmask(BitmasksIntEnum::class, 16),
-            new Bitmask(BitmasksIntEnum::class, 32)
-        ));
-        $this->assertFalse($bitmask->none(
-            new Bitmask(BitmasksIntEnum::class, 8),
-            new Bitmask(BitmasksIntEnum::class, 32)
-        ));
+    expect($bitmask->none('Execute'))->toBeFalse();
+    expect($bitmask->none('Write'))->toBeTrue();
+    expect($bitmask->none('Read', 'Write'))->toBeTrue();
+    expect($bitmask->none('Execute', 'Read'))->toBeFalse();
 
-        $this->assertFalse($bitmask->none(8));
-        $this->assertTrue($bitmask->none(32));
-        $this->assertTrue($bitmask->none(16, 32));
-        $this->assertFalse($bitmask->none(8, 32));
+    expect($bitmask->none('Execute'))->toBeFalse();
+    expect($bitmask->none('Write'))->toBeTrue();
+    expect($bitmask->none('Read', 'Write'))->toBeTrue();
+    expect($bitmask->none('Execute', 'Read'))->toBeFalse();
 
-        $this->assertFalse($bitmask->none('Execute'));
-        $this->assertTrue($bitmask->none('Write'));
-        $this->assertTrue($bitmask->none('Read', 'Write'));
-        $this->assertFalse($bitmask->none('Execute', 'Read'));
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 40);
 
-        $this->assertFalse($bitmask->none('Execute'));
-        $this->assertTrue($bitmask->none('Write'));
-        $this->assertTrue($bitmask->none('Read', 'Write'));
-        $this->assertFalse($bitmask->none('Execute', 'Read'));
+    expect(
+        $bitmask->none(
+            new Bitmask(BitmasksIntEnum::class, 24),
+        )
+    )->toBeTrue();
+});
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 40);
+test('cases', function () {
+    expect((new Bitmask(BitmasksIntEnum::class, 0))->cases())->toBe([]);
 
-        $this->assertTrue(
-            $bitmask->none(
-                new Bitmask(BitmasksIntEnum::class, 24),
-            )
-        );
-    }
+    expect((new Bitmask(BitmasksIntEnum::class, 8))->cases())->toBe([
+        BitmasksIntEnum::Execute
+    ]);
 
-    public function testCases()
-    {
-        $this->assertEquals(
-            [],
-            (new Bitmask(BitmasksIntEnum::class, 0))->cases()
-        );
+    expect((new Bitmask(BitmasksIntEnum::class, 24))->cases())->toBe([
+        BitmasksIntEnum::Execute,
+        BitmasksIntEnum::Read
+    ]);
 
-        $this->assertEquals(
-            [
-                BitmasksIntEnum::Execute
-            ],
-            (new Bitmask(BitmasksIntEnum::class, 8))->cases()
-        );
-
-        $this->assertEquals(
-            [
-                BitmasksIntEnum::Execute,
-                BitmasksIntEnum::Read
-            ],
-            (new Bitmask(BitmasksIntEnum::class, 24))->cases()
-        );
-
-        $this->assertEquals(
-            BitmasksIntEnum::cases(),
-            (new Bitmask(BitmasksIntEnum::class, 56))->cases()
-        );
-    }
-}
+    expect((new Bitmask(BitmasksIntEnum::class, 56))->cases())->toBe(BitmasksIntEnum::cases());
+});

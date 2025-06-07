@@ -1,129 +1,97 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Attributes\AnotherAttribute;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Attributes\AttributesEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Attributes\ClassAttributesEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Attributes\Description;
-use PHPUnit\Framework\TestCase;
 
-class AttributesTest extends TestCase
-{
-    public function testShouldGetDescription(): void
-    {
-        $description = AttributesEnum::WithAttribute->getAttribute(Description::class);
+test('should get description', function () {
+    $description = AttributesEnum::WithAttribute->getAttribute(Description::class);
 
-        $this->assertInstanceOf(Description::class, $description);
+    expect($description)->toBeInstanceOf(Description::class);
+    expect($description->value)->toBe('has description');
+});
 
-        $this->assertEquals('has description', $description->value);
-    }
+test('should get another attribute', function () {
+    $description = AttributesEnum::WithMixedAttributes->getAttribute(AnotherAttribute::class);
 
-    public function testShouldGetAnotherAttribute(): void
-    {
-        $description = AttributesEnum::WithMixedAttributes->getAttribute(AnotherAttribute::class);
+    expect($description)->toBeInstanceOf(AnotherAttribute::class);
+});
 
-        $this->assertInstanceOf(AnotherAttribute::class, $description);
-    }
+test('should return null when no description', function () {
+    $description = AttributesEnum::WithoutAttribute->getAttribute(Description::class);
 
+    expect($description)->toBeNull();
+});
 
-    public function testShouldReturnNullWhenNoDescription(): void
-    {
-        $description = AttributesEnum::WithoutAttribute->getAttribute(Description::class);
+test('should get descriptions', function () {
+    $descriptions = AttributesEnum::WithMultipleAttributes->getAttributes(Description::class);
 
-        $this->assertNull($description);
-    }
+    expect($descriptions)->toHaveCount(2);
+    expect($descriptions[0])->toBeInstanceOf(Description::class);
+    expect($descriptions[1])->toBeInstanceOf(Description::class);
+    expect($descriptions[0]->value)->toBe('has description');
+    expect($descriptions[1]->value)->toBe('and another one');
+});
 
-    public function testShouldGetDescriptions(): void
-    {
-        $descriptions = AttributesEnum::WithMultipleAttributes->getAttributes(Description::class);
+test('should get all attributes', function () {
+    $descriptions = AttributesEnum::WithMultipleAttributes->getAttributes();
 
-        $this->assertCount(2, $descriptions);
+    expect($descriptions)->toHaveCount(2);
+    expect($descriptions[0])->toBeInstanceOf(Description::class);
+    expect($descriptions[1])->toBeInstanceOf(Description::class);
+    expect($descriptions[0]->value)->toBe('has description');
+    expect($descriptions[1]->value)->toBe('and another one');
+});
 
-        $this->assertInstanceOf(Description::class, $descriptions[0]);
-        $this->assertInstanceOf(Description::class, $descriptions[1]);
+test('should get mixed attributes', function () {
+    $descriptions = AttributesEnum::WithMixedAttributes->getAttributes();
 
-        $this->assertEquals('has description', $descriptions[0]->value);
-        $this->assertEquals('and another one', $descriptions[1]->value);
-    }
+    expect($descriptions)->toHaveCount(2);
+    expect($descriptions[0])->toBeInstanceOf(Description::class);
+    expect($descriptions[1])->toBeInstanceOf(AnotherAttribute::class);
+    expect($descriptions[0]->value)->toBe('has description');
+});
 
+test('get attributes should get empty array', function () {
+    $descriptions = AttributesEnum::WithoutAttribute->getAttributes(Description::class);
 
-    public function testShouldGetAllAttributes(): void
-    {
-        $descriptions = AttributesEnum::WithMultipleAttributes->getAttributes();
+    expect($descriptions)->toHaveCount(0);
+});
 
-        $this->assertCount(2, $descriptions);
+test('get attributes should get empty array with non existent attribute', function () {
+    $descriptions = AttributesEnum::WithAttribute->getAttributes(AnotherAttribute::class);
 
-        $this->assertInstanceOf(Description::class, $descriptions[0]);
-        $this->assertInstanceOf(Description::class, $descriptions[1]);
+    expect($descriptions)->toHaveCount(0);
+});
 
-        $this->assertEquals('has description', $descriptions[0]->value);
-        $this->assertEquals('and another one', $descriptions[1]->value);
-    }
+test('get enum attribute returns null', function () {
+    expect(AttributesEnum::getEnumAttribute(Description::class))->toBeNull();
+});
 
-    public function testShouldGetMixedAttributes(): void
-    {
-        $descriptions = AttributesEnum::WithMixedAttributes->getAttributes();
+test('get enum attribute returns empty', function () {
+    expect(AttributesEnum::getEnumAttributes(Description::class))->toBeEmpty();
+});
 
-        $this->assertCount(2, $descriptions);
+test('get enum attribute', function () {
+    $description = ClassAttributesEnum::getEnumAttribute(Description::class);
 
-        $this->assertInstanceOf(Description::class, $descriptions[0]);
-        $this->assertInstanceOf(AnotherAttribute::class, $descriptions[1]);
+    expect($description)->toBeInstanceOf(Description::class);
+    expect($description->value)->toBe('test');
+});
 
-        $this->assertEquals('has description', $descriptions[0]->value);
-    }
+test('get enum attributes by name', function () {
+    $description = ClassAttributesEnum::getEnumAttributes(Description::class);
 
-    public function testGetAttributesShouldGetEmptyArray(): void
-    {
-        $descriptions = AttributesEnum::WithoutAttribute->getAttributes(Description::class);
+    expect($description[0])->toBeInstanceOf(Description::class);
+    expect($description[0]->value)->toBe('test');
+});
 
-        $this->assertCount(0, $descriptions);
-    }
+test('get enum attributes without name', function () {
+    $description = ClassAttributesEnum::getEnumAttributes();
 
-    public function testGetAttributesShouldGetEmptyArrayWithNonExistentAttribute(): void
-    {
-        $descriptions = AttributesEnum::WithAttribute->getAttributes(AnotherAttribute::class);
-
-        $this->assertCount(0, $descriptions);
-    }
-
-    public function testGetEnumAttributeReturnsNull()
-    {
-        $this->assertNull(AttributesEnum::getEnumAttribute(Description::class));
-    }
-
-    public function testGetEnumAttributeReturnsEmpty()
-    {
-        $this->assertEmpty(AttributesEnum::getEnumAttributes(Description::class));
-    }
-
-    public function testGetEnumAttribute()
-    {
-        $description = ClassAttributesEnum::getEnumAttribute(Description::class);
-
-        $this->assertInstanceOf(Description::class, $description);
-
-        $this->assertEquals('test', $description->value);
-    }
-
-    public function testGetEnumAttributesByName()
-    {
-        $description = ClassAttributesEnum::getEnumAttributes(Description::class);
-
-        $this->assertInstanceOf(Description::class, $description[0]);
-
-        $this->assertEquals('test', $description[0]->value);
-    }
-
-    public function testGetEnumAttributesWithoutName()
-    {
-        $description = ClassAttributesEnum::getEnumAttributes();
-
-        $this->assertCount(2, $description);
-
-        $this->assertInstanceOf(Description::class, $description[0]);
-        $this->assertInstanceOf(AnotherAttribute::class, $description[1]);
-
-        $this->assertEquals('test', $description[0]->value);
-    }
-}
+    expect($description)->toHaveCount(2);
+    expect($description[0])->toBeInstanceOf(Description::class);
+    expect($description[1])->toBeInstanceOf(AnotherAttribute::class);
+    expect($description[0]->value)->toBe('test');
+});

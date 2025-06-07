@@ -1,77 +1,64 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers\Bitmasks\Concerns;
-
 use Henzeb\Enumhancer\Helpers\Bitmasks\Bitmask;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
-use PHPUnit\Framework\TestCase;
 
-class BitmaskModifiersTest extends TestCase
-{
-    public function testSet()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
-        $this->assertEquals(16, $bitmask->set($bitmask->copy()->set(1))->value());
+test('set', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
+    expect($bitmask->set($bitmask->copy()->set(1))->value())->toBe(16);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
-        $this->assertEquals(16, $bitmask->set(1)->value());
-        $this->assertEquals(24, $bitmask->set(8)->value());
-        $this->assertEquals(24, $bitmask->set(8)->value());
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
+    expect($bitmask->set(1)->value())->toBe(16);
+    expect($bitmask->set(8)->value())->toBe(24);
+    expect($bitmask->set(8)->value())->toBe(24);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
-        $this->assertEquals(16, $bitmask->set(BitmasksIntEnum::Read)->value());
-        $this->assertEquals(16, $bitmask->set(BitmasksIntEnum::Read)->value());
-        $this->assertEquals(24, $bitmask->set(BitmasksIntEnum::Execute)->value());
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
+    expect($bitmask->set(BitmasksIntEnum::Read)->value())->toBe(16);
+    expect($bitmask->set(BitmasksIntEnum::Read)->value())->toBe(16);
+    expect($bitmask->set(BitmasksIntEnum::Execute)->value())->toBe(24);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
-        $this->assertEquals(48, $bitmask->set('Read', 'Write')->value());
-    }
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 0);
+    expect($bitmask->set('Read', 'Write')->value())->toBe(48);
+});
 
-    public function testUnset()
-    {
+test('unset', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    expect($bitmask->unset($bitmask->copy()->clear()->set(1))->value())->toBe(40);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
-        $this->assertEquals(40, $bitmask->unset($bitmask->copy()->clear()->set(1))->value());
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    expect($bitmask->unset(1)->value())->toBe(40);
+    expect($bitmask->unset(8)->value())->toBe(32);
+    expect($bitmask->unset(8)->value())->toBe(32);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
-        $this->assertEquals(40, $bitmask->unset(1)->value());
-        $this->assertEquals(32, $bitmask->unset(8)->value());
-        $this->assertEquals(32, $bitmask->unset(8)->value());
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    expect($bitmask->unset(BitmasksIntEnum::Read)->value())->toBe(40);
+    expect($bitmask->unset(BitmasksIntEnum::Read)->value())->toBe(40);
+    expect($bitmask->unset(BitmasksIntEnum::Execute)->value())->toBe(32);
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
-        $this->assertEquals(40, $bitmask->unset(BitmasksIntEnum::Read)->value());
-        $this->assertEquals(40, $bitmask->unset(BitmasksIntEnum::Read)->value());
-        $this->assertEquals(32, $bitmask->unset(BitmasksIntEnum::Execute)->value());
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    expect($bitmask->unset('Read', 'Write')->value())->toBe(8);
+});
 
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
-        $this->assertEquals(8, $bitmask->unset('Read', 'Write')->value());
-    }
+test('toggle', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 40);
+    expect($bitmask->toggle('Execute')->value())->toBe(32);
+    expect($bitmask->toggle(BitmasksIntEnum::Read)->value())->toBe(48);
+    expect($bitmask->toggle(32, 16, 8)->value())->toBe(8);
+});
 
-    public function testToggle()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 40);
-        $this->assertEquals(32, $bitmask->toggle('Execute')->value());
-        $this->assertEquals(48, $bitmask->toggle(BitmasksIntEnum::Read)->value());
-        $this->assertEquals(8, $bitmask->toggle(32, 16, 8)->value());
-    }
+test('clear', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
 
-    public function testClear()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    expect($bitmask->clear()->value())->toBe(0);
+});
 
-        $this->assertEquals(0, $bitmask->clear()->value());
-    }
+test('copy', function () {
+    $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
+    $copy = $bitmask->copy();
 
-    public function testCopy()
-    {
-        $bitmask = new Bitmask(BitmasksIntEnum::class, 56);
-        $copy = $bitmask->copy();
+    expect($bitmask !== $copy)->toBeTrue();
 
-        $this->assertTrue($bitmask !== $copy);
+    expect($copy->for(BitmasksIntEnum::class))->toBeTrue();
 
-        $this->assertTrue($copy->for(BitmasksIntEnum::class));
-
-        $this->assertEquals($bitmask->value(), $copy->value());
-    }
-
-}
+    expect($copy->value())->toBe($bitmask->value());
+});

@@ -1,173 +1,130 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
 use Henzeb\Enumhancer\Helpers\Bitmasks\EnumBitmasks;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksCorrectModifierEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
-use PHPUnit\Framework\TestCase;
-use TypeError;
 
-class BitmasksTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        set_error_handler(static function (int $errno, string $errstr): never {
-            throw new TypeError($errstr, $errno);
-        }, E_USER_ERROR);
-    }
+beforeEach(function () {
+    set_error_handler(static function (int $errno, string $errstr): never {
+        throw new TypeError($errstr, $errno);
+    }, E_USER_ERROR);
+});
 
-    public function testShouldReturnCorrectBit(): void
-    {
-        $this->assertEquals(1, IntBackedEnum::TEST->bit());
-        $this->assertEquals(2, IntBackedEnum::TEST_2->bit());
-        $this->assertEquals(4, IntBackedEnum::TEST_3->bit());
-    }
+afterEach(function () {
+    restore_error_handler();
+    restore_exception_handler();
+});
 
-    public function testShouldReturnBits(): void
-    {
-        $this->assertEquals(
-            [
-                1 => 'TEST',
-                2 => 'TEST_2',
-                4 => 'TEST_3'
-            ],
-            IntBackedEnum::bits()
-        );
-    }
+test('should return correct bit', function () {
+    expect(IntBackedEnum::TEST->bit())->toBe(1);
+    expect(IntBackedEnum::TEST_2->bit())->toBe(2);
+    expect(IntBackedEnum::TEST_3->bit())->toBe(4);
+});
 
-    public function testShouldReturnBitmaskInstance(): void
-    {
-        $mask = IntBackedEnum::mask();
-        $this->assertEquals(IntBackedEnum::class, $mask->forEnum());
-        $this->assertEquals(0, $mask->value());
-    }
+test('should return bits', function () {
+    expect(IntBackedEnum::bits())->toBe([
+        1 => 'TEST',
+        2 => 'TEST_2',
+        4 => 'TEST_3'
+    ]);
+});
 
-    public function testShouldReturnBitmaskInstanceWithValues(): void
-    {
-        $mask = IntBackedEnum::mask(IntBackedEnum::TEST, 'TEST_2');
-        $this->assertEquals(3, $mask->value());
-    }
+test('should return bitmask instance', function () {
+    $mask = IntBackedEnum::mask();
+    expect($mask->forEnum())->toBe(IntBackedEnum::class);
+    expect($mask->value())->toBe(0);
+});
 
-    public function testShouldCreateBitmaskFromMask(): void
-    {
-        $mask = IntBackedEnum::fromMask(3);
-        $this->assertEquals(IntBackedEnum::class, $mask->forEnum());
-        $this->assertEquals(3, $mask->value());
+test('should return bitmask instance with values', function () {
+    $mask = IntBackedEnum::mask(IntBackedEnum::TEST, 'TEST_2');
+    expect($mask->value())->toBe(3);
+});
 
-        $mask = IntBackedEnum::fromMask(4);
-        $this->assertEquals(4, $mask->value());
-    }
+test('should create bitmask from mask', function () {
+    $mask = IntBackedEnum::fromMask(3);
+    expect($mask->forEnum())->toBe(IntBackedEnum::class);
+    expect($mask->value())->toBe(3);
 
-    public function testShouldTryCreateBitmaskFromMask(): void
-    {
-        $mask = IntBackedEnum::tryMask(3);
-        $this->assertEquals(IntBackedEnum::class, $mask->forEnum());
-        $this->assertEquals(3, $mask->value());
+    $mask = IntBackedEnum::fromMask(4);
+    expect($mask->value())->toBe(4);
+});
 
-        $mask = IntBackedEnum::tryMask(4);
-        $this->assertEquals(4, $mask->value());
+test('should try create bitmask from mask', function () {
+    $mask = IntBackedEnum::tryMask(3);
+    expect($mask->forEnum())->toBe(IntBackedEnum::class);
+    expect($mask->value())->toBe(3);
 
-        $mask = IntBackedEnum::tryMask(9);
-        $this->assertEquals(0, $mask->value());
-    }
+    $mask = IntBackedEnum::tryMask(4);
+    expect($mask->value())->toBe(4);
 
-    public function testShouldExpectMaskWithDefaultValue(): void
-    {
-        IntBackedEnum::setDefault(IntBackedEnum::TEST_3);
-        $mask = IntBackedEnum::tryMask(9);
-        $this->assertEquals(4, $mask->value());
+    $mask = IntBackedEnum::tryMask(9);
+    expect($mask->value())->toBe(0);
+});
 
-        IntBackedEnum::setDefault(null);
-    }
+test('should expect mask with default value', function () {
+    IntBackedEnum::setDefault(IntBackedEnum::TEST_3);
+    $mask = IntBackedEnum::tryMask(9);
+    expect($mask->value())->toBe(4);
 
-    public function testTryMaskShouldExpectMaskWithOverridenDefault(): void
-    {
-        IntBackedEnum::setDefault(IntBackedEnum::TEST_3);
-        $mask = IntBackedEnum::tryMask(9, 1);
-        $this->assertEquals(2, $mask->value());
+    IntBackedEnum::setDefault(null);
+});
 
-        IntBackedEnum::setDefault(null);
-    }
+test('try mask should expect mask with overriden default', function () {
+    IntBackedEnum::setDefault(IntBackedEnum::TEST_3);
+    $mask = IntBackedEnum::tryMask(9, 1);
+    expect($mask->value())->toBe(2);
 
-    public function testTryMaskShouldExpectMaskWithGivenDefault(): void
-    {
-        $mask = IntBackedEnum::tryMask(9, 1);
-        $this->assertEquals(2, $mask->value());
-    }
+    IntBackedEnum::setDefault(null);
+});
 
-    public function testShouldUseIntegerValuesAsBit()
-    {
+test('try mask should expect mask with given default', function () {
+    $mask = IntBackedEnum::tryMask(9, 1);
+    expect($mask->value())->toBe(2);
+});
 
-        $this->assertEquals(
-            [
-                8 => 'Execute',
-                16 => 'Read',
-                32 => 'Write'
-            ],
-            BitmasksIntEnum::bits()
-        );
+test('should use integer values as bit', function () {
+    expect(BitmasksIntEnum::bits())->toBe([
+        8 => 'Execute',
+        16 => 'Read',
+        32 => 'Write'
+    ]);
 
-        $this->assertEquals(16, BitmasksIntEnum::Read->bit());
-    }
+    expect(BitmasksIntEnum::Read->bit())->toBe(16);
+});
 
-    public function testBitShouldThrowErrorWhenIncorrectValues()
-    {
-        $this->expectException(TypeError::class);
-        BitmasksIncorrectIntEnum::Read->bit();
-    }
+test('bit should throw error when incorrect values', function () {
+    BitmasksIncorrectIntEnum::Read->bit();
+})->throws(TypeError::class);
 
-    public function testBitsShouldThrowErrorWhenIncorrectValues()
-    {
-        $this->expectException(TypeError::class);
-        BitmasksIncorrectIntEnum::bits();
-    }
+test('bits should throw error when incorrect values', function () {
+    BitmasksIncorrectIntEnum::bits();
+})->throws(TypeError::class);
 
-    public function testShouldThrowErrorWhenIncorrectValues()
-    {
-        $this->expectException(TypeError::class);
-        BitmasksIncorrectIntEnum::mask();
-    }
+test('should throw error when incorrect values', function () {
+    BitmasksIncorrectIntEnum::mask();
+})->throws(TypeError::class);
 
-    public function testFromMaskShouldThrowErrorWhenIncorrectValues()
-    {
-        $this->expectException(TypeError::class);
-        BitmasksIncorrectIntEnum::fromMask(5);
-    }
+test('from mask should throw error when incorrect values', function () {
+    BitmasksIncorrectIntEnum::fromMask(5);
+})->throws(TypeError::class);
 
-    public function testTryMaskShouldThrowErrorWhenIncorrectValues()
-    {
-        $this->expectException(TypeError::class);
-        BitmasksIncorrectIntEnum::tryMask(5);
-    }
+test('try mask should throw error when incorrect values', function () {
+    BitmasksIncorrectIntEnum::tryMask(5);
+})->throws(TypeError::class);
 
-    public function testShouldThrowErrorWhenCastingTobits()
-    {
-        $this->expectException(TypeError::class);
-        EnumBitmasks::getBits(BitmasksIntEnum::class, 64);
-    }
+test('should throw error when casting to bits', function () {
+    EnumBitmasks::getBits(BitmasksIntEnum::class, 64);
+})->throws(TypeError::class);
 
-    public function testAllowAsModifier()
-    {
+test('allow as modifier', function () {
+    expect(BitmasksCorrectModifierEnum::bits())->toBe([
+        1 => "Neither",
+        2 => "Read",
+        4 => "Write",
+        6 => "Both",
+    ]);
 
-        $this->assertSame(
-            [
-                1 => "Neither",
-                2 => "Read",
-                4 => "Write",
-                6 => "Both",
-            ],
-            BitmasksCorrectModifierEnum::bits()
-        );
-
-        $this->assertEquals(6, BitmasksCorrectModifierEnum::mask(2, 4)->value());
-    }
-
-    protected function tearDown(): void
-    {
-        restore_error_handler();
-        restore_exception_handler();
-    }
-}
+    expect(BitmasksCorrectModifierEnum::mask(2, 4)->value())->toBe(6);
+});

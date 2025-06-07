@@ -11,6 +11,7 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\MissingConstantFromReflectionException;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\Constant\ConstantArrayType;
 use PHPStan\Type\Constant\ConstantStringType;
 use function strtolower;
@@ -67,19 +68,23 @@ class MapperConstantRule implements Rule
 
         if (!$implementsMappers && $isValid) {
             $return = [
-                sprintf(
-                    'Enumhancer: `%s` is not going to be used because enum is not implementing `Mappers`',
-                    $constantName,
-                )
+                RuleErrorBuilder::message(
+                    sprintf(
+                        'Enumhancer: `%s` is not going to be used because enum is not implementing `Mappers`',
+                        $constantName,
+                    )
+                )->build()
             ];
         }
 
         if ($implementsMappers && !$isValid) {
             $return = [
-                sprintf(
-                    'Enumhancer: The specified `%s` map is invalid',
-                    $constantName,
-                )
+                RuleErrorBuilder::message(
+                    sprintf(
+                        'Enumhancer: The specified `%s` map is invalid',
+                        $constantName,
+                    )
+                )->build()
             ];
         }
 
@@ -99,8 +104,12 @@ class MapperConstantRule implements Rule
 
         if ($valueType instanceof ConstantStringType) {
             $class = $valueType->getValue();
-            $isValid = $valueType->isClassStringType()->yes()
-                && $this->reflectionProvider->getClass($class)->isSubclassOf(Mapper::class);
+            try {
+                $classReflection = $this->reflectionProvider->getClass($class);
+                $isValid = $classReflection->isSubclassOf(Mapper::class);
+            } catch (\PHPStan\Broker\ClassNotFoundException) {
+                $isValid = false;
+            }
         }
 
         return $isValid;

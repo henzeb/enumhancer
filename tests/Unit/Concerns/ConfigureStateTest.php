@@ -1,89 +1,76 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use Henzeb\Enumhancer\Concerns\ConfigureState;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Configure\ConfigureEnum;
-use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
-use PHPUnit\Framework\TestCase;
 
-class ConfigureStateTest extends TestCase
-{
-    use ClearsEnumProperties;
+afterEach(function () {
+    \Closure::bind(function () {
+        EnumProperties::clearGlobal();
+        EnumProperties::$properties = [];
+        EnumProperties::$once = [];
+    }, null, EnumProperties::class)();
+});
 
-    public function testSetTransitionHook()
-    {
-        $hook = new class extends TransitionHook {
-            public function allowsConfiguredNotConfigured(): bool
-            {
-                return false;
-            }
-        };
+test('set transition hook', function () {
+    $hook = new class extends TransitionHook {
+        public function allowsConfiguredNotConfigured(): bool
+        {
+            return false;
+        }
+    };
 
-        ConfigureEnum::setTransitionHook($hook);
+    ConfigureEnum::setTransitionHook($hook);
 
-        $this->assertSame($hook, EnumProperties::get(ConfigureEnum::class, EnumProperties::reservedWord('hooks')));
+    expect(EnumProperties::get(ConfigureEnum::class, EnumProperties::reservedWord('hooks')))->toBe($hook);
 
-        $this->assertFalse(
-            ConfigureEnum::Configured->isTransitionAllowed(ConfigureEnum::NotConfigured)
-        );
+    expect(
+        ConfigureEnum::Configured->isTransitionAllowed(ConfigureEnum::NotConfigured)
+    )->toBeFalse();
+});
 
-    }
+test('set transition hook once', function () {
+    $hook = new class extends TransitionHook {
+        public function allowsConfiguredNotConfigured(): bool
+        {
+            return false;
+        }
+    };
 
-    public function testSetTransitionHookOnce()
-    {
-        $hook = new class extends TransitionHook {
-            public function allowsConfiguredNotConfigured(): bool
-            {
-                return false;
-            }
-        };
+    ConfigureEnum::setTransitionHookOnce($hook);
 
-        ConfigureEnum::setTransitionHookOnce($hook);
+    expect(EnumProperties::get(ConfigureEnum::class, EnumProperties::reservedWord('hooks')))->toBe($hook);
 
-        $this->assertSame($hook, EnumProperties::get(ConfigureEnum::class, EnumProperties::reservedWord('hooks')));
+    expect(ConfigureEnum::Configured->isTransitionAllowed(ConfigureEnum::NotConfigured))->toBeFalse();
 
-        $this->assertFalse(ConfigureEnum::Configured->isTransitionAllowed(ConfigureEnum::NotConfigured));
+    ConfigureEnum::setTransitionHook(new class extends TransitionHook{});
+})->throws(PropertyAlreadyStoredException::class);
 
-        $this->expectException(PropertyAlreadyStoredException::class);
+test('set transitions', function () {
+    $expected = [
+        ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
+        ConfigureEnum::Configured->name => ConfigureEnum::NotConfigured,
+    ];
 
-        ConfigureEnum::setTransitionHook(new class extends TransitionHook{});
-    }
+    ConfigureEnum::setTransitions([
+        ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
+    ]);
 
-    public function testSetTransitions()
-    {
-        $expected = [
-            ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
-            ConfigureEnum::Configured->name => ConfigureEnum::NotConfigured,
-        ];
+    expect(ConfigureEnum::transitions())->toEqual($expected);
+});
 
+test('set transitions once', function () {
+    $expected = [
+        ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
+        ConfigureEnum::Configured->name => ConfigureEnum::NotConfigured,
+    ];
 
-        ConfigureEnum::setTransitions([
-            ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
-        ]);
+    ConfigureEnum::setTransitionsOnce([
+        ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
+    ]);
 
-        $this->assertEquals($expected, ConfigureEnum::transitions());
-    }
+    expect(ConfigureEnum::transitions())->toEqual($expected);
 
-    public function testSetTransitionsOnce()
-    {
-        $expected = [
-            ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
-            ConfigureEnum::Configured->name => ConfigureEnum::NotConfigured,
-        ];
-
-
-        ConfigureEnum::setTransitionsOnce([
-            ConfigureEnum::NotConfigured->name => ConfigureEnum::Configured,
-        ]);
-
-        $this->assertEquals($expected, ConfigureEnum::transitions());
-
-        $this->expectException(PropertyAlreadyStoredException::class);
-
-        ConfigureEnum::setTransitions([]);
-    }
-}
+    ConfigureEnum::setTransitions([]);
+})->throws(PropertyAlreadyStoredException::class);

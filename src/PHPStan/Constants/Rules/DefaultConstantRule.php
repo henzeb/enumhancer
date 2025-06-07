@@ -8,6 +8,7 @@ use PhpParser\Node\Stmt\ClassConst;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleErrorBuilder;
 use PHPStan\Type\Enum\EnumCaseObjectType;
 use ReflectionException;
 
@@ -56,21 +57,25 @@ class DefaultConstantRule implements Rule
 
         if ($implementsDefault && !$valueFromEnum) {
             $return = [
-                sprintf(
-                    'Enumhancer: enum is implementing `Defaults`, '
-                    . 'but constant `%s` is not referencing to one of its own cases.',
-                    $constantName
-                )
+                RuleErrorBuilder::message(
+                    sprintf(
+                        'Enumhancer: enum is implementing `Defaults`, '
+                        . 'but constant `%s` is not referencing to one of its own cases.',
+                        $constantName
+                    )
+                )->build()
             ];
         }
 
         if (!$implementsDefault && $valueFromEnum) {
             $return = [
-                sprintf(
-                    'Enumhancer: Constant `%s` is not going to be used, '
-                    . 'because enum is not implementing `Defaults`',
-                    $constantName
-                )
+                RuleErrorBuilder::message(
+                    sprintf(
+                        'Enumhancer: Constant `%s` is not going to be used, '
+                        . 'because enum is not implementing `Defaults`',
+                        $constantName
+                    )
+                )->build()
             ];
         }
 

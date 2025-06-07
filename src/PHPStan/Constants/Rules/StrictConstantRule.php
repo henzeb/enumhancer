@@ -8,6 +8,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\ClassConstantsNode;
 use PHPStan\Reflection\ClassReflection;
 use PHPStan\Rules\Rule;
+use PHPStan\Rules\RuleErrorBuilder;
 
 /**
  * @phpstan-implements Rule<ClassConstantsNode>
@@ -35,7 +36,9 @@ class StrictConstantRule implements Rule
 
         if ($class->getConstant($constantName)->getValueType()->isBoolean()->no()) {
             return [
-                sprintf('Enumhancer: constant `%s` should be a boolean.', $constantName)
+                RuleErrorBuilder::message(
+                    sprintf('Enumhancer: constant `%s` should be a boolean.', $constantName)
+                )->build()
             ];
         }
 

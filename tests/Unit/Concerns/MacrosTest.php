@@ -1,188 +1,139 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use BadMethodCallException;
-use Exception;
 use Henzeb\Enumhancer\Helpers\Enumhancer;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosAnotherUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Macros\MacrosUnitEnum;
-use PHPUnit\Framework\TestCase;
 
-class MacrosTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        set_error_handler(static function (int $errno, string $errstr): never {
-            throw new Exception($errstr, $errno);
-        }, E_USER_ERROR);
-    }
+beforeEach(function () {
+    set_error_handler(static function (int $errno, string $errstr): never {
+        throw new \Exception($errstr, $errno);
+    }, E_USER_ERROR);
+});
 
-    public function expectError(): void
-    {
-        $this->expectException(Exception::class);
-    }
+afterEach(function () {
+    MacrosUnitEnum::flushMacros();
+    restore_error_handler();
+});
 
-    public function testShouldAddMacroAndflush()
-    {
-        MacrosUnitEnum::macro('test', static fn() => true);
+test('should add macro and flush', function () {
+    MacrosUnitEnum::macro('test', static fn() => true);
 
-        $this->assertTrue(MacrosUnitEnum::test());
+    expect(MacrosUnitEnum::test())->toBeTrue();
 
-        MacrosUnitEnum::flushMacros();
+    MacrosUnitEnum::flushMacros();
 
-        $this->expectException(BadMethodCallException::class);
+    expect(fn() => MacrosUnitEnum::test())->toThrow(\BadMethodCallException::class);
+});
 
-        MacrosUnitEnum::test();
-    }
+test('should only flush owned macros', function () {
+    MacrosUnitEnum::macro('test', static fn() => true);
+    MacrosAnotherUnitEnum::macro('test', static fn() => true);
+    MacrosAnotherUnitEnum::flushMacros();
 
-    public function testShouldOnlyflushOwnedMacros()
-    {
-        MacrosUnitEnum::macro('test', static fn() => true);
-        MacrosAnotherUnitEnum::macro('test', static fn() => true);
-        MacrosAnotherUnitEnum::flushMacros();
+    expect(MacrosUnitEnum::test())->toBeTrue();
 
-        $this->assertTrue(MacrosUnitEnum::test());
+    expect(fn() => MacrosAnotherUnitEnum::test())->toThrow(\BadMethodCallException::class);
+});
 
-        $this->expectException(BadMethodCallException::class);
+test('should only add macro to given enum', function () {
+    MacrosUnitEnum::macro('test', static fn() => true);
 
-        MacrosAnotherUnitEnum::test();
-    }
+    expect(fn() => MacrosAnotherUnitEnum::test())->toThrow(\BadMethodCallException::class);
+});
 
-    public function testShouldOnlyAddMacroToGivenEnum()
-    {
-        MacrosUnitEnum::macro('test', static fn() => true);
+test('static macro should be bound to enum', function () {
+    MacrosUnitEnum::macro('test', static fn() => self::class);
+    expect(MacrosUnitEnum::test())->toBe(MacrosUnitEnum::class);
+});
 
-        $this->expectException(BadMethodCallException::class);
-        MacrosAnotherUnitEnum::test();
-    }
+test('non static macro should be bound to enum', function () {
+    MacrosUnitEnum::macro('test', fn() => $this);
+    expect(MacrosUnitEnum::Hearts->test())->toBe(MacrosUnitEnum::Hearts);
+});
 
-    public function testStaticMacroShouldBeBoundToEnum(): void
-    {
-        MacrosUnitEnum::macro('test', static fn() => self::class);
-        $this->assertEquals(MacrosUnitEnum::class, MacrosUnitEnum::test());
-    }
+test('should override method case insensitive', function () {
+    MacrosUnitEnum::macro('test', static fn() => false);
+    MacrosUnitEnum::macro('TEST', static fn() => true);
 
-    public function testNonStaticMacroShouldBeBoundToEnum(): void
-    {
-        MacrosUnitEnum::macro('test', fn() => $this);
-        $this->assertEquals(MacrosUnitEnum::Hearts, MacrosUnitEnum::Hearts->test());
-    }
+    expect(MacrosUnitEnum::test())->toBeTrue();
+});
 
-    public function testShouldOverrideMethodCaseInsensitive()
-    {
-        MacrosUnitEnum::macro('test', static fn() => false);
-        MacrosUnitEnum::macro('TEST', static fn() => true);
+test('allow passing parameters', function () {
+    MacrosUnitEnum::macro('test', static fn(string $string, bool $bool) => [$string, $bool]);
 
-        $this->assertTrue(MacrosUnitEnum::test());
+    expect(MacrosUnitEnum::test('hello', 1))->toBe([
+        'hello',
+        true
+    ]);
 
-    }
+    expect(MacrosUnitEnum::Hearts->test('world', false))->toBe([
+        'world',
+        false
+    ]);
+});
 
-    public function testAllowPassingParameters()
-    {
-        MacrosUnitEnum::macro('test', static fn(string $string, bool $bool) => [$string, $bool]);
+test('should not execute non static macro statically', function () {
+    MacrosUnitEnum::macro('test', fn() => true);
 
-        $this->assertEquals(
-            [
-                'hello',
-                true
-            ],
-            MacrosUnitEnum::test('hello', 1)
-        );
+    expect(MacrosUnitEnum::Diamonds->test())->toBeTrue();
 
-        $this->assertEquals(
-            [
-                'world',
-                false
-            ],
-            MacrosUnitEnum::Hearts->test('world', false)
-        );
-    }
+    expect(fn() => MacrosUnitEnum::test())->toThrow(\Exception::class);
+});
 
-    public function testShouldNotExecuteNonStaticMacroStatically()
-    {
-        MacrosUnitEnum::macro('test', fn() => true);
+test('should execute static macro statically', function () {
+    MacrosUnitEnum::macro('test2', static fn() => true);
 
-        $this->assertTrue(MacrosUnitEnum::Diamonds->test());
+    expect(MacrosUnitEnum::test2())->toBeTrue();
+    expect(MacrosUnitEnum::Hearts->test2())->toBeTrue();
+});
 
-        $this->expectError();
+test('mixin', function () {
+    $mixin = new class {
+        protected function test()
+        {
+            return static fn() => true;
+        }
+    };
 
-        $this->assertTrue(MacrosUnitEnum::test());
+    MacrosUnitEnum::mixin($mixin);
 
-    }
+    expect(MacrosUnitEnum::test())->toBeTrue();
+});
 
-    public function testShouldExecuteStaticMacroStatically()
-    {
-        MacrosUnitEnum::macro('test2', static fn() => true);
+test('mixin as string', function () {
+    $mixin = new class {
+        protected function test()
+        {
+            return static fn() => true;
+        }
+    };
 
-        $this->assertTrue(MacrosUnitEnum::test2());
+    MacrosUnitEnum::mixin($mixin::class);
 
-        $this->assertTrue(MacrosUnitEnum::Hearts->test2());
-    }
+    expect(MacrosUnitEnum::test())->toBeTrue();
+});
 
-    public function testMixin()
-    {
-        $mixin = new class {
-            protected function test()
-            {
-                return static fn() => true;
-            }
-        };
+test('has macros', function () {
+    expect(MacrosUnitEnum::hasMacro('test'))->toBeFalse();
+    MacrosUnitEnum::macro('test', fn() => true);
+    expect(MacrosUnitEnum::hasMacro('test'))->toBeTrue();
+});
 
-        MacrosUnitEnum::mixin($mixin);
+test('has macros global', function () {
+    expect(MacrosUnitEnum::hasMacro('test'))->toBeFalse();
+    Enumhancer::macro('test', fn() => true);
+    expect(MacrosUnitEnum::hasMacro('test'))->toBeTrue();
+});
 
-        $this->assertTrue(MacrosUnitEnum::test());
+test('global macro mixin', function () {
+    $mixin = new class {
+        protected function test()
+        {
+            return static fn() => true;
+        }
+    };
 
-    }
+    Enumhancer::mixin($mixin::class);
 
-    public function testMixinAsString()
-    {
-        $mixin = new class {
-            protected function test()
-            {
-                return static fn() => true;
-            }
-        };
-
-        MacrosUnitEnum::mixin($mixin::class);
-
-        $this->assertTrue(MacrosUnitEnum::test());
-
-    }
-
-    public function testHasMacros()
-    {
-        $this->assertFalse(MacrosUnitEnum::hasMacro('test'));
-        MacrosUnitEnum::macro('test', fn() => true);
-        $this->assertTrue(MacrosUnitEnum::hasMacro('test'));
-
-    }
-
-    public function testHasMacrosGlobal()
-    {
-        $this->assertFalse(MacrosUnitEnum::hasMacro('test'));
-        Enumhancer::macro('test', fn() => true);
-        $this->assertTrue(MacrosUnitEnum::hasMacro('test'));
-    }
-
-    public function testGlobalMacroMixin()
-    {
-        $mixin = new class {
-            protected function test()
-            {
-                return static fn() => true;
-            }
-        };
-
-        Enumhancer::mixin($mixin::class);
-
-        $this->assertTrue(MacrosUnitEnum::test());
-    }
-
-    protected function tearDown(): void
-    {
-        MacrosUnitEnum::flushMacros();
-
-        restore_error_handler();
-    }
-}
+    expect(MacrosUnitEnum::test())->toBeTrue();
+});

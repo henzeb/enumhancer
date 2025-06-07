@@ -1,206 +1,117 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-
-use Generator;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Getters\GetUnitEnum;
-use PHPUnit\Framework\TestCase;
-use ValueError;
 
+test('expect value error when get null', function () {
+    StringBackedGetEnum::get(null);
+})->throws(ValueError::class);
 
-class GettersTest extends TestCase
-{
-    public function testExpectValueErrorWhenGetNull()
-    {
-        $this->expectException(ValueError::class);
-        StringBackedGetEnum::get(null);
-    }
+test('expect value error when get unknown value', function () {
+    StringBackedGetEnum::get('RANDOM_UNKNOWN_VALUE');
+})->throws(ValueError::class);
 
-    public function testExpectValueErrorWhenGetUnknownValue()
-    {
-        $this->expectException(ValueError::class);
-        StringBackedGetEnum::get('RANDOM_UNKNOWN_VALUE');
-    }
+test('get', function () {
+    expect(StringBackedGetEnum::get('TEST'))->toBe(StringBackedGetEnum::TEST);
+});
 
-    public function testGet()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST,
-            StringBackedGetEnum::get('TEST')
-        );
-    }
+test('get str to upper', function () {
+    expect(StringBackedGetEnum::get('test'))->toBe(StringBackedGetEnum::TEST);
+});
 
-    public function testGetStrToUpper()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST,
-            StringBackedGetEnum::get('test')
-        );
-    }
+test('get by value', function () {
+    expect(StringBackedGetEnum::get('Different'))->toBe(StringBackedGetEnum::TEST1);
+});
 
-    public function testGetByValue()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST1,
-            StringBackedGetEnum::get('Different')
-        );
-    }
+test('get by value str to upper', function () {
+    expect(StringBackedGetEnum::get('stringtoupper'))->toBe(StringBackedGetEnum::TEST_STRING_TO_UPPER);
+});
 
-    public function testGetByValueStrToUpper()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST_STRING_TO_UPPER,
-            StringBackedGetEnum::get('stringtoupper')
-        );
-    }
+test('get by value on int backed enum', function () {
+    expect(IntBackedEnum::get(0))->toBe(IntBackedEnum::TEST);
+});
 
-    public function testGetByValueOnIntbackedEnum()
-    {
-        $this->assertEquals(
-            IntBackedEnum::TEST,
-            IntBackedEnum::get(0)
-        );
-    }
+test('try get return null when does not exist', function () {
+    expect(StringBackedGetEnum::tryGet('DOES NOT EXISTS'))->toBeNull();
+});
 
-    public function testTryGetReturnNullWhenDoesNotExist()
-    {
-        $this->assertNull(
-            StringBackedGetEnum::tryGet('DOES NOT EXISTS')
-        );
-    }
+test('try get by name', function () {
+    expect(StringBackedGetEnum::tryGet('TEST'))->toBe(StringBackedGetEnum::TEST);
+});
 
-    public function testTryGetByName()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST,
-            StringBackedGetEnum::tryGet('TEST')
-        );
-    }
+test('try get by value', function () {
+    expect(StringBackedGetEnum::tryGet('different'))->toBe(StringBackedGetEnum::TEST1);
+});
 
-    public function testTryGetByValue()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST1,
-            StringBackedGetEnum::tryGet('different')
-        );
-    }
+test('try get by value on int backed enum', function () {
+    expect(IntBackedEnum::tryGet(0))->toBe(IntBackedEnum::TEST);
+});
 
-    public function testTryGetByValueOnIntbackedEnum()
-    {
-        $this->assertEquals(
-            IntBackedEnum::TEST,
-            IntBackedEnum::tryGet(0)
-        );
-    }
+test('get array', function () {
+    expect(StringBackedGetEnum::getArray(['TEST', 'different', 'stringtoupper']))->toBe([
+        StringBackedGetEnum::TEST,
+        StringBackedGetEnum::TEST1,
+        StringBackedGetEnum::TEST_STRING_TO_UPPER
+    ]);
+});
 
-    public function testGetArray()
-    {
-        $this->assertEquals(
-            [
-                StringBackedGetEnum::TEST,
-                StringBackedGetEnum::TEST1,
-                StringBackedGetEnum::TEST_STRING_TO_UPPER
-            ],
-            StringBackedGetEnum::getArray(['TEST', 'different', 'stringtoupper'])
-        );
-    }
+test('get array with generator', function () {
+    expect(StringBackedGetEnum::getArray(
+        (function (): \Generator {
+            yield 'TEST';
+            yield 'different';
+            yield 'stringtoupper';
+        })()
+    ))->toBe([
+        StringBackedGetEnum::TEST,
+        StringBackedGetEnum::TEST1,
+        StringBackedGetEnum::TEST_STRING_TO_UPPER
+    ]);
+});
 
-    public function testGetArrayWithGenerator()
-    {
-        $this->assertEquals(
-            [
-                StringBackedGetEnum::TEST,
-                StringBackedGetEnum::TEST1,
-                StringBackedGetEnum::TEST_STRING_TO_UPPER
-            ],
-            StringBackedGetEnum::getArray(
-                (function (): Generator {
-                    yield 'TEST';
-                    yield 'different';
-                    yield 'stringtoupper';
-                })()
-            )
-        );
-    }
+test('get array fails', function () {
+    StringBackedGetEnum::getArray(['DOES_NOT_EXIST']);
+})->throws(ValueError::class);
 
-    public function testGetArrayFails()
-    {
-        $this->expectException(ValueError::class);
+test('try get array', function () {
+    expect(StringBackedGetEnum::tryArray(['TEST', 'different', 'stringtoupper', 'DOES_NOT_EXIST']))->toBe([
+        StringBackedGetEnum::TEST,
+        StringBackedGetEnum::TEST1,
+        StringBackedGetEnum::TEST_STRING_TO_UPPER
+    ]);
+});
 
-        StringBackedGetEnum::getArray(['DOES_NOT_EXIST']);
-    }
+test('try get array with generator', function () {
+    expect(StringBackedGetEnum::tryArray(
+        (function (): \Generator {
+            yield 'TEST';
+            yield 'different';
+            yield 'stringtoupper';
+            yield 'DOES_NOT_EXIST';
+        })()
+    ))->toBe([
+        StringBackedGetEnum::TEST,
+        StringBackedGetEnum::TEST1,
+        StringBackedGetEnum::TEST_STRING_TO_UPPER
+    ]);
+});
 
-    public function testTryGetArray()
-    {
-        $this->assertEquals(
-            [
-                StringBackedGetEnum::TEST,
-                StringBackedGetEnum::TEST1,
-                StringBackedGetEnum::TEST_STRING_TO_UPPER
-            ],
-            StringBackedGetEnum::tryArray(['TEST', 'different', 'stringtoupper', 'DOES_NOT_EXIST'])
-        );
-    }
+test('get string backed enum with integer', function () {
+    expect(StringBackedGetEnum::get(1))->toBe(StringBackedGetEnum::TEST1);
+});
 
-    public function testTryGetArrayWithGenerator()
-    {
-        $this->assertEquals(
-            [
-                StringBackedGetEnum::TEST,
-                StringBackedGetEnum::TEST1,
-                StringBackedGetEnum::TEST_STRING_TO_UPPER
-            ],
-            StringBackedGetEnum::tryArray(
-                (function (): Generator {
-                    yield 'TEST';
-                    yield 'different';
-                    yield 'stringtoupper';
-                    yield 'DOES_NOT_EXIST';
-                })()
-            )
-        );
-    }
+test('get unit enum with integer', function () {
+    expect(GetUnitEnum::get(0))->toBe(GetUnitEnum::Zero);
+});
 
-    public function testGetStringBackedEnumWithInteger()
-    {
-        $this->assertEquals(
-            StringBackedGetEnum::TEST1, StringBackedGetEnum::get(1)
-        );
-    }
+test('try get should return default', function () {
+    expect(DefaultsEnum::tryGet('caseMissing'))->toBe(DefaultsEnum::default());
+    expect(DefaultsEnum::tryArray(['caseMissing']))->toBe([DefaultsEnum::default()]);
+});
 
-    public function testGetUnitEnumWithInteger()
-    {
-        $this->assertEquals(
-            GetUnitEnum::Zero, GetUnitEnum::get(0)
-        );
-    }
-
-    public function testTryGetShouldReturnDefault(): void
-    {
-        $this->assertEquals(
-            DefaultsEnum::default(),
-            DefaultsEnum::tryGet('caseMissing')
-        );
-
-        $this->assertEquals(
-            [DefaultsEnum::default()],
-            DefaultsEnum::tryArray(['caseMissing'])
-        );
-    }
-
-    public function testTryGetShouldNotReturnDefault(): void
-    {
-        $this->assertEquals(
-            null,
-            DefaultsEnum::tryGet('caseMissing', false)
-        );
-        $this->assertEquals(
-            [],
-            DefaultsEnum::tryArray(['caseMissing'], false)
-        );
-    }
-}
+test('try get should not return default', function () {
+    expect(DefaultsEnum::tryGet('caseMissing', false))->toBeNull();
+    expect(DefaultsEnum::tryArray(['caseMissing'], false))->toBe([]);
+});

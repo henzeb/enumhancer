@@ -5,18 +5,18 @@ namespace Henzeb\Enumhancer\Tests\Unit\PHPStan\Methods;
 use Henzeb\Enumhancer\PHPStan\Methods\EnumComparisonMethodsClassReflection;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Reflection\ReflectionProvider;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\BooleanType;
+use stdClass;
 
-class EnumComparisonMethodsClassReflectionTest extends MockeryTestCase
+class EnumComparisonMethodsClassReflectionTest extends PHPStanTestCase
 {
     public function testReturnsFalseIfNotEnum(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnFalse();
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(stdClass::class);
 
         $this->assertFalse(
             (new EnumComparisonMethodsClassReflection())->hasMethod(
@@ -28,10 +28,8 @@ class EnumComparisonMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseIfNotImplementingComparison(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->twice()->andReturnTrue();
-        $reflection->expects('getName')->twice()->andReturns(SimpleEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(SimpleEnum::class);
 
         $this->assertFalse(
             (new EnumComparisonMethodsClassReflection())->hasMethod(
@@ -50,10 +48,8 @@ class EnumComparisonMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseWithIncorrectMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->twice()->andReturnTrue();
-        $reflection->expects('getName')->twice()->andReturns(EnhancedUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(EnhancedUnitEnum::class);
 
         $this->assertFalse(
             (new EnumComparisonMethodsClassReflection())->hasMethod(
@@ -72,10 +68,8 @@ class EnumComparisonMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsTrueWithCorrectMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->twice()->andReturnTrue();
-        $reflection->expects('getName')->twice()->andReturns(EnhancedUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(EnhancedUnitEnum::class);
 
         $this->assertTrue(
             (new EnumComparisonMethodsClassReflection())->hasMethod(
@@ -94,7 +88,8 @@ class EnumComparisonMethodsClassReflectionTest extends MockeryTestCase
 
     public function testGetMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(EnhancedUnitEnum::class);
 
         $methodReflection = (new EnumComparisonMethodsClassReflection())->getMethod(
             $reflection,

@@ -1,85 +1,69 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Contracts;
-
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\SyntaxException;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 
-class TransitionHookTest extends MockeryTestCase
-{
-    public function testShouldExecuteAndReturnNullWithoutHook()
-    {
-        $mock = Mockery::mock(TransitionHook::class)->makePartial();
+test('should execute and return null without hook', function () {
+    $mock = Mockery::mock(TransitionHook::class)->makePartial();
 
-        $this->assertNull($mock->execute(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
+    expect($mock->execute(StateElevatorEnum::Open, StateElevatorEnum::Close))->toBeNull();
+});
 
-    public function testShouldExecuteAndReturnNullWithHook()
-    {
-        $class = new class extends TransitionHook {
-            public function openClose() {
+test('should execute and return null with hook', function () {
+    $class = new class extends TransitionHook {
+        public function openClose() {
 
-            }
-        };
-        $mock = Mockery::mock($class)->makePartial();
-        $mock->expects('openClose');
-        $mock->execute(StateElevatorEnum::Open, StateElevatorEnum::Close);
-    }
+        }
+    };
+    $mock = Mockery::mock($class)->makePartial();
+    $mock->expects('openClose');
+    $mock->execute(StateElevatorEnum::Open, StateElevatorEnum::Close);
+});
 
-    public function testShouldReturnTrueWithoutHook()
-    {
-        $class = new class extends TransitionHook {
-        };
+test('should return true without hook', function () {
+    $class = new class extends TransitionHook {
+    };
 
-        $this->assertTrue($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
+    expect($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close))->toBeTrue();
+});
 
-    public function testShouldReturnTrueWithHookReturningNothing()
-    {
-        $class = new class extends TransitionHook {
-            public function allowedOpenClose() {
+test('should return true with hook returning nothing', function () {
+    $class = new class extends TransitionHook {
+        public function allowedOpenClose() {
 
-            }
-        };
+        }
+    };
 
-        $this->assertTrue($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
+    expect($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close))->toBeTrue();
+});
 
-    public function testShouldThrowExceptionWhenNotReturningBool()
-    {
-        $class = new class extends TransitionHook {
-            public function allowsOpenClose() {
-                return 'string';
-            }
-        };
+test('should throw exception when not returning bool', function () {
+    $class = new class extends TransitionHook {
+        public function allowsOpenClose() {
+            return 'string';
+        }
+    };
 
-        $this->expectException(SyntaxException::class);
+    $class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close);
+})->throws(SyntaxException::class);
 
-        $this->assertTrue($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
+test('should return true with hook', function () {
+    $class = new class extends TransitionHook {
+        public function allowsOpenClose() {
+            return true;
+        }
+    };
 
-    public function testShouldReturnTrueWithHook()
-    {
-        $class = new class extends TransitionHook {
-            public function allowsOpenClose() {
-                return true;
-            }
-        };
+    expect($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close))->toBeTrue();
+});
 
-        $this->assertTrue($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
+test('should return false with hook', function () {
+    $class = new class extends TransitionHook {
+        public function allowsOpenClose() {
+            return false;
+        }
+    };
 
-    public function testShouldReturnFalseWithHook()
-    {
-        $class = new class extends TransitionHook {
-            public function allowsOpenClose() {
-                return false;
-            }
-        };
-
-        $this->assertFalse($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close));
-    }
-}
+    expect($class->isAllowed(StateElevatorEnum::Open, StateElevatorEnum::Close))->toBeFalse();
+});
