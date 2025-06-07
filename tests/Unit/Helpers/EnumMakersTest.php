@@ -1,59 +1,35 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
-
 use Henzeb\Enumhancer\Helpers\EnumGetters;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
-use PHPUnit\Framework\TestCase;
-use stdClass;
-use TypeError;
 
-/**
- * @ignore
- */
-class EnumMakersTest extends TestCase
-{
-    public function testMakeShouldFailWithInvalidClass()
-    {
-        $this->expectException(TypeError::class);
+test('make should fail with invalid class', function () {
+    EnumGetters::get(stdClass::class, 'test');
+})->throws(TypeError::class);
 
-        EnumGetters::get(stdClass::class, 'test');
-    }
+test('try make should fail with invalid class', function () {
+    EnumGetters::tryGet(stdClass::class, 'test');
+})->throws(TypeError::class);
 
-    public function testTryMakeShouldFailWithInvalidClass()
-    {
-        $this->expectException(TypeError::class);
+test('make array should fail with invalid class', function () {
+    EnumGetters::getArray(stdClass::class, ['test']);
+})->throws(TypeError::class);
 
-        EnumGetters::tryGet(stdClass::class, 'test');
-    }
+test('try make array should fail with invalid class', function () {
+    EnumGetters::tryArray(stdClass::class, ['test']);
+})->throws(TypeError::class);
 
-    public function testMakeArrayShouldFailWithInvalidClass()
-    {
-        $this->expectException(TypeError::class);
+test('try cast returns null', function () {
+    expect(EnumGetters::tryCast(EnhancedUnitEnum::class, 'DoesnotExist'))
+        ->toBeNull();
+});
 
-        EnumGetters::getArray(stdClass::class, ['test']);
-    }
+test('try cast', function () {
+    expect(EnumGetters::tryCast(EnhancedUnitEnum::class, 'ENUM'))
+        ->toBe(EnhancedUnitEnum::ENUM);
+});
 
-    public function testTryMakeArrayShouldFailWithInvalidClass()
-    {
-        $this->expectException(TypeError::class);
-
-        EnumGetters::tryArray(stdClass::class, ['test']);
-    }
-
-    public function testTryCastReturnsNull()
-    {
-        $this->assertNull(EnumGetters::tryCast(EnhancedUnitEnum::class, 'DoesnotExist'));
-    }
-
-    public function testTryCast()
-    {
-        $this->assertEquals(EnhancedUnitEnum::ENUM, EnumGetters::tryCast(EnhancedUnitEnum::class, 'ENUM'));
-    }
-
-    public function testTryCastAlreadyEnum()
-    {
-        $this->assertEquals(EnhancedUnitEnum::ENUM,
-            EnumGetters::tryCast(EnhancedUnitEnum::class, EnhancedUnitEnum::ENUM));
-    }
-}
+test('try cast already enum', function () {
+    expect(EnumGetters::tryCast(EnhancedUnitEnum::class, EnhancedUnitEnum::ENUM))
+        ->toBe(EnhancedUnitEnum::ENUM);
+});

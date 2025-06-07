@@ -1,53 +1,30 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use BadMethodCallException;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedStaticCallableEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedStaticCallableEnum;
-use PHPUnit\Framework\TestCase;
 
+test('should get enum using static call', function () {
+    expect(ConstructableUnitEnum::CALLABLE())
+        ->toBe(ConstructableUnitEnum::CALLABLE);
+});
 
-class ConstructorTest extends TestCase
-{
-    public function testShouldGetEnumUsingStaticCall(): void
-    {
-        $this->assertEquals(
-            ConstructableUnitEnum::CALLABLE,
-            ConstructableUnitEnum::CALLABLE()
-        );
-    }
+test('should fail using static call to unknown enum', function () {
+    ConstructableUnitEnum::CANNOT_CALL();
+})->throws(\BadMethodCallException::class);
 
-    public function testShouldFailUsingStaticCallToUnknownEnum(): void
-    {
-        $this->expectException(BadMethodCallException::class);
-        ConstructableUnitEnum::CANNOT_CALL();
-    }
+test('should get string backed enum by name', function () {
+    expect(StringBackedStaticCallableEnum::CALLABLE())
+        ->toBe(StringBackedStaticCallableEnum::CALLABLE);
+});
 
-    public function testShouldGetStringBackedEnumByName(): void
-    {
-        $this->assertEquals(
-            StringBackedStaticCallableEnum::CALLABLE,
-            StringBackedStaticCallableEnum::CALLABLE()
-        );
-    }
+test('should get string backed enum by value', function () {
+    expect(StringBackedStaticCallableEnum::gets_callable())
+        ->toBe(StringBackedStaticCallableEnum::CALLABLE);
+});
 
-    public function testShouldGetStringBackedEnumByValue(): void
-    {
-        $this->assertEquals(
-            StringBackedStaticCallableEnum::CALLABLE,
-            StringBackedStaticCallableEnum::gets_callable()
-        );
-    }
-
-    public function testShouldGetIntBackedEnumByValue(): void
-    {
-        $method = '0';
-        $this->assertEquals(
-            IntBackedStaticCallableEnum::CALLABLE,
-            IntBackedStaticCallableEnum::$method()
-        );
-    }
-
-}
+test('should get int backed enum by value', function () {
+    $method = '0';
+    expect(IntBackedStaticCallableEnum::$method())
+        ->toBe(IntBackedStaticCallableEnum::CALLABLE);
+});
