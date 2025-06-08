@@ -12,7 +12,7 @@ class BitmaskModifierConstantAlwaysUsed implements AlwaysUsedClassConstantsExten
 
     public function isAlwaysUsed(ConstantReflection $constant): bool
     {
-        if ($constant->getName() !== strtolower('bit_modifier')) {
+        if (strtolower($constant->getName()) !== 'bit_modifier') {
             return false;
         }
 

@@ -1,115 +1,60 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Mixins;
-
 use Henzeb\Enumhancer\Contracts\Mapper;
-use Henzeb\Enumhancer\Laravel\Providers\EnumhancerServiceProvider;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
+use Henzeb\Enumhancer\Tests\TestCase;
 use Illuminate\Foundation\Http\FormRequest;
-use Orchestra\Testbench\TestCase;
 
-class FormRequestMixinTest extends TestCase
-{
-    protected function getPackageProviders($app)
-    {
-        return [
-            EnumhancerServiceProvider::class
-        ];
-    }
+uses(TestCase::class);
 
-    public function testAsEnum()
-    {
-        $request = new FormRequest(
-            [
-                'myEnum' => 'open',
-                'myInvalidEnum' => 'invalid',
-                'myNullEnum' => null,
-            ]
-        );
-
-        $this->assertEquals(
-            SimpleEnum::Open,
-            $request->asEnum('myEnum', SimpleEnum::class)
-        );
-
-        $this->assertNull(
-            $request->asEnum('myInvalidEnum', SimpleEnum::class)
-        );
-
-        $this->assertNull(
-            $request->asEnum('myDoesNotExistEnum', SimpleEnum::class)
-        );
-
-        $this->assertNull(
-            $request->asEnum('myNullEnum', SimpleEnum::class)
-        );
-    }
-
-    public function testAsEnumDefault()
-    {
-        $request = new FormRequest([
-            'myEnum' => 'default',
+test('as enum', function () {
+    $request = new FormRequest(
+        [
+            'myEnum' => 'open',
             'myInvalidEnum' => 'invalid',
-            'NullEnum' => null,
-        ]);
+            'myNullEnum' => null,
+        ]
+    );
 
-        $this->assertEquals(
-            DefaultsEnum::default(),
-            $request->asEnum('myEnum', DefaultsEnum::class)
-        );
+    expect($request->asEnum('myEnum', SimpleEnum::class))->toBe(SimpleEnum::Open);
+    expect($request->asEnum('myInvalidEnum', SimpleEnum::class))->toBeNull();
+    expect($request->asEnum('myDoesNotExistEnum', SimpleEnum::class))->toBeNull();
+    expect($request->asEnum('myNullEnum', SimpleEnum::class))->toBeNull();
+});
 
-        $this->assertEquals(
-            DefaultsEnum::default(),
-            $request->asEnum('myInvalidEnum', DefaultsEnum::class)
-        );
+test('as enum default', function () {
+    $request = new FormRequest([
+        'myEnum' => 'default',
+        'myInvalidEnum' => 'invalid',
+        'NullEnum' => null,
+    ]);
 
-        $this->assertEquals(
-            DefaultsEnum::default(),
-            $request->asEnum('myDoesNotExistEnum', DefaultsEnum::class)
-        );
+    expect($request->asEnum('myEnum', DefaultsEnum::class))->toBe(DefaultsEnum::default());
+    expect($request->asEnum('myInvalidEnum', DefaultsEnum::class))->toBe(DefaultsEnum::default());
+    expect($request->asEnum('myDoesNotExistEnum', DefaultsEnum::class))->toBe(DefaultsEnum::default());
+    expect($request->asEnum('nullEnum', DefaultsEnum::class))->toBe(DefaultsEnum::default());
+});
 
-        $this->assertEquals(
-            DefaultsEnum::default(),
-            $request->asEnum('nullEnum', DefaultsEnum::class)
-        );
-    }
+test('as enum with mapper', function () {
+    $request = new FormRequest([
+        'myEnum' => 'opened',
+    ]);
 
-    public function testAsEnumWithMapper()
+    expect($request->asEnum('myEnum', SimpleEnum::class, ['opened' => 'open']))->toBe(SimpleEnum::Open);
+
+    expect($request->asEnum('myEnum', SimpleEnum::class, ['opened' => 'opening'], ['opening' => 'open']))->toBe(SimpleEnum::Open);
+
+    $mapper = new class extends Mapper
     {
-        $request = new FormRequest([
-            'myEnum' => 'opened',
-        ]);
-
-        $this->assertEquals(
-            SimpleEnum::Open,
-            $request->asEnum('myEnum', SimpleEnum::class, ['opened' => 'open'])
-        );
-
-        $this->assertEquals(
-            SimpleEnum::Open,
-            $request->asEnum('myEnum', SimpleEnum::class, ['opened' => 'opening'], ['opening' => 'open'])
-        );
-
-        $mapper = new class extends Mapper
+        protected function mappable(): array
         {
-            protected function mappable(): array
-            {
-                return [
-                    'opened'=>'opening'
-                ];
-            }
-        };
+            return [
+                'opened'=>'opening'
+            ];
+        }
+    };
 
-        $this->assertEquals(
-            SimpleEnum::Open,
-            $request->asEnum('myEnum', SimpleEnum::class, $mapper, ['opening'=>'open'])
-        );
-
-        $this->assertEquals(
-            SimpleEnum::Open,
-            $request->asEnum('myEnum', SimpleEnum::class, $mapper::class, ['opening'=>'open'])
-        );
-
-    }
-}
+    expect($request->asEnum('myEnum', SimpleEnum::class, $mapper, ['opening'=>'open']))->toBe(SimpleEnum::Open);
+    expect($request->asEnum('myEnum', SimpleEnum::class, $mapper::class, ['opening'=>'open']))->toBe(SimpleEnum::Open);
+});

@@ -5,18 +5,17 @@ namespace Henzeb\Enumhancer\Tests\Unit\PHPStan\Methods;
 use Henzeb\Enumhancer\PHPStan\Methods\EnumStateMethodsClassReflection;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ObjectType;
+use stdClass;
 
-class EnumStateMethodsClassReflectionTest extends MockeryTestCase
+class EnumStateMethodsClassReflectionTest extends PHPStanTestCase
 {
     public function testReturnsFalseIfNotEnum(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnFalse();
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(stdClass::class);
 
         $this->assertFalse(
             (new EnumStateMethodsClassReflection())->hasMethod(
@@ -28,10 +27,8 @@ class EnumStateMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseIfNotImplementingState(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnTrue();
-        $reflection->expects('getName')->andReturns(SimpleEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(SimpleEnum::class);
 
         $this->assertFalse(
             (new EnumStateMethodsClassReflection())->hasMethod(
@@ -43,10 +40,8 @@ class EnumStateMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseWithIncorrectMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->twice()->andReturnTrue();
-        $reflection->expects('getName')->twice()->andReturns(StateElevatorEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(StateElevatorEnum::class);
 
         $this->assertFalse(
             (new EnumStateMethodsClassReflection())->hasMethod(
@@ -65,10 +60,8 @@ class EnumStateMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsTrueWithCorrectMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->twice()->andReturnTrue();
-        $reflection->expects('getName')->twice()->andReturns(StateElevatorEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(StateElevatorEnum::class);
 
         $this->assertTrue(
             (new EnumStateMethodsClassReflection())->hasMethod(
@@ -87,8 +80,8 @@ class EnumStateMethodsClassReflectionTest extends MockeryTestCase
 
     public function testGetMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-        $reflection->expects('getName')->andReturns(StateElevatorEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(StateElevatorEnum::class);
 
         $methodReflection = (new EnumStateMethodsClassReflection())->getMethod(
             $reflection,

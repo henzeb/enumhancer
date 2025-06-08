@@ -1,157 +1,133 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-
-use BackedEnum;
 use Henzeb\Enumhancer\Contracts\Reporter;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Tests\Fixtures\CustomReportingEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\NotReportingEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\ReporterTestEnum;
-use Mockery;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
 
-class ReportersTest extends TestCase
-{
-    public static function providesEnumsToTestWith(): array
-    {
-        return [
-            'just-reporters' => [ReporterTestEnum::class],
-            'with-mappers-enhancement' => [EnhancedBackedEnum::class]
-        ];
-    }
+afterEach(function () {
+    EnumReporter::set(null);
+});
 
+test('existing enum', function (string $enum) {
+    expect($enum::getOrReport('ENUM'))->toBe($enum::ENUM);
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testExistingEnum(string $enum)
-    {
-        $this->assertEquals(
-            $enum::ENUM,
-            $enum::getOrReport('ENUM')
-        );
-    }
+test('no reporting', function (string $enum) {
+    expect($enum::getOrReport('NOT EXIST'))->toBeNull();
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testNoreporting(string $enum)
-    {
-        $this->assertNull($enum::getOrReport('NOT EXIST'));
-    }
+test('does report', function (string $enum) {
+    $reporter = \Mockery::mock(Reporter::class)
+        ->shouldReceive(
+            'report'
+        )->once()->getMock();
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testDoesReport(string $enum)
-    {
-        $reporter = Mockery::mock(Reporter::class)
-            ->shouldReceive(
-                'report'
-            )->once()->getMock();
+    EnumReporter::set(
+        $reporter
+    );
 
-        EnumReporter::set(
-            $reporter
-        );
+    expect($enum::getOrReport('NOT EXIST'))->toBeNull();
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-        $this->assertNull($enum::getOrReport('NOT EXIST'));
-    }
+test('overrides global reporter with null', function (string $enum) {
+    $globalReporter = \Mockery::mock(Reporter::class)
+        ->shouldReceive(
+            'report'
+        )->never()->getMock();
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testOverridesGlobalReporterWithNull(string $enum)
-    {
-        $globalReporter = Mockery::mock(Reporter::class)
-            ->shouldReceive(
-                'report'
-            )->never()->getMock();
+    EnumReporter::set(
+        $globalReporter
+    );
 
-        EnumReporter::set(
-            $globalReporter
-        );
+    expect(NotReportingEnum::getOrReport('NOT EXIST'))->toBeNull();
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-        $this->assertNull(NotReportingEnum::getOrReport('NOT EXIST'));
-    }
+test('overrides global reporter with own reporter', function () {
+    $globalReporter = Mockery::mock(Reporter::class)
+        ->shouldReceive(
+            'report'
+        )->never()->getMock();
 
-    public function testOverridesGlobalReporterWithOwnReporter()
-    {
-        $globalReporter = Mockery::mock(Reporter::class)
-            ->shouldReceive(
-                'report'
-            )->never()->getMock();
+    $customReporter = \Mockery::mock(Reporter::class)
+        ->shouldReceive(
+            'report'
+        )->once()->getMock();
 
-        $customReporter = Mockery::mock(Reporter::class)
-            ->shouldReceive(
-                'report'
-            )->once()->getMock();
+    EnumReporter::set(
+        $globalReporter
+    );
 
-        EnumReporter::set(
-            $globalReporter
-        );
+    CustomReportingEnum::property('reporter', $customReporter);
 
-        CustomReportingEnum::property('reporter', $customReporter);
+    expect(CustomReportingEnum::getOrReport('NOT EXIST'))->toBeNull();
+});
 
-        $this->assertNull(CustomReportingEnum::getOrReport('NOT EXIST'));
-    }
+test('existing enums', function (string $enum) {
+    expect($enum::getOrReportArray(['ENUM', 'ANOTHER_ENUM']))->toBe([$enum::ENUM, $enum::ANOTHER_ENUM]);
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testExistingEnums(string $enum)
-    {
-        $this->assertEquals(
-            [$enum::ENUM, $enum::ANOTHER_ENUM],
-            $enum::getOrReportArray(['ENUM', 'ANOTHER_ENUM'])
-        );
-    }
+test('non existing enums', function (string $enum) {
+    $globalReporter = Mockery::mock(Reporter::class)
+        ->shouldReceive(
+            'report'
+        )->once()->getMock();
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testNonExistingEnums(string $enum)
-    {
-        $globalReporter = Mockery::mock(Reporter::class)
-            ->shouldReceive(
-                'report'
-            )->once()->getMock();
+    EnumReporter::set($globalReporter);
 
-        EnumReporter::set($globalReporter);
+    expect($enum::getOrReportArray(['ENUM', 'DOESNOTEXIST']))->toBe([$enum::ENUM]);
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-        $this->assertEquals(
-            [$enum::ENUM],
-            $enum::getOrReportArray(['ENUM', 'DOESNOTEXIST'])
-        );
-    }
+test('report with context', function (string $enum) {
+    $reporter = new class implements Reporter {
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testReportWithContext(string $enum)
-    {
-        $reporter = new class implements Reporter {
+        public function report(string $enum, ?string $key, ?\BackedEnum $context): void
+        {
+            enum_exists($context::class);
+        }
+    };
 
-            public function report(string $enum, ?string $key, ?BackedEnum $context): void
-            {
-                enum_exists($context::class);
-            }
-        };
+    EnumReporter::set($reporter);
 
-        EnumReporter::set($reporter);
+    expect($enum::getOrReport('DOESNOTEXIST', EnhancedBackedEnum::ANOTHER_ENUM))->toBeNull();
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);
 
-        $this->assertNull($enum::getOrReport('DOESNOTEXIST', EnhancedBackedEnum::ANOTHER_ENUM));
+test('get or report array with context', function (string $enum) {
+    $reporter = new class implements Reporter {
 
-    }
+        public function report(string $enum, ?string $key, ?\BackedEnum $context): void
+        {
+            enum_exists($context::class);
+        }
+    };
 
-    #[DataProvider("providesEnumsToTestWith")]
-    public function testGetOrReportArrayWithContext(string $enum)
-    {
-        $reporter = new class implements Reporter {
+    EnumReporter::set($reporter);
 
-            public function report(string $enum, ?string $key, ?BackedEnum $context): void
-            {
-                enum_exists($context::class);
-            }
-        };
-
-        EnumReporter::set($reporter);
-
-        $this->assertEquals([], $enum::getOrReportArray(['DOESNOTEXIST'], EnhancedBackedEnum::ANOTHER_ENUM));
-
-    }
-
-    protected function tearDown(): void
-    {
-        EnumReporter::set(null);
-    }
-}
+    expect($enum::getOrReportArray(['DOESNOTEXIST'], EnhancedBackedEnum::ANOTHER_ENUM))->toBe([]);
+})->with([
+    'just-reporters' => [ReporterTestEnum::class],
+    'with-mappers-enhancement' => [EnhancedBackedEnum::class]
+]);

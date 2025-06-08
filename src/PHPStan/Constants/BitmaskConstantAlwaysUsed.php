@@ -3,15 +3,15 @@
 namespace Henzeb\Enumhancer\PHPStan\Constants;
 
 use Henzeb\Enumhancer\Helpers\EnumImplements;
-use PHPStan\Reflection\ConstantReflection;
+use PHPStan\Reflection\ClassConstantReflection;
 use PHPStan\Rules\Constants\AlwaysUsedClassConstantsExtension;
 
 class BitmaskConstantAlwaysUsed implements AlwaysUsedClassConstantsExtension
 {
 
-    public function isAlwaysUsed(ConstantReflection $constant): bool
+    public function isAlwaysUsed(ClassConstantReflection $constant): bool
     {
-        if ($constant->getName() !== \strtolower('bit_values')) {
+        if (\strtolower($constant->getName()) !== 'bit_values') {
             return false;
         }
 

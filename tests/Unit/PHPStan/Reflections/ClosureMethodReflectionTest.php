@@ -11,7 +11,6 @@ use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ClosureTypeFactory;
 use PHPStan\Type\Generic\TemplateTypeMap;
 use PHPUnit\Framework\Attributes\DataProvider;
-use function is_bool;
 
 class ClosureMethodReflectionTest extends PHPStanTestCase
 {

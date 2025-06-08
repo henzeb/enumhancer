@@ -1,8 +1,5 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Laravel\Concerns;
-
-
 use Henzeb\Enumhancer\Contracts\TransitionHook;
 use Henzeb\Enumhancer\Exceptions\IllegalEnumTransitionException;
 use Henzeb\Enumhancer\Helpers\EnumValue;
@@ -16,162 +13,131 @@ use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\State\StateElevatorEnum;
 use Illuminate\Database\Eloquent\Model;
-use Orchestra\Testbench\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use UnitEnum;
-use ValueError;
 
-class CastsStatefulEnumerationsTest extends TestCase
-{
-    public static function providesEnums(): array
-    {
-        return [
-            [SubsetUnitEnum::ENUM, 'unitEnum'],
-            [IntBackedEnum::TEST, 'intBackedEnum'],
-            [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+test('should cast correctly from string', function (UnitEnum $enum, string $key, bool $keepCase = true) {
+    $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
+    $model->setRawAttributes([
+        $key => EnumValue::value($enum, $keepCase)
+    ]);
 
-            [SubsetUnitEnum::ENUM, 'unitEnum', false],
-            [IntBackedEnum::TEST, 'intBackedEnum', false],
-            [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
+    expect($model->$key)->toBe($enum);
+})->with([
+    [SubsetUnitEnum::ENUM, 'unitEnum'],
+    [IntBackedEnum::TEST, 'intBackedEnum'],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+    [SubsetUnitEnum::ENUM, 'unitEnum', false],
+    [IntBackedEnum::TEST, 'intBackedEnum', false],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
+]);
+
+test('should cast correctly to string', function (UnitEnum $enum, string $key, bool $keepCase = true) {
+    $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
+    $model->$key = $enum;
+
+    $result = $model->toArray()[$key];
+    $expected = EnumValue::value($enum, $keepCase);
+    expect((string)$result)->toBe((string)$expected);
+})->with([
+    [SubsetUnitEnum::ENUM, 'unitEnum'],
+    [IntBackedEnum::TEST, 'intBackedEnum'],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum'],
+    [SubsetUnitEnum::ENUM, 'unitEnum', false],
+    [IntBackedEnum::TEST, 'intBackedEnum', false],
+    [StringBackedGetEnum::TEST, 'stringBackedEnum', false],
+]);
+
+test('should handle null', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = null;
+
+    expect($model->unitEnum)->toBeNull();
+});
+
+test('should handle object in attribute', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
+
+    expect($model->unitEnum)->toBe(SubsetUnitEnum::ENUM);
+});
+
+test('should handle string value', function () {
+    $model = new CastsBasicEnumsModel();
+    $model->unitEnum = 'enum';
+
+    expect($model->getAttributes()['unitEnum'])->toBe('ENUM');
+    expect($model->unitEnum)->toBe(SubsetUnitEnum::ENUM);
+});
+
+test('should handle string value lower case', function () {
+    $model = new CastsBasicEnumsLowerCaseModel();
+    $model->unitEnum = 'ENUM';
+
+    expect($model->getAttributes()['unitEnum'])->toBe('enum');
+});
+
+test('should fail if string is not valid', function () {
+    $model = new CastsStatefulEnumsModel();
+    $model->unitEnum = 'NotAnEnum';
+})->throws(ValueError::class);
+
+test('should fail if enum is not valid', function () {
+    $model = new CastsStatefulEnumsModel();
+    $model->unitEnum = IntBackedEnum::TEST;
+})->throws(ValueError::class);
+
+test('should not throw error when changing stateless enum value', function () {
+    $model = new CastsStatefulEnumsModel();
+    $model->unitEnum = 'Enum';
+    $model->unitEnum = 'THIRD_ENUM';
+
+    expect($model->unitEnum)->toBe(SubsetUnitEnum::THIRD_ENUM);
+});
+
+test('should just cast when enum is not stateful value', function () {
+    $model = new CastsStatefulEnumsModel();
+    $model->intBackedEnum = 0;
+    $model->intBackedEnum = 2;
+
+    expect($model->intBackedEnum)->toBe(IntBackedEnum::TEST_3);
+});
+
+test('should allow transition', function () {
+    $model = new CastsStatefulEnumsModel();
+
+    $model->stringBackedEnum = StringBackedGetEnum::TEST;
+    $model->stringBackedEnum = StringBackedGetEnum::TEST1;
+
+    expect($model->stringBackedEnum)->toBe(StringBackedGetEnum::TEST1);
+});
+
+test('should throw exception when transition is not allowed', function () {
+    $model = new CastsStatefulEnumsModel();
+
+    $model->stringBackedEnum = StringBackedGetEnum::TEST;
+    $model->stringBackedEnum = StringBackedGetEnum::TEST_STRING_TO_UPPER;
+})->throws(IllegalEnumTransitionException::class);
+
+test('should throw exception when transition is not allowed with hook', function () {
+    $model = new class extends Model {
+        use CastsStatefulEnumerations;
+
+        protected $casts = [
+            'state' => StateElevatorEnum::class
         ];
-    }
 
-    #[DataProvider("providesEnums")]
-    public function testShouldCastCorrectlyFromString(UnitEnum $enum, string $key, bool $keepCase = true)
-    {
-        $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
-        $model->setRawAttributes([
-            $key => EnumValue::value($enum, $keepCase)
-        ]);
-
-        $this->assertEquals(
-            $enum,
-            $model->$key,
-        );
-    }
-
-    #[DataProvider("providesEnums")]
-    public function testShouldCastCorrectlyToString(UnitEnum $enum, string $key, bool $keepCase = true)
-    {
-        $model = $keepCase ? new CastsStatefulEnumsModel() : new CastsStatefulEnumsLowerCaseModel();
-        $model->$key = $enum;
-
-        $this->assertEquals(
-            EnumValue::value($enum, $keepCase),
-            $model->toArray()[$key],
-        );
-    }
-
-    public function testShouldHandleNull()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = null;
-
-        $this->assertEquals(null, $model->unitEnum);
-    }
-
-    public function testShouldHandleObjectInAttribute()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->setRawAttributes(['unitEnum' => SubsetUnitEnum::ENUM]);
-
-        $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
-    }
-
-    public function testShouldHandleStringValue()
-    {
-        $model = new CastsBasicEnumsModel();
-        $model->unitEnum = 'enum';
-
-        $this->assertEquals('ENUM', $model->getAttributes()['unitEnum']);
-
-        $this->assertEquals(SubsetUnitEnum::ENUM, $model->unitEnum);
-    }
-
-    public function testShouldHandleStringValueLowerCase()
-    {
-        $model = new CastsBasicEnumsLowerCaseModel();
-        $model->unitEnum = 'ENUM';
-
-        $this->assertEquals('enum', $model->getAttributes()['unitEnum']);
-    }
-
-    public function testShouldFailIfStringIsNotValid()
-    {
-        $this->expectException(ValueError::class);
-        $model = new CastsStatefulEnumsModel();
-        $model->unitEnum = 'NotAnEnum';
-    }
-
-    public function testShouldFailIfEnumIsNotValid()
-    {
-        $this->expectException(ValueError::class);
-
-        $model = new CastsStatefulEnumsModel();
-        $model->unitEnum = IntBackedEnum::TEST;
-    }
-
-    public function testShouldNotThrowErrorWhenChangingStatelessEnumValue()
-    {
-        $model = new CastsStatefulEnumsModel();
-        $model->unitEnum = 'Enum';
-        $model->unitEnum = 'THIRD_ENUM';
-
-        $this->assertEquals(SubsetUnitEnum::THIRD_ENUM, $model->unitEnum);
-    }
-
-    public function testShouldJustCastWhenEnumIsNotStatefulValue()
-    {
-        $model = new CastsStatefulEnumsModel();
-        $model->intBackedEnum = 0;
-        $model->intBackedEnum = 2;
-
-        $this->assertEquals(IntBackedEnum::TEST_3, $model->intBackedEnum);
-    }
-
-    public function testShouldAllowTransition()
-    {
-        $model = new CastsStatefulEnumsModel();
-
-        $model->stringBackedEnum = StringBackedGetEnum::TEST;
-        $model->stringBackedEnum = StringBackedGetEnum::TEST1;
-
-        $this->assertEquals(StringBackedGetEnum::TEST1, $model->stringBackedEnum);
-    }
-
-    public function testShouldThrowExceptionWhenTransitionIsNotAllowed()
-    {
-        $this->expectException(IllegalEnumTransitionException::class);
-        $model = new CastsStatefulEnumsModel();
-
-        $model->stringBackedEnum = StringBackedGetEnum::TEST;
-        $model->stringBackedEnum = StringBackedGetEnum::TEST_STRING_TO_UPPER;
-    }
-
-    public function testShouldThrowExceptionWhenTransitionIsNotAllowedWithHook()
-    {
-        $model = new class extends Model {
-            use CastsStatefulEnumerations;
-
-            protected $casts = [
-                'state' => StateElevatorEnum::class
-            ];
-
-            public function getTransactionHooks(string $attribute): ?TransitionHook
-            {
-                return match ($attribute) {
-                    'state' => new class extends TransitionHook {
-                        protected function allowsOpenClose(): bool
-                        {
-                            return false;
-                        }
+        public function getTransactionHooks(string $attribute): ?TransitionHook
+        {
+            return match ($attribute) {
+                'state' => new class extends TransitionHook {
+                    protected function allowsOpenClose(): bool
+                    {
+                        return false;
                     }
-                };
-            }
-        };
+                }
+            };
+        }
+    };
 
-        $model->state = StateElevatorEnum::Open;
-        $this->expectException(IllegalEnumTransitionException::class);
-        $model->state = StateElevatorEnum::Close;
-    }
-}
+    $model->state = StateElevatorEnum::Open;
+    $model->state = StateElevatorEnum::Close;
+})->throws(IllegalEnumTransitionException::class);

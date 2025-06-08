@@ -1,294 +1,167 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use BadMethodCallException;
 use Henzeb\Enumhancer\Concerns\Comparison;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use PHPUnit\Framework\TestCase;
-use TypeError;
+
+test('enum equals', function () {
+    expect(EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ENUM))->toBeTrue();
+});
+
+test('enum not equals', function () {
+    expect(EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM))->toBeFalse();
+});
 
 
-class ComparisonTest extends TestCase
-{
-    public function testEnumEquals()
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ENUM)
-        );
-    }
+test('equals does not accept different object', function () {
+    $class = new class {
+        use Comparison;
+    };
 
-    public function testEnumNotEquals()
-    {
-        $this->assertFalse(
-            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM)
-        );
-    }
+    EnhancedBackedEnum::ENUM->equals($class);
+})->throws(TypeError::class);
 
+test('when multiple values are given and one is true', function () {
+    expect(EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ENUM))->toBeTrue();
+});
 
-    public function testEqualsDoesNotAcceptDifferentObject()
-    {
-        $class = new class {
-            use Comparison;
-        };
-        $this->expectException(TypeError::class);
+test('when multiple values are given and none is true', function () {
+    expect(EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM,
+        EnhancedBackedEnum::ANOTHER_ENUM))->toBeFalse();
+});
 
-        EnhancedBackedEnum::ENUM->equals($class);
-    }
+test('when string equals name', function () {
+    expect(EnhancedBackedEnum::ENUM->equals('ENUM'))->toBeTrue();
+});
 
-    public function testWhenMultipleValuesAreGivenAndOneIsTrue()
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ENUM)
-        );
-    }
+test('when string not equals name', function () {
+    expect(EnhancedBackedEnum::ENUM->equals('TEST2'))->toBeFalse();
+});
 
-    public function testWhenMultipleValuesAreGivenAndNoneIsTrue()
-    {
-        $this->assertFalse(
-            EnhancedBackedEnum::ENUM->equals(EnhancedBackedEnum::ANOTHER_ENUM, EnhancedBackedEnum::ANOTHER_ENUM)
-        );
-    }
+test('when string equals value', function () {
+    expect(EnhancedBackedEnum::ENUM->equals('an enum'))->toBeTrue();
+});
 
-    public function testWhenStringEqualsName()
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ENUM->equals('ENUM')
-        );
-    }
+test('when string equals value with capitals', function () {
+    expect(EnhancedBackedEnum::WITH_CAPITALS->equals('THIRD enum'))->toBeTrue();
+});
 
-    public function testWhenStringNotEqualsName()
-    {
-        $this->assertFalse(
-            EnhancedBackedEnum::ENUM->equals('TEST2')
-        );
-    }
+test('when string not equals value', function () {
+    expect(EnhancedBackedEnum::ENUM->equals('not an enum'))->toBeFalse();
+});
 
-    public function testWhenStringEqualsValue()
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ENUM->equals('an enum')
-        );
-    }
+test('should match with unit enum value', function () {
+    expect(EnhancedUnitEnum::ENUM->equals('enum'))->toBeTrue();
+});
 
-    public function testWhenStringEqualsValueWithCapitals()
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::WITH_CAPITALS->equals('THIRD enum')
-        );
-    }
+test('should match with unit enum value 2', function () {
+    expect(EnhancedUnitEnum::ENUM->equals('Enum'))->toBeTrue();
+});
 
-    public function testWhenStringNotEqualsValue()
-    {
-        $this->assertFalse(
-            EnhancedBackedEnum::ENUM->equals('not an enum')
-        );
-    }
+test('should match with unit enum value without value method', function () {
+    expect(SubsetUnitEnum::ENUM->equals('enum'))->toBeTrue();
+});
 
-    public function testShouldMatchWithUnitEnumValue()
-    {
-        $this->assertTrue(
-            EnhancedUnitEnum::ENUM->equals('enum')
-        );
-    }
+test('should match with int backed enum value', function () {
+    expect(IntBackedEnum::TEST->equals(0))->toBeTrue();
+});
 
-    public function testShouldMatchWithUnitEnumValue2()
-    {
-        $this->assertTrue(
-            EnhancedUnitEnum::ENUM->equals('Enum')
-        );
-    }
+test('should not match with int backed enum value', function () {
+    expect(IntBackedEnum::TEST->equals(1))->toBeFalse();
+});
 
-    public function testShouldMatchWithUnitEnumValueWithoutValueMethod()
-    {
-        $this->assertTrue(
-            SubsetUnitEnum::ENUM->equals('enum')
-        );
-    }
+test('should return true using magic function', function () {
+    expect(IntBackedEnum::TEST->isTest())->toBeTrue();
+});
 
-    public function testShouldMatchWithIntBackedEnumValue()
-    {
-        $this->assertTrue(
-            IntBackedEnum::TEST->equals(0)
-        );
-    }
+test('should fail using magic function that does not exist', function () {
+    IntBackedEnum::TEST->isClosed();
+})->throws(BadMethodCallException::class);
 
-    public function testShouldNotMatchWithIntBackedEnumValue()
-    {
-        $this->assertFalse(
-            IntBackedEnum::TEST->equals(1)
-        );
-    }
+test('should return true using magic function is not', function () {
+    expect(IntBackedEnum::TEST_2->isNotTest())->toBeTrue();
+});
 
-    public function testShouldReturnTrueUsingMagicFunction()
-    {
-        $this->assertTrue(
-            IntBackedEnum::TEST->isTest()
-        );
-    }
+test('should return true using magic function with value', function () {
+    expect(IntBackedEnum::TEST->is0())->toBeTrue();
+});
 
-    public function testShouldFailUsingMagicFunctionThatDoesNotExist()
-    {
-        $this->expectException(BadMethodCallException::class);
-        $this->assertFalse(
-            IntBackedEnum::TEST->isClosed()
-        );
-    }
+test('should return true using magic function with value is not', function () {
+    expect(IntBackedEnum::TEST_2->isNot0())->toBeTrue();
+});
 
-    public function testShouldReturnTrueUsingMagicFunctionIsNot()
-    {
-        $this->assertTrue(
-            IntBackedEnum::TEST_2->isNotTest()
-        );
-    }
+test('should return false using magic function', function () {
+    expect(IntBackedEnum::TEST->isTest_2())->toBeFalse();
+});
 
-    public function testShouldReturnTrueUsingMagicFunctionWithValue()
-    {
-        $this->assertTrue(
-            IntBackedEnum::TEST->is0()
-        );
-    }
+test('should return true using magic function basic', function () {
+    expect(EnhancedUnitEnum::ENUM->isEnum())->toBeTrue();
+});
 
-    public function testShouldReturnTrueUsingMagicFunctionWithValueIsNot()
-    {
-        $this->assertTrue(
-            IntBackedEnum::TEST_2->isNot0()
-        );
-    }
+test('should return true using magic function basic is not', function () {
+    expect(EnhancedUnitEnum::ANOTHER_ENUM->isNotEnum())->toBeTrue();
+});
 
-    public function testShouldReturnFalseUsingMagicFunction()
-    {
-        $this->assertFalse(
-            IntBackedEnum::TEST->isTest_2()
-        );
-    }
+test('should return false using magic function basic', function () {
+    expect(EnhancedUnitEnum::ENUM->isAnother_Enum())->toBeFalse();
+});
 
-    public function testShouldReturnTrueUsingMagicFunctionBasic()
-    {
-        $this->assertTrue(
-            EnhancedUnitEnum::ENUM->isEnum()
-        );
-    }
+test('should return false using magic function basic is not', function () {
+    expect(EnhancedUnitEnum::ENUM->isNotEnum())->toBeFalse();
+});
 
-    public function testShouldReturnTrueUsingMagicFunctionBasicIsNot()
-    {
-        $this->assertTrue(
-            EnhancedUnitEnum::ANOTHER_ENUM->isNotEnum()
-        );
-    }
+test('should throw exception when enum not exists magic function', function () {
+    EnhancedUnitEnum::ENUM->isDoesNotExist();
+})->throws(BadMethodCallException::class);
 
-    public function testShouldReturnFalseUsingMagicFunctionBasic()
-    {
-        $this->assertFalse(
-            EnhancedUnitEnum::ENUM->isAnother_Enum()
-        );
-    }
+test('should throw exception when method not exists magic function', function () {
+    EnhancedUnitEnum::ENUM->doesNotExist();
+})->throws(BadMethodCallException::class);
 
-    public function testShouldReturnFalseUsingMagicFunctionBasicIsNot()
-    {
-        $this->assertFalse(
-            EnhancedUnitEnum::ENUM->isNotEnum()
-        );
-    }
+test('should work without issues calling self', function () {
+    expect(EnhancedUnitEnum::ENUM->isEnumFunction())->toBeTrue();
+});
 
-    public function testShouldThrowExceptionWhenEnumNotExistsMagicFunction()
-    {
-        $this->expectException(BadMethodCallException::class);
-        EnhancedUnitEnum::ENUM->isDoesNotExist();
-    }
+test('passing null returns false', function () {
+    expect(EnhancedUnitEnum::ENUM->equals(null))->toBeFalse();
+    expect(EnhancedBackedEnum::ENUM->equals(null))->toBeFalse();
+});
 
-    public function testShouldThrowExceptionWhenMethodNotExistsMagicFunction()
-    {
-        $this->expectException(BadMethodCallException::class);
-        EnhancedUnitEnum::ENUM->doesNotExist();
-    }
+test('passing enums', function () {
+    expect(EnhancedBackedEnum::ENUM->equals(EnhancedUnitEnum::ENUM))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isMapped())->toBeTrue();
 
-    public function testShouldWorkWithoutIssuesCallingSelf()
-    {
-        $this->assertTrue(EnhancedUnitEnum::ENUM->isEnumFunction());
-    }
+    EnhancedBackedEnum::ANOTHER_ENUM->isExpectedToFail();
+})->throws(BadMethodCallException::class);
 
-    public function testPassingNullReturnsFalse()
-    {
-        $this->assertFalse(EnhancedUnitEnum::ENUM->equals(null));
-        $this->assertFalse(EnhancedBackedEnum::ENUM->equals(null));
-    }
+test('is', function () {
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->is('another_enum'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->is(1))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->is(EnhancedUnitEnum::ANOTHER_ENUM))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->is('mapped'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->is('something else'))->toBeFalse();
+});
 
-    public function testPassingEnums(): void
-    {
-        $this->assertTrue(EnhancedBackedEnum::ENUM->equals(EnhancedUnitEnum::ENUM));
+test('is not', function () {
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNot('another_enum'))->toBeFalse();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNot(2))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNot(EnhancedUnitEnum::ANOTHER_ENUM))->toBeFalse();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNot('mapped'))->toBeFalse();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNot('something else'))->toBeTrue();
+});
 
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isMapped());
+test('is in', function () {
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isIn('another_enum', 'somethingElse'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isIn(EnhancedUnitEnum::ANOTHER_ENUM, 'somethingElse'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 1))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 2))->toBeFalse();
+});
 
-        $this->expectException(BadMethodCallException::class);
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isExpectedToFail());
-    }
-
-    public function testIs(): void
-    {
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('another_enum'));
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(1));
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is(EnhancedUnitEnum::ANOTHER_ENUM));
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->is('mapped'));
-
-        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->is('something else'));
-    }
-
-    public function testIsNot(): void
-    {
-        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot('another_enum'));
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isNot(2));
-
-        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot(EnhancedUnitEnum::ANOTHER_ENUM));
-
-        $this->assertFalse(EnhancedBackedEnum::ANOTHER_ENUM->isNot('mapped'));
-
-        $this->assertTrue(EnhancedBackedEnum::ANOTHER_ENUM->isNot('something else'));
-    }
-
-    public function testIsIn(): void
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isIn('another_enum', 'somethingElse')
-        );
-
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isIn(EnhancedUnitEnum::ANOTHER_ENUM, 'somethingElse')
-        );
-
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 1)
-        );
-
-        $this->assertFalse(
-            EnhancedBackedEnum::ANOTHER_ENUM->isIn(0, 2)
-        );
-    }
-
-    public function testIsNotIn(): void
-    {
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn('other_enums', 'somethingElse')
-        );
-
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(EnhancedUnitEnum::ENUM, 'somethingElse')
-        );
-
-        $this->assertTrue(
-            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 2)
-        );
-
-        $this->assertFalse(
-            EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 1)
-        );
-    }
-}
+test('is not in', function () {
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNotIn('other_enums', 'somethingElse'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(EnhancedUnitEnum::ENUM, 'somethingElse'))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 2))->toBeTrue();
+    expect(EnhancedBackedEnum::ANOTHER_ENUM->isNotIn(0, 1))->toBeFalse();
+});

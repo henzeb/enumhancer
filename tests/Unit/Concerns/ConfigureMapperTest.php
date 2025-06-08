@@ -1,62 +1,53 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Concerns;
-
-use PHPUnit\Framework\TestCase;
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Helpers\EnumProperties;
-use Henzeb\Enumhancer\Tests\Helpers\ClearsEnumProperties;
 use Henzeb\Enumhancer\Exceptions\PropertyAlreadyStoredException;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Configure\ConfigureEnum;
 
-class ConfigureMapperTest extends TestCase
-{
-    use ClearsEnumProperties;
+afterEach(function () {
+    \Closure::bind(function () {
+        EnumProperties::clearGlobal();
+        EnumProperties::$properties = [];
+        EnumProperties::$once = [];
+    }, null, EnumProperties::class)();
+});
 
-    public function testSetMapper()
-    {
-        $mapper = new class extends Mapper {
+test('set mapper', function () {
+    $mapper = new class extends Mapper {
+        protected function mappable(): array
+        {
+            return [
+                'set' => ConfigureEnum::Configured
+            ];
+        }
+    };
 
-            protected function mappable(): array
-            {
-                return [
-                    'set' => ConfigureEnum::Configured
-                ];
-            }
-        };
+    ConfigureEnum::setMapper($mapper);
 
-        ConfigureEnum::setMapper($mapper);
+    expect(ConfigureEnum::property(EnumProperties::reservedWord('mapper')))->toBe([$mapper]);
+    expect(ConfigureEnum::get('set'))->toBe(ConfigureEnum::Configured);
+});
 
-        $this->assertSame([$mapper], ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
+test('set mapper once', function () {
+    $mapper = new class extends Mapper {
+        protected function mappable(): array
+        {
+            return [
+                'set' => ConfigureEnum::Configured
+            ];
+        }
+    };
 
-        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::get('set'));
-    }
+    ConfigureEnum::setMapperOnce($mapper);
 
-    public function testSetMapperOnce()
-    {
-        $mapper = new class extends Mapper {
+    expect(ConfigureEnum::property(EnumProperties::reservedWord('mapper')))->toBe([$mapper]);
+    expect(ConfigureEnum::get('set'))->toBe(ConfigureEnum::Configured);
 
-            protected function mappable(): array
-            {
-                return [
-                    'set' => ConfigureEnum::Configured
-                ];
-            }
-        };
-
-        ConfigureEnum::setMapperOnce($mapper);
-
-        $this->assertSame([$mapper], ConfigureEnum::property(EnumProperties::reservedWord('mapper')));
-
-        $this->assertEquals(ConfigureEnum::Configured, ConfigureEnum::get('set'));
-
-        $this->expectException(PropertyAlreadyStoredException::class);
-
-        ConfigureEnum::setMapper(new class extends Mapper {
-            protected function mappable(): array
-            {
-                return [];
-            }
-        });
-    }
-}
+    expect(fn() => ConfigureEnum::setMapper(new class extends Mapper {
+        protected function mappable(): array
+        {
+            return [];
+        }
+    }))->toThrow(PropertyAlreadyStoredException::class);
+});

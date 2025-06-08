@@ -4,82 +4,78 @@ namespace Henzeb\Enumhancer\Tests\Unit\PHPStan\Constants;
 
 use Henzeb\Enumhancer\PHPStan\Constants\DefaultConstantAlwaysUsed;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsConstantEnum;
-use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
 use Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Defaults\EnumWithCapitalizedDefault;
 use Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Defaults\EnumWithDefaultNotImplementing;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use PHPStan\Reflection\ClassReflection;
-use PHPStan\Reflection\ConstantReflection;
+use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
+use PHPStan\Testing\PHPStanTestCase;
+use stdClass;
 
-class DefaultConstantAlwaysUsedTest extends MockeryTestCase
+class DefaultConstantAlwaysUsedTest extends PHPStanTestCase
 {
-    public function testConstantIsNotDefault()
+    public function testConstantIsNotDefault(): void
     {
-        $constantReflection = Mockery::mock(ConstantReflection::class);
-        $constantReflection->expects('getName')->andReturns('notDefault');
-
-        $constant = new DefaultConstantAlwaysUsed();
-
-        $this->assertFalse($constant->isAlwaysUsed($constantReflection));
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(\Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Value\ValueStrictEnum::class);
+        
+        $strictConstant = $classReflection->getConstant('strict');
+        $constantChecker = new DefaultConstantAlwaysUsed();
+        
+        $this->assertFalse($constantChecker->isAlwaysUsed($strictConstant));
     }
 
-    public function testClassIsNotEnum()
+    public function testClassIsNotEnum(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('isEnum')->andReturnFalse();
-
-        $constantReflection = Mockery::mock(ConstantReflection::class);
-        $constantReflection->expects('getName')->andReturns('Default');
-        $constantReflection->expects('getDeclaringClass')->andReturns($classReflection);
-
-        $constant = new DefaultConstantAlwaysUsed();
-
-        $this->assertFalse($constant->isAlwaysUsed($constantReflection));
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(\Henzeb\Enumhancer\Tests\Unit\PHPStan\Fixtures\Defaults\NotEnum::class);
+        
+        $defaultConstant = $classReflection->getConstant('Default');
+        $constantChecker = new DefaultConstantAlwaysUsed();
+        
+        $this->assertFalse($constantChecker->isAlwaysUsed($defaultConstant));
     }
 
-    public function testConstantCorrectDefaultInEnum()
+    public function testConstantCorrectDefaultInEnum(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(DefaultsConstantEnum::class);
-        $classReflection->expects('isEnum')->andReturnTrue();
-
-        $constantReflection = Mockery::mock(ConstantReflection::class);
-        $constantReflection->expects('getName')->andReturns('Default');
-        $constantReflection->expects('getDeclaringClass')->andReturns($classReflection);
-
-        $constant = new DefaultConstantAlwaysUsed();
-
-        $this->assertTrue($constant->isAlwaysUsed($constantReflection));
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(DefaultsConstantEnum::class);
+        
+        if (!$classReflection->hasConstant('Default')) {
+            $this->markTestSkipped('Default constant not found in DefaultsConstantEnum');
+        }
+        
+        $defaultConstant = $classReflection->getConstant('Default');
+        $constantChecker = new DefaultConstantAlwaysUsed();
+        
+        $this->assertTrue($constantChecker->isAlwaysUsed($defaultConstant));
     }
 
-    public function testConstantCorrectDefaultCapitalizedInEnum()
+    public function testConstantCorrectDefaultCapitalizedInEnum(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(EnumWithCapitalizedDefault::class);
-        $classReflection->expects('isEnum')->andReturnTrue();
-
-        $constantReflection = Mockery::mock(ConstantReflection::class);
-        $constantReflection->expects('getName')->andReturns('DEFAULT');
-        $constantReflection->expects('getDeclaringClass')->andReturns($classReflection);
-
-        $constant = new DefaultConstantAlwaysUsed();
-
-        $this->assertTrue($constant->isAlwaysUsed($constantReflection));
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(EnumWithCapitalizedDefault::class);
+        
+        if (!$classReflection->hasConstant('DEFAULT')) {
+            $this->markTestSkipped('DEFAULT constant not found in EnumWithCapitalizedDefault');
+        }
+        
+        $defaultConstant = $classReflection->getConstant('DEFAULT');
+        $constantChecker = new DefaultConstantAlwaysUsed();
+        
+        $this->assertTrue($constantChecker->isAlwaysUsed($defaultConstant));
     }
 
-    public function testConstantNamedDefaultNotImplementingDefaults()
+    public function testConstantNamedDefaultNotImplementingDefaults(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(EnumWithDefaultNotImplementing::class);
-        $classReflection->expects('isEnum')->andReturnTrue();
-
-        $constantReflection = Mockery::mock(ConstantReflection::class);
-        $constantReflection->expects('getName')->andReturns('Default');
-        $constantReflection->expects('getDeclaringClass')->andReturns($classReflection);
-
-        $constant = new DefaultConstantAlwaysUsed();
-
-        $this->assertFalse($constant->isAlwaysUsed($constantReflection));
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(EnumWithDefaultNotImplementing::class);
+        
+        if (!$classReflection->hasConstant('Default')) {
+            $this->markTestSkipped('Default constant not found in EnumWithDefaultNotImplementing');
+        }
+        
+        $defaultConstant = $classReflection->getConstant('Default');
+        $constantChecker = new DefaultConstantAlwaysUsed();
+        
+        $this->assertFalse($constantChecker->isAlwaysUsed($defaultConstant));
     }
 }

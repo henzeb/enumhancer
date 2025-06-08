@@ -60,8 +60,8 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
 
     public function testShouldReturnFalseWhenNotEnum(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('isEnum')->andReturnFalse();
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass('stdClass');
 
         $this->assertFalse($this->reflection->hasMethod($classReflection, 'method'));
 
@@ -69,9 +69,8 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
 
     public function testShouldReturnFalseWhenNotImplementingMacros(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('isEnum')->andReturnTrue();
-        $classReflection->expects('getName')->andReturns(SimpleEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(SimpleEnum::class);
 
         $this->assertFalse($this->reflection->hasMethod($classReflection, 'method'));
 
@@ -79,18 +78,16 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
 
     public function testShouldReturnFalseWhenMacroNotSet(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('isEnum')->andReturnTrue();
-        $classReflection->expects('getName')->andReturns(MacrosUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(MacrosUnitEnum::class);
 
         $this->assertFalse($this->reflection->hasMethod($classReflection, 'notAMacro'));
     }
 
     public function testShouldReturnTrueWhenMacroSet(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('isEnum')->twice()->andReturnTrue();
-        $classReflection->expects('getName')->twice()->andReturns(MacrosUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(MacrosUnitEnum::class);
 
         $this->assertTrue($this->reflection->hasMethod($classReflection, 'aMacroCall'));
         $this->assertTrue($this->reflection->hasMethod($classReflection, 'aStaticMacroCall'));
@@ -98,8 +95,8 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
 
     public function testGetMethod(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(MacrosUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(MacrosUnitEnum::class);
         $methodReflection = $this->reflection->getMethod($classReflection, 'aMacroCall');
 
         $this->assertInstanceOf(ClosureMethodReflection::class, $methodReflection);
@@ -121,8 +118,8 @@ class EnumMacrosMethodsClassReflectionTest extends PHPStanTestCase
 
     public function testGetStaticMethod(): void
     {
-        $classReflection = Mockery::mock(ClassReflection::class);
-        $classReflection->expects('getName')->andReturns(MacrosUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $classReflection = $reflectionProvider->getClass(MacrosUnitEnum::class);
         $methodReflection = $this->reflection->getMethod($classReflection, 'aStaticMacroCall');
 
         $this->assertInstanceOf(ClosureMethodReflection::class, $methodReflection);

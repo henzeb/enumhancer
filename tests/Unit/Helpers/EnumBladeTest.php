@@ -1,7 +1,5 @@
 <?php
 
-namespace Henzeb\Enumhancer\Tests\Unit\Helpers;
-
 use Henzeb\Enumhancer\Exceptions\NotAnEnumException;
 use Henzeb\Enumhancer\Helpers\EnumBlade;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
@@ -9,78 +7,53 @@ use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 use Orchestra\Testbench\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use UnitEnum;
 use function Henzeb\Enumhancer\Functions\backing;
 use function Henzeb\Enumhancer\Functions\name;
 use function Henzeb\Enumhancer\Functions\value;
 
-class EnumBladeTest extends TestCase
-{
-    use InteractsWithViews;
+uses(TestCase::class, InteractsWithViews::class);
 
-    public static function providesTestcases(): array
-    {
-        return [
-            'int-backed' => [IntBackedEnum::TEST],
-            'string-backed' => [EnhancedBackedEnum::ENUM],
-            'unit' => [EnhancedUnitEnum::ENUM],
+test('should render value', function ($enum, $keepValueCase = true) {
+    $method = $keepValueCase ? 'register' : 'registerLowercase';
+    EnumBlade::$method($enum::class);
 
-            'int-backed-lower' => [IntBackedEnum::TEST, false],
-            'string-backed-lower' => [EnhancedBackedEnum::ENUM, false],
-            'unit-lower' => [EnhancedUnitEnum::ENUM, false],
-        ];
-    }
+    expect(
+        (string)$this->blade('{{ $data }}',
+            ['data' => $enum], true
+        )
+    )->toBe((string)value($enum, $keepValueCase));
 
-    /**
-     * @param UnitEnum $enum
-     * @param bool $keepValueCase
-     * @return void
-     */
-    #[DataProvider("providesTestcases")]
-    public function testShouldRenderValue(UnitEnum $enum, bool $keepValueCase = true): void
-    {
-        $method = $keepValueCase ? 'register' : 'registerLowercase';
-        EnumBlade::$method($enum::class);
+    expect(
+        (string)$this->blade('{{ $data }}',
+            ['data' => backing($enum, $keepValueCase)], true
+        )
+    )->toBe(backing($enum, $keepValueCase)->value);
 
-        $this->assertEquals(
-            (string)value($enum, $keepValueCase),
-            $this->blade('{{ $data }}',
-                ['data' => $enum], true
-            )
-        );
+    expect(
+        (string)$this->blade('{{ $data->value }}',
+            ['data' => backing($enum, $keepValueCase)], true
+        )
+    )->toBe(backing($enum, $keepValueCase)->value);
 
-        $this->assertEquals(
-            backing($enum, $keepValueCase)->value,
-            $this->blade('{{ $data }}',
-                ['data' => backing($enum, $keepValueCase)], true
-            )
-        );
+    expect(
+        (string)$this->blade('{{ $data->name }}',
+            ['data' => $enum], true
+        )
+    )->toBe(name($enum));
+})->with([
+    'int-backed' => [IntBackedEnum::TEST],
+    'string-backed' => [EnhancedBackedEnum::ENUM],
+    'unit' => [EnhancedUnitEnum::ENUM],
 
-        $this->assertEquals(
-            backing($enum, $keepValueCase)->value,
-            $this->blade('{{ $data->value }}',
-                ['data' => backing($enum, $keepValueCase)], true
-            )
-        );
+    'int-backed-lower' => [IntBackedEnum::TEST, false],
+    'string-backed-lower' => [EnhancedBackedEnum::ENUM, false],
+    'unit-lower' => [EnhancedUnitEnum::ENUM, false],
+]);
 
-        $this->assertEquals(
-            name($enum),
-            $this->blade('{{ $data->name }}',
-                ['data' => $enum], true
-            )
-        );
-    }
+test('should fail adding non enum lowercase', function () {
+    EnumBlade::registerLowercase(stdClass::class);
+})->throws(NotAnEnumException::class);
 
-    public function testShouldFailAddingNonEnumLowercase(): void
-    {
-        $this->expectException(NotAnEnumException::class);
-        EnumBlade::registerLowercase(self::class);
-    }
-
-    public function testShouldFailAddingNonEnum(): void
-    {
-        $this->expectException(NotAnEnumException::class);
-        EnumBlade::register(self::class);
-    }
-}
+test('should fail adding non enum', function () {
+    EnumBlade::register(stdClass::class);
+})->throws(NotAnEnumException::class);

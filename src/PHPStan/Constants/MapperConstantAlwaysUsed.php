@@ -3,14 +3,14 @@
 namespace Henzeb\Enumhancer\PHPStan\Constants;
 
 use Henzeb\Enumhancer\Helpers\EnumImplements;
-use PHPStan\Reflection\ConstantReflection;
+use PHPStan\Reflection\ClassConstantReflection;
 use PHPStan\Rules\Constants\AlwaysUsedClassConstantsExtension;
 use function str_starts_with;
 use function strtolower;
 
 class MapperConstantAlwaysUsed implements AlwaysUsedClassConstantsExtension
 {
-    public function isAlwaysUsed(ConstantReflection $constant): bool
+    public function isAlwaysUsed(ClassConstantReflection $constant): bool
     {
         $class = $constant->getDeclaringClass();
 

@@ -5,18 +5,17 @@ namespace Henzeb\Enumhancer\Tests\Unit\PHPStan\Methods;
 use Henzeb\Enumhancer\PHPStan\Methods\EnumConstructorMethodsClassReflection;
 use Henzeb\Enumhancer\Tests\Fixtures\ConstructableUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use PHPStan\Reflection\ClassReflection;
+use PHPStan\Testing\PHPStanTestCase;
 use PHPStan\Type\ObjectType;
+use stdClass;
 
-class EnumConstructorMethodsClassReflectionTest extends MockeryTestCase
+class EnumConstructorMethodsClassReflectionTest extends PHPStanTestCase
 {
     public function testReturnsFalseIfNotEnum(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnFalse();
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(stdClass::class);
 
         $this->assertFalse(
             (new EnumConstructorMethodsClassReflection())->hasMethod(
@@ -28,10 +27,8 @@ class EnumConstructorMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseIfNotImplementingConstructor(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnTrue();
-        $reflection->expects('getName')->andReturns(SimpleEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(SimpleEnum::class);
 
         $this->assertFalse(
             (new EnumConstructorMethodsClassReflection())->hasMethod(
@@ -43,10 +40,8 @@ class EnumConstructorMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsFalseIfCaseDoesNotExists(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnTrue();
-        $reflection->expects('getName')->andReturns(ConstructableUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(ConstructableUnitEnum::class);
 
         $this->assertFalse(
             (new EnumConstructorMethodsClassReflection())->hasMethod(
@@ -58,10 +53,8 @@ class EnumConstructorMethodsClassReflectionTest extends MockeryTestCase
 
     public function testReturnsTrueIfCaseDoesExists(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-
-        $reflection->expects('isEnum')->andReturnTrue();
-        $reflection->expects('getName')->andReturns(ConstructableUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(ConstructableUnitEnum::class);
 
         $this->assertFalse(
             (new EnumConstructorMethodsClassReflection())->hasMethod(
@@ -73,8 +66,8 @@ class EnumConstructorMethodsClassReflectionTest extends MockeryTestCase
 
     public function testGetMethod(): void
     {
-        $reflection = Mockery::mock(ClassReflection::class);
-        $reflection->expects('getName')->andReturns(ConstructableUnitEnum::class);
+        $reflectionProvider = $this->createReflectionProvider();
+        $reflection = $reflectionProvider->getClass(ConstructableUnitEnum::class);
 
         $methodReflection = (new EnumConstructorMethodsClassReflection())->getMethod(
             $reflection,
