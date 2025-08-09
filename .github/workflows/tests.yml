@@ -63,7 +63,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          run: |
+          command: |
             composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update --quiet
             composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
