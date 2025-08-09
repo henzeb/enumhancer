@@ -11,10 +11,12 @@
 |
 */
 
-use PHPUnit\Framework\TestCase;
+use Henzeb\Enumhancer\Tests\TestCase;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
 
 ini_set('memory_limit', '512M');
-uses(TestCase::class)->in('Unit');
+
+uses(TestCase::class, InteractsWithViews::class)->in('Unit');
 
 /*
 |--------------------------------------------------------------------------

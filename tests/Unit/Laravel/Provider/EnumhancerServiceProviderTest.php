@@ -3,9 +3,7 @@
 use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Helpers\EnumReporter;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
-use Henzeb\Enumhancer\Tests\TestCase;
 
-uses(TestCase::class);
 
 test('has set laravel reporter', function () {
     $reporter = EnumReporter::get();

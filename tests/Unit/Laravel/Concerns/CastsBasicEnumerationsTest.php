@@ -7,8 +7,7 @@ use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsModel;
 use Henzeb\Enumhancer\Tests\Fixtures\Models\CastsBasicEnumsNoPropertyModel;
 use Henzeb\Enumhancer\Tests\Fixtures\StringBackedGetEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SubsetUnitEnum;
-use Henzeb\Enumhancer\Tests\TestCase;
-uses(TestCase::class);
+
 
 test('should cast correctly from string', function (\UnitEnum $enum, string $key, bool $keepCase = true) {
     $model = $keepCase ? new CastsBasicEnumsModel() : new CastsBasicEnumsLowerCaseModel();
@@ -100,12 +99,12 @@ test('should handle unit enum in toArray when shouldUseBasicEnumWorkaround retur
 
 test('should return non-enum value in getStorableEnumValue', function () {
     $model = new CastsBasicEnumsModel();
-    
+
     // Use reflection to test the protected method
     $reflection = new ReflectionClass($model);
     $method = $reflection->getMethod('getStorableEnumValue');
     $method->setAccessible(true);
-    
+
     // Test with a non-UnitEnum value - this should hit line 79
     $result = $method->invoke($model, 'some_string', 'some_string');
     expect($result)->toBe('some_string');

@@ -8,8 +8,10 @@ use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedIntBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
-class TestCase extends \Orchestra\Testbench\TestCase
+
+class TestCase extends OrchestraTestCase
 {
     protected function setUp(): void
     {
@@ -17,12 +19,24 @@ class TestCase extends \Orchestra\Testbench\TestCase
         parent::setUp();
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
-        return [EnumhancerServiceProvider::class];
+        return [
+            EnumhancerServiceProvider::class,
+        ];
     }
 
-    protected function defineRoutes($router)
+    protected function defineEnvironment($app): void
+    {
+        config()->set('database.default', 'sqlite');
+        config()->set('database.connections.sqlite', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+    protected function defineRoutes($router): void
     {
         // For SubstituteEnumsTest
         $router->middleware('api')->get('/simpleapi/{status}',
@@ -32,7 +46,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
         );
     }
 
-    protected function defineWebRoutes($router)
+    protected function defineWebRoutes($router): void
     {
         // For SubstituteEnumsTest
         $router->get('/noparams',
