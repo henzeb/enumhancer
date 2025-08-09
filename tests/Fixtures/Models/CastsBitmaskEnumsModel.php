@@ -1,0 +1,23 @@
+<?php
+
+namespace Henzeb\Enumhancer\Tests\Fixtures\Models;
+
+use Henzeb\Enumhancer\Laravel\Casts\AsBitmask;
+use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmaskPreferenceEnum;
+use Illuminate\Database\Eloquent\Model;
+
+
+class CastsBitmaskEnumsModel extends Model
+{
+    protected $table   = 'casts_bitmask_enums';
+    protected $guarded = [];
+
+
+    # casts
+    protected function casts(): array
+    {
+        return [
+            'preferences' => AsBitmask::class . ':' . BitmaskPreferenceEnum::class,
+        ];
+    }
+}
