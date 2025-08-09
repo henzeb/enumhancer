@@ -14,10 +14,7 @@ class CastsBitmaskEnumsModel extends Model
 
 
     # casts
-    protected function casts(): array
-    {
-        return [
-            'preferences' => AsBitmask::class . ':' . BitmaskPreferenceEnum::class,
-        ];
-    }
+    protected $casts = [
+        'preferences' => AsBitmask::class . ':' . BitmaskPreferenceEnum::class,
+    ];
 }
