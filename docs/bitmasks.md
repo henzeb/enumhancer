@@ -336,3 +336,6 @@ Returns the class name of the enum the Bitmask belongs to.
 Permission::mask()->forEnum(); // returns Permission::class
 PermissionInt::mask()->forEnum(); // returns PermissionInt::class
 ````
+
+### Laravel Casting
+For details on integrating bitmask enums with Eloquent models, see [Laravel Casting](casting.md#bitmask).

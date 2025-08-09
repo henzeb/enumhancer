@@ -196,4 +196,4 @@ $model->preferences->has(Preferences::LogActivity); // true or false
 $model->preferences->value(); // e.g. 5 for LogActivity and TwoFactorAuth
 ```
 
-Tip: Using bitmasks is a space-efficient way to store multiple enum values in a single column, and the AsBitmask cast makes working with them in Eloquent models seamless.
+> Using bitmasks is a space-efficient way to store multiple enum values in a single column, and the AsBitmask cast makes working with them in Eloquent models seamless.
