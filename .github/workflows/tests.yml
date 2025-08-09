@@ -30,6 +30,13 @@ jobs:
             testbench: 9.*
           - laravel: 12.*
             testbench: 10.*
+        exclude:
+          - laravel: 11.*
+            php: 8.1
+          - laravel: 12.*
+            php: 8.0
+          - laravel: 12.*
+            php: 8.1
 
     steps:
       - name: Checkout Code
