@@ -5,13 +5,10 @@ use Henzeb\Enumhancer\Helpers\EnumBlade;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\IntBackedEnum;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithViews;
-use Orchestra\Testbench\TestCase;
 use function Henzeb\Enumhancer\Functions\backing;
 use function Henzeb\Enumhancer\Functions\name;
 use function Henzeb\Enumhancer\Functions\value;
 
-uses(TestCase::class, InteractsWithViews::class);
 
 test('should render value', function ($enum, $keepValueCase = true) {
     $method = $keepValueCase ? 'register' : 'registerLowercase';

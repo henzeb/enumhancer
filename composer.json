@@ -73,7 +73,7 @@
         "composer/composer": "2.8.9",
         "henzeb/enumhancer-ide-helper": "main-dev",
         "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^8|^9|^10",
+        "orchestra/testbench": "^8.6.0|^9|^10",
         "pestphp/pest": "^2.0|^3.0",
         "phpstan/phpstan": "^2.0"
     },

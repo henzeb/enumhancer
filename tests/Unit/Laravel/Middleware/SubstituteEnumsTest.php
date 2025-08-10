@@ -3,7 +3,6 @@
 use Henzeb\Enumhancer\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     Config::set('app.key', 'base64:+vvg9yApP0djYSZlVTA0y4QnzdC7icL1U5qExdW4gts=');

@@ -3,12 +3,10 @@
 use Henzeb\Enumhancer\Enums\LogLevel;
 use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
-use Henzeb\Enumhancer\Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Psr\Log\LoggerInterface;
 
-uses(TestCase::class);
 
 beforeEach(function () {
     Config::set('logging.default', 'stack');

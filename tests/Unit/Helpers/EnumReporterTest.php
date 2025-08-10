@@ -8,10 +8,7 @@ use Henzeb\Enumhancer\Laravel\Reporters\LaravelLogReporter;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedBackedEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
 use Illuminate\Support\Facades\Log;
-use Orchestra\Testbench\TestCase;
 use Psr\Log\LoggerInterface;
-
-uses(TestCase::class);
 
 beforeEach(function () {
     $this->app->getProviders(EnumhancerServiceProvider::class);

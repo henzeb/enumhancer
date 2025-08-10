@@ -94,6 +94,7 @@ implemented the methods of `Getters`, `Extractor` and `Reporters`.
 - [FormRequest](docs/formrequests.md)
 - [Implicit (basic) enum binding](docs/binding.md)
 - [Validation](docs/laravel.validation.md)
+- [Eloquent](docs/laravel.eloquent.md)
 
 ### Laravel's auto-discovery
 

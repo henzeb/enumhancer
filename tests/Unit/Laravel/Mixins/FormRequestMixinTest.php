@@ -3,10 +3,8 @@
 use Henzeb\Enumhancer\Contracts\Mapper;
 use Henzeb\Enumhancer\Tests\Fixtures\SimpleEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\UnitEnums\Defaults\DefaultsEnum;
-use Henzeb\Enumhancer\Tests\TestCase;
 use Illuminate\Foundation\Http\FormRequest;
 
-uses(TestCase::class);
 
 test('as enum', function () {
     $request = new FormRequest(
