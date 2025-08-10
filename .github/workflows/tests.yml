@@ -50,22 +50,12 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
         if: ${{ !env.ACT }}
 
-      - name: Install PHP Dependencies (prefer-lowest)
-        if: ${{ matrix.stability == 'prefer-lowest' }}
+      - name: Install PHP Dependencies
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer update --prefer-lowest --prefer-dist --no-interaction --no-progress --quiet --with "laravel/framework:10.14.0"
-
-      - name: Install PHP Dependencies (prefer-stable)
-        if: ${{ matrix.stability == 'prefer-stable' }}
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 5
-          max_attempts: 5
-          command: composer update --prefer-dist --no-interaction --no-progress --quiet
-
+          command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
       - name: Lint PHP files
         run: find src/ tests/ -name "*.php" -exec php -l {} \;
