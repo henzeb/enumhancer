@@ -501,6 +501,6 @@ test('`serialize` method returns correct string for bitmask values', function ()
         BitmaskPreferenceEnum::DarkMode,
     );
 
-    $result = $cast->serialize($model, 'preferences', $value, []);
+    $result = $cast->serialize($model, $this->attr, $value, []);
     expect($result)->toBe('LogActivity,DarkMode,DataExport');
 });
