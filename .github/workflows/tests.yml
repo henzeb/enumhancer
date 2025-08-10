@@ -13,30 +13,15 @@ on:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
     runs-on: ubuntu-latest
     env:
       CC_TOKEN: ${{ secrets.CODECLIMATE_TOKEN }}
     strategy:
       fail-fast: true
       matrix:
-        php: ['8.1', '8.2', '8.3', '8.4']
-        laravel: ['10.*', '11.*', '12.*']
-        dependency-version: [ prefer-stable ]
-        include:
-          - laravel: 10.*
-            testbench: 8.*
-          - laravel: 11.*
-            testbench: 9.*
-          - laravel: 12.*
-            testbench: 10.*
-        exclude:
-          - laravel: 11.*
-            php: 8.1
-          - laravel: 12.*
-            php: 8.0
-          - laravel: 12.*
-            php: 8.1
+        php: [ '8.1','8.4' ]
+        stability: [ prefer-lowest, prefer-stable ]
 
     steps:
       - name: Checkout Code
@@ -65,14 +50,22 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
         if: ${{ !env.ACT }}
 
-      - name: Install PHP Dependencies
+      - name: Install PHP Dependencies (prefer-lowest)
+        if: ${{ matrix.stability == 'prefer-lowest' }}
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: |
-            composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update --quiet
-            composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          command: composer update --prefer-lowest --prefer-dist --no-interaction --no-progress --quiet --with "laravel/framework:10.14.0"
+
+      - name: Install PHP Dependencies (prefer-stable)
+        if: ${{ matrix.stability == 'prefer-stable' }}
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --prefer-dist --no-interaction --no-progress --quiet
+
 
       - name: Lint PHP files
         run: find src/ tests/ -name "*.php" -exec php -l {} \;
