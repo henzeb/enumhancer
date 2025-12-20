@@ -74,7 +74,7 @@
         "henzeb/enumhancer-ide-helper": "main-dev",
         "mockery/mockery": "^1.5",
         "orchestra/testbench": "^8|^9|^10",
-        "pestphp/pest": "^2.0|^3.0",
+        "pestphp/pest": "^2.0|^3.0|^4.0",
         "phpstan/phpstan": "^2.0"
     },
     "autoload": {

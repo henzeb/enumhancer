@@ -32,25 +32,28 @@ test('store property', function (string $key, mixed $value, mixed $expectedValue
     EnumProperties::store($storeIn, $key, $value);
 
     expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
-})->with([
-    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
-    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
-    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
-    'enum' => [
-        'anEnum',
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::class
-    ],
-    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
-    'another-enum-that-tries-to-get' => [
-        'anotherProperty',
-        true,
-        null,
-        ConstructableUnitEnum::class,
-        StringBackedGetEnum::class
-    ],
-]);
+})->with(function () {
+    $callable = fn() => 'true';
+    return [
+        'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+        'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+        'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+        'enum' => [
+            'anEnum',
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::class
+        ],
+        'callable' => ['property', $callable, $callable, ConstructableUnitEnum::class],
+        'another-enum-that-tries-to-get' => [
+            'anotherProperty',
+            true,
+            null,
+            ConstructableUnitEnum::class,
+            StringBackedGetEnum::class
+        ],
+    ];
+});
 
 test('store property once', function (string $key, mixed $value, mixed $expectedValue, string $storeIn, string|null $expectedStoreIn = null) {
     EnumProperties::storeOnce($storeIn, $key, $value);
@@ -58,25 +61,28 @@ test('store property once', function (string $key, mixed $value, mixed $expected
     expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
 
     expect(fn() => EnumProperties::storeOnce($storeIn, $key, $value))->toThrow(PropertyAlreadyStoredException::class);
-})->with([
-    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
-    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
-    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
-    'enum' => [
-        'anEnum',
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::class
-    ],
-    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
-    'another-enum-that-tries-to-get' => [
-        'anotherProperty',
-        true,
-        null,
-        ConstructableUnitEnum::class,
-        StringBackedGetEnum::class
-    ],
-]);
+})->with(function () {
+    $callable = fn() => 'true';
+    return [
+        'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+        'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+        'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+        'enum' => [
+            'anEnum',
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::class
+        ],
+        'callable' => ['property', $callable, $callable, ConstructableUnitEnum::class],
+        'another-enum-that-tries-to-get' => [
+            'anotherProperty',
+            true,
+            null,
+            ConstructableUnitEnum::class,
+            StringBackedGetEnum::class
+        ],
+    ];
+});
 
 test('store property once and try storing', function (string $key, mixed $value, mixed $expectedValue, string $storeIn, string|null $expectedStoreIn = null) {
     EnumProperties::storeOnce($storeIn, $key, $value);
@@ -84,25 +90,28 @@ test('store property once and try storing', function (string $key, mixed $value,
     expect(EnumProperties::get($expectedStoreIn ?? $storeIn, $key))->toEqual($expectedValue);
 
     expect(fn() => EnumProperties::store($storeIn, $key, $value))->toThrow(PropertyAlreadyStoredException::class);
-})->with([
-    'boolean' => ['property', true, true, ConstructableUnitEnum::class],
-    'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
-    'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
-    'enum' => [
-        'anEnum',
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::CALLABLE,
-        ConstructableUnitEnum::class
-    ],
-    'callable' => ['property', fn() => 'true', fn() => 'true', ConstructableUnitEnum::class],
-    'another-enum-that-tries-to-get' => [
-        'anotherProperty',
-        true,
-        null,
-        ConstructableUnitEnum::class,
-        StringBackedGetEnum::class
-    ],
-]);
+})->with(function () {
+    $callable = fn() => 'true';
+    return [
+        'boolean' => ['property', true, true, ConstructableUnitEnum::class],
+        'object' => ['anObject', new \stdClass(), new \stdClass(), ConstructableUnitEnum::class],
+        'string' => ['aString', 'A String', 'A String', ConstructableUnitEnum::class],
+        'enum' => [
+            'anEnum',
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::CALLABLE,
+            ConstructableUnitEnum::class
+        ],
+        'callable' => ['property', $callable, $callable, ConstructableUnitEnum::class],
+        'another-enum-that-tries-to-get' => [
+            'anotherProperty',
+            true,
+            null,
+            ConstructableUnitEnum::class,
+            StringBackedGetEnum::class
+        ],
+    ];
+});
 
 test('clears properties', function () {
     EnumProperties::store(ConstructableUnitEnum::class, 'property', 'a value');
@@ -154,13 +163,16 @@ test('store globally', function (string $key, mixed $value, mixed $expectedValue
     EnumProperties::global($key, $value);
 
     expect(EnumProperties::get(StringBackedGetEnum::class, $key))->toEqual($expectedValue);
-})->with([
-    'boolean' => ['property', true, true],
-    'object' => ['anObject', new \stdClass(), new \stdClass()],
-    'string' => ['aString', 'A String', 'A String'],
-    'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE],
-    'callable' => ['property', fn() => 'true', fn() => 'true'],
-]);
+})->with(function () {
+    $callable = fn() => 'true';
+    return [
+        'boolean' => ['property', true, true],
+        'object' => ['anObject', new \stdClass(), new \stdClass()],
+        'string' => ['aString', 'A String', 'A String'],
+        'enum' => ['anEnum', ConstructableUnitEnum::CALLABLE, ConstructableUnitEnum::CALLABLE],
+        'callable' => ['property', $callable, $callable],
+    ];
+});
 
 test('if local property overrides global property', function () {
     EnumProperties::global('property', 'global value');

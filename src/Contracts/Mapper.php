@@ -81,6 +81,10 @@ abstract class Mapper
     {
         $key = $this->parseValue($key);
 
+        if ($key === null) {
+            return null;
+        }
+
         if (is_string($key)) {
             $key = strtolower($key);
         }
