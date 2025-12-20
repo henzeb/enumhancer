@@ -84,6 +84,11 @@ final class Bitmask
         return !$this->any(...$bits);
     }
 
+    public function empty(): bool
+    {
+        return $this->bitmask === 0;
+    }
+
     public function value(): int
     {
         return $this->bitmask;

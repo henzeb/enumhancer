@@ -98,6 +98,11 @@ test('any', function () {
     expect($bitmask->any(BitmasksIntEnum::Execute, BitmasksIntEnum::Read, BitmasksIntEnum::Write))->toBeTrue();
 });
 
+test('empty', function () {
+    expect((new Bitmask(BitmasksIntEnum::class, 0)->empty())->toBeTrue();
+    expect((new Bitmask(BitmasksIntEnum::class, 24)->empty())->toBeFalse();
+});
+
 test('xor', function () {
     $bitmask = new Bitmask(BitmasksIntEnum::class, 24);
 
