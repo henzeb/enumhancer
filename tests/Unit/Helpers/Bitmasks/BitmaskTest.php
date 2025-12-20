@@ -5,9 +5,10 @@ use Henzeb\Enumhancer\Helpers\Bitmasks\Bitmask;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIncorrectIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\BackedEnums\Bitmasks\BitmasksIntEnum;
 use Henzeb\Enumhancer\Tests\Fixtures\EnhancedUnitEnum;
+
 test('should fail with string for enum', function () {
     new Bitmask('test', 1);
-})->throws(\TypeError::class);
+})->throws(TypeError::class);
 
 test('should fail with non enum', function () {
     new Bitmask(Bitmask::class, 1);
@@ -99,8 +100,8 @@ test('any', function () {
 });
 
 test('empty', function () {
-    expect((new Bitmask(BitmasksIntEnum::class, 0)->empty())->toBeTrue();
-    expect((new Bitmask(BitmasksIntEnum::class, 24)->empty())->toBeFalse();
+    expect((new Bitmask(BitmasksIntEnum::class, 0))->empty())->toBeTrue();
+    expect((new Bitmask(BitmasksIntEnum::class, 24))->empty())->toBeFalse();
 });
 
 test('xor', function () {
