@@ -1,7 +1,7 @@
 # Enumhancer
 
 [![Build Status](https://github.com/henzeb/enumhancer/workflows/tests/badge.svg)](https://github.com/henzeb/enumhancer/actions)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/5cee34b5dd839b0c2cdd/test_coverage)](https://codeclimate.com/github/henzeb/enumhancer/test_coverage)
+[![Code Coverage](https://qlty.sh/gh/henzeb/projects/enumhancer/coverage.svg)](https://qlty.sh/gh/henzeb/projects/enumhancer)
 [![Total Downloads](https://img.shields.io/packagist/dt/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/henzeb/enumhancer.svg)](https://packagist.org/packages/henzeb/enumhancer)
 [![License](https://img.shields.io/packagist/l/henzeb/enumhancer)](https://packagist.org/packages/henzeb/enumhancer)
