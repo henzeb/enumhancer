@@ -12,11 +12,25 @@ on:
       - '**.md'
 
 jobs:
+  lint:
+    name: Lint PHP Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Lint PHP files
+        run: find src/ tests/ -name "*.php" -exec php -l {} \;
+
   tests:
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
     runs-on: ubuntu-latest
-    env:
-      CC_TOKEN: ${{ secrets.CODECLIMATE_TOKEN }}
+    needs: lint
     strategy:
       fail-fast: true
       matrix:
@@ -40,7 +54,6 @@ jobs:
       - name: Get composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-        if: ${{ !env.ACT }}
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
@@ -48,7 +61,6 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }} }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
-        if: ${{ !env.ACT }}
 
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2
@@ -57,23 +69,48 @@ jobs:
           max_attempts: 5
           command: composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress --quiet
 
-      - name: Lint PHP files
-        run: find src/ tests/ -name "*.php" -exec php -l {} \;
-
       - name: Execute Pest
-        run: vendor/bin/pest
-        if: ${{ !env.CC_TOKEN || (matrix.stability != 'prefer-stable' && matrix.php != '8.5') }}
+        run: vendor/bin/pest --compact
 
-      - name: Execute Pest for codeclimate
-        run: vendor/bin/pest --coverage-clover=coverage.xml
-        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.5' }}
+  qlty:
+    name: Code Coverage (Qlty)
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v3.1.1
-        continue-on-error: true
-        env:
-          CC_TEST_REPORTER_ID: ${{ env.CC_TOKEN }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          coverageCommand: ''
-          coverageLocations: ./coverage.xml:clover
-        if: ${{ env.CC_TOKEN && matrix.stability == 'prefer-stable' && matrix.php == '8.5' }}
+          php-version: '8.5'
+          tools: composer:v2
+          coverage: pcov
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-prefer-stable-8.5 }}
+          restore-keys: ${{ runner.os }}-composer-prefer-stable-8.5
+
+      - name: Install PHP Dependencies
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --prefer-stable --prefer-dist --no-interaction --no-progress --quiet
+
+      - name: Execute Pest with coverage
+        run: vendor/bin/pest --compact --coverage-clover=coverage.xml
+
+      - name: Upload coverage to Qlty
+        uses: qltysh/qlty-action/coverage@v2
+        with:
+          token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+          files: coverage.xml
+          format: clover
