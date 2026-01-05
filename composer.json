@@ -70,7 +70,7 @@
         "php": "^8.1"
     },
     "require-dev": {
-        "composer/composer": "2.8.9",
+        "composer/composer": "^2.9.3",
         "henzeb/enumhancer-ide-helper": "main-dev",
         "mockery/mockery": "^1.5",
         "orchestra/testbench": "^8|^9|^10",
