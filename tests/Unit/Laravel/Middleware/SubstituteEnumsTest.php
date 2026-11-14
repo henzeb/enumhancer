@@ -1,12 +1,23 @@
 <?php
 
 use Henzeb\Enumhancer\Tests\TestCase;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Config;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 uses(TestCase::class);
 
 beforeEach(function () {
     Config::set('app.key', 'base64:+vvg9yApP0djYSZlVTA0y4QnzdC7icL1U5qExdW4gts=');
+
+    $this->withoutMiddleware([
+        StartSession::class,
+        ShareErrorsFromSession::class,
+        ValidateCsrfToken::class,
+        PreventRequestForgery::class,
+    ]);
 });
 
 test('api route no parameters', function () {

@@ -62,10 +62,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }} }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
 
-      - name: Require Laravel 13 on PHP 8.6
-        if: matrix.php == '8.6'
-        run: composer require orchestra/testbench:^11 --dev --no-update --no-interaction
-
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2
         with:
