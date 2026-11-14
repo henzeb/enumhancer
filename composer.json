@@ -67,14 +67,14 @@
         }
     ],
     "require": {
-        "php": "^8.1"
+        "php": "^8.2"
     },
     "require-dev": {
-        "composer/composer": "^2.9.3",
+        "composer/composer": "^2.10.3",
         "henzeb/enumhancer-ide-helper": "main-dev",
-        "mockery/mockery": "^1.5",
-        "orchestra/testbench": "^8|^9|^10|^11",
-        "pestphp/pest": "^2.0|^3.0|^4.0",
+        "mockery/mockery": "^1.6.10",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.8.5|^4.0",
         "phpstan/phpstan": "^2.0"
     },
     "autoload": {
