@@ -113,6 +113,19 @@ test('mixin as string', function () {
     expect(MacrosUnitEnum::test())->toBeTrue();
 });
 
+test('mixin with static method', function () {
+    $mixin = new class {
+        protected static function test()
+        {
+            return static fn() => true;
+        }
+    };
+
+    MacrosUnitEnum::mixin($mixin);
+
+    expect(MacrosUnitEnum::test())->toBeTrue();
+});
+
 test('has macros', function () {
     expect(MacrosUnitEnum::hasMacro('test'))->toBeFalse();
     MacrosUnitEnum::macro('test', fn() => true);

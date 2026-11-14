@@ -142,7 +142,7 @@ final class EnumMapper
     {
         return self::isMapperClass($value)
             || is_array($value)
-            || is_a($value, $enum);
+            || $value instanceof $enum;
     }
 
     public static function isMapperClass(mixed $mapper): bool

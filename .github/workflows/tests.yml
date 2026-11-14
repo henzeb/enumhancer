@@ -22,7 +22,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: '8.6'
 
       - name: Lint PHP files
         run: find src/ tests/ -name "*.php" -exec php -l {} \;
@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '8.1','8.5' ]
+        php: [ '8.1','8.6' ]
         stability: [ prefer-lowest, prefer-stable ]
 
     steps:
@@ -62,6 +62,10 @@ jobs:
           key: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }} }}
           restore-keys: ${{ runner.os }}-composer-${{ matrix.stability }}-${{ matrix.php }}
 
+      - name: Require Laravel 13 on PHP 8.6
+        if: matrix.php == '8.6'
+        run: composer require orchestra/testbench:^11 --dev --no-update --no-interaction
+
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2
         with:
@@ -83,7 +87,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: '8.6'
           tools: composer:v2
           coverage: pcov
 
@@ -95,8 +99,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-prefer-stable-8.5 }}
-          restore-keys: ${{ runner.os }}-composer-prefer-stable-8.5
+          key: ${{ runner.os }}-composer-prefer-stable-8.6 }}
+          restore-keys: ${{ runner.os }}-composer-prefer-stable-8.6
 
       - name: Install PHP Dependencies
         uses: nick-invision/retry@v2

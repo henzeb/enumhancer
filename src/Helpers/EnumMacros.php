@@ -58,11 +58,11 @@ final class EnumMacros
 
         foreach (self::getMethodsFromMixin($mixin) as $method) {
             if ($enum) {
-                self::macro($enum, $method->name, $method->invoke($mixin));
+                self::macro($enum, $method->name, $method->invoke($method->isStatic() ? null : $mixin));
                 continue;
             }
 
-            self::globalMacro($method->name, $method->invoke($mixin));
+            self::globalMacro($method->name, $method->invoke($method->isStatic() ? null : $mixin));
         }
 
         unset($mixin);
